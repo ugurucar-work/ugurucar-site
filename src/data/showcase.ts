@@ -14,7 +14,7 @@ export interface ShowcaseItem {
   reference?: string;     // URL of the ad this was adapted from (competitor clone)
   referenceImage?: string; // still of the reference, when there is no embeddable link
   referenceLabel?: string; // e.g. 'Competitor UGC ad'
-  group?: 'clone' | 'adkit' | 'variation' | 'best' | 'hook' | 'film' | 'avatar';
+  group?: 'clone' | 'adkit' | 'variation' | 'best' | 'hook' | 'film' | 'avatar' | 'kinetic-still';
 }
 
 export const SHOWCASE: ShowcaseItem[] = [
@@ -79,4 +79,9 @@ export const SHOWCASE: ShowcaseItem[] = [
   { app: 'Telicall', type: 'video', src: '/work/telicall/avatar-did-you-know.mp4', poster: '/work/telicall/avatar-did-you-know.jpg', title: 'No new phone, no new SIM', format: 'Avatar', ai: true, group: 'avatar' },
   { app: 'Telicall', type: 'video', src: '/work/telicall/avatar-surprise-friend.mp4', poster: '/work/telicall/avatar-surprise-friend.jpg', title: 'Surprise a friend who moved', format: 'Avatar', ai: true, group: 'avatar' },
   { app: 'Telicall', type: 'video', src: '/work/telicall/avatar-uk-number-london.mp4', poster: '/work/telicall/avatar-uk-number-london.jpg', title: 'A UK number without a contract', format: 'Avatar', ai: true, group: 'avatar' },
+  { app: 'Telicall', type: 'image', src: '/work/telicall/kin-plus-one.webp', title: 'You can\'t switch off your real number', format: 'Kinetic', ai: true, group: 'kinetic-still' },
+  { app: 'Telicall', type: 'image', src: '/work/telicall/kin-second-whatsapp.webp', title: 'Second WhatsApp. One phone.', format: 'Kinetic', ai: true, group: 'kinetic-still' },
+  { app: 'Telicall', type: 'image', src: '/work/telicall/kin-search-verification.webp', title: 'A number just for verification codes', format: 'Kinetic', ai: true, group: 'kinetic-still' },
+  { app: 'Telicall', type: 'image', src: '/work/telicall/kin-uk-number-blue.webp', title: '+44, your own UK number', format: 'Kinetic', ai: true, group: 'kinetic-still' },
+  { app: 'Telicall', type: 'image', src: '/work/telicall/kin-tiny-rates-v2.webp', title: 'Real calls. Tiny rates. (v2)', format: 'Kinetic', ai: true, group: 'kinetic-still' },
 ];

@@ -4,7 +4,8 @@ import { SHOWCASE } from '../data/showcase';
 const aiWork = SHOWCASE.filter((s) => s.group === 'best');
 const clones = SHOWCASE.filter((s) => s.group === 'clone' && (s.reference || s.referenceImage));
 const kit = SHOWCASE.filter((s) => s.group === 'adkit' && s.type === 'video').slice(0, 4);
-const statics = SHOWCASE.filter((s) => s.group === 'adkit' && s.type === 'image').slice(0, 4);
+const statics = SHOWCASE.filter((s) => s.group === 'adkit' && s.type === 'image' && s.ratio !== '1:1').slice(0, 4);
+const kinStills = SHOWCASE.filter((s) => s.group === 'kinetic-still').slice(0, 4);
 const variations = SHOWCASE.filter((s) => s.group === 'variation').slice(0, 3);
 const hooks = SHOWCASE.filter((s) => s.group === 'hook');
 const films = SHOWCASE.filter((s) => s.group === 'film').slice(0, 3);
@@ -100,7 +101,7 @@ const results = [
           <div class="kbody" aria-hidden="true">
             <div class="krow" data-kc="v">{['lily','vincent','ashley','albert','hook-sim','hook-jelly'].map((n) => <i class="ph v img" style={`background-image:url(/images/previews/${n}.webp)`}></i>)}</div>
             <div class="krow two">
-              <div data-kc="k">{['kin-two','kin-three','kin-wood'].map((n) => <i class="ph k img" style={`background-image:url(/images/previews/${n}.webp)`}></i>)}</div>
+              <div data-kc="k">{['kin-plus-one','kin-second-whatsapp','kin-search-verification'].map((n) => <i class="ph k img" style={`background-image:url(/work/telicall/${n}.webp)`}></i>)}</div>
               <div data-kc="f">{['film-mexico-city-1998','film-quiet-grew','film-fake-number'].map((n) => <i class="ph f img" style={`background-image:url(/work/telicall/${n}.jpg)`}></i>)}</div>
             </div>
             <div class="krow" data-kc="i">{['sq-creator-kit-lagos','sq-neon-go-global','sq-comic-went-global','sq-honest-table','sq-lagos-to-london','static-tiny-rates'].map((n) => <i class="sq img" style={`background-image:url(/work/telicall/${n}.webp)`}></i>)}</div>
@@ -259,6 +260,9 @@ const results = [
             </figure>
           ))}
         </div>
+        {kinStills.length > 0 && (
+          <div class="sgrid">{kinStills.map((s) => <figure><img src={s.src} alt={s.title} loading="lazy" /><figcaption><b>Kinetic</b>{s.title}</figcaption></figure>)}</div>
+        )}
         {films.length > 0 && (
           <div class="kgrid three">
             {films.map((k) => (
