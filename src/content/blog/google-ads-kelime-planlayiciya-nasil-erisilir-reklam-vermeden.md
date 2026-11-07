@@ -5,6 +5,7 @@ pubDate: "2021-04-12"
 updatedDate: "2021-04-12"
 heroImage: "/images/blog/google-ads-kelime-planlayiciya-nasil-erisilir-reklam-vermeden/00.webp"
 lang: "tr"
+translation: "how-to-access-google-keyword-planner-without-running-ads"
 originalUrl: "https://www.ugurucar.work/post/google-ads-kelime-planlayıcıya-nasıl-erişilir-reklam-vermeden"
 ---
 

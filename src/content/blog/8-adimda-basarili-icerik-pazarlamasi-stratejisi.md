@@ -5,6 +5,7 @@ pubDate: "2021-01-21"
 updatedDate: "2021-03-09"
 heroImage: "/images/blog/8-adimda-basarili-icerik-pazarlamasi-stratejisi/00.webp"
 lang: "tr"
+translation: "8-steps-to-a-content-strategy-that-stands-out"
 originalUrl: "https://www.ugurucar.work/post/8-adımda-başarılı-i-çerik-pazarlaması-stratejisi-nasıl-oluşturulur"
 ---
 
@@ -37,7 +38,7 @@ Kitleleri tanımaya ve onları anlamaya çalışılmalıdır. Bunun için bir [B
 
 ### 4. İçerik Oluşturma
 
-Bu aşama içeriği oluşturmakla ilgili tüm aşamaları içerir. Bu, uygun görselleri tasarlamak, yazıyı oluşturmak ve SEO kontrollerini gerçekleştirmek gibi çalışmaları içerir. İşletme içerisinde kendi kaynaklarıyla yapabileceği gibi bunu yapan ajanslara ya da [freelancer çalışanlara](https://www.marketerslens.com/iletisim) outsource da edilebilir. Bir başlama bitiş tarihi olmayan sürekli bir iş olduğundan üretme yeterliliğinin devamlılığından emin olunmalıdır. İşletmeler için en düşük maliyetli ve en güvenilir yöntem genelde dıştan profesyonel yardım almaktır.
+Bu aşama içeriği oluşturmakla ilgili tüm aşamaları içerir. Bu, uygun görselleri tasarlamak, yazıyı oluşturmak ve SEO kontrollerini gerçekleştirmek gibi çalışmaları içerir. İşletme içerisinde kendi kaynaklarıyla yapabileceği gibi bunu yapan ajanslara ya da freelancer çalışanlara outsource da edilebilir. Bir başlama bitiş tarihi olmayan sürekli bir iş olduğundan üretme yeterliliğinin devamlılığından emin olunmalıdır. İşletmeler için en düşük maliyetli ve en güvenilir yöntem genelde dıştan profesyonel yardım almaktır.
 
 ### 5.İçerik Dağıtımı
 

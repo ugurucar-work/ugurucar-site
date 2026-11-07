@@ -5,6 +5,7 @@ pubDate: "2021-10-09"
 updatedDate: "2021-10-09"
 heroImage: "/images/blog/networking-tavsiyeleri-guclu-iliskiler-kurmanin-sirlari/00.webp"
 lang: "tr"
+translation: "networking-tips-from-16-marketing-professionals"
 originalUrl: "https://www.ugurucar.work/post/networking-tavsiyeleri-16-pazarlama-profesyonelinin-ağzından-güçlü-i-lişkiler-kurmanın-sırları"
 ---
 
@@ -113,6 +114,6 @@ Benim tavsiyelerim:
 
 *Amie Cangelosi*
 
-**Yukarıdaki bazı tavsiyeleri not alın ve bir sonraki konferansta kullanmayı deneyin. Eğer etkili olduysa benimle tanışmak ve tecrübelerinizi aktarmak için** [**ucaru.marketing@gmail.com**](mailto:ucaru.marketing@gmail.com) **adresinden bana bir e-posta göndermeyi de unutmayın.**
+**Yukarıdaki bazı tavsiyeleri not alın ve bir sonraki konferansta kullanmayı deneyin. Eğer etkili olduysa benimle tanışmak ve tecrübelerinizi aktarmak için** [**collab@ugurucar.work**](mailto:collab@ugurucar.work) **adresinden bana bir e-posta göndermeyi de unutmayın.**
 
 **Ayrıca yazı hoşunuza gittiyse beni desteklemek için** [**buraya tıklayarak**](https://www.linkedin.com/posts/u%C4%9Fur-u%C3%A7ar_networking-tavsiyeleri-16-pazarlama-profesyonelinin-activity-6852589230703575040-r4Xa) **gideceğiniz Linkedln postuna birazcık sevgi gösterebilirsiniz.**

@@ -4,6 +4,8 @@ import PostCard from '../../components/PostCard.astro';
 import { getCollection } from 'astro:content';
 const posts = (await getCollection('blog', ({ data }) => !data.draft))
   .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+// Turkish originals that have an English version only show under the Türkçe filter.
+const translated = new Set(posts.filter((p) => p.data.lang === 'en' && p.data.translation).map((p) => p.data.translation));
 ---
 <Base title="Blog" image="/og/blog.jpg" description="Notes on UGC, influencer marketing, game marketing and the full-stack marketer in the age of AI.">
   <section class="wrap top">
@@ -16,7 +18,7 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft))
     </div>
   </section>
   <section class="wrap grid">
-    {posts.map((p) => <div data-lang={p.data.lang}><PostCard post={p} /></div>)}
+    {posts.map((p) => <div data-lang={p.data.lang} data-dup={translated.has(p.id) ? '1' : undefined} hidden={translated.has(p.id)}><PostCard post={p} /></div>)}
   </section>
 </Base>
 <script>
@@ -24,7 +26,8 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft))
   btns.forEach((b) => b.addEventListener('click', () => {
     btns.forEach((x) => x.classList.toggle('on', x === b));
     document.querySelectorAll<HTMLElement>('[data-lang]').forEach((el) => {
-      el.hidden = b.dataset.f !== 'all' && el.dataset.lang !== b.dataset.f;
+      const f = b.dataset.f;
+      el.hidden = f === 'all' ? el.dataset.dup === '1' : el.dataset.lang !== f;
     });
   }));
 </script>

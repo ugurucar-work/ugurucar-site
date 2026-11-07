@@ -5,6 +5,7 @@ pubDate: "2021-02-14"
 updatedDate: "2021-03-29"
 heroImage: "/images/blog/pazarlama-4-0-pazarlamanin-5a-si-nedir/00.webp"
 lang: "tr"
+translation: "marketing-4-0-the-5as-of-marketing"
 originalUrl: "https://www.ugurucar.work/post/pazarlama-4-0-pazarlamanın-5a-sı-nedir"
 ---
 

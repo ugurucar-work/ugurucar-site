@@ -5,6 +5,7 @@ pubDate: "2021-01-21"
 updatedDate: "2021-02-02"
 heroImage: "/images/blog/mmo-ekonomileri-ve-pazarlamasina-dair-inceleme/00.webp"
 lang: "tr"
+translation: "mmo-economies-how-inflation-happens"
 originalUrl: "https://www.ugurucar.work/post/mmo-ekonomileri-ve-pazarlamasına-dair-i-nceleme"
 ---
 
@@ -55,7 +56,7 @@ Başlığınıza mizah dolu ya da gündemle ilgili tartışmalı bir şey yazara
 
 Sattığınız ürünle ilgili bir anahtar kelime ya da cümle seçerek chatte sürekli bunu tekrar edersiniz, pazarınızın ismini de bu yaparsınız. İnsanlar chatten görüp geldiğinde anında sizi tanır.
 
-Satış & Pazarlama taktikleri elbette genişletilebilir. Bunlar ilk bakışta benim yaratıp kategorileştirme şeklim. İçeriği büyütmek isterseniz fikirlerinizi yorum olarak bırakabilir ya da direkt olarak [ucaru.marketing@gmail.com](mailto:ucaru.marketing@gmail.com) adresinden bana yazabilirsiniz.
+Satış & Pazarlama taktikleri elbette genişletilebilir. Bunlar ilk bakışta benim yaratıp kategorileştirme şeklim. İçeriği büyütmek isterseniz fikirlerinizi yorum olarak bırakabilir ya da direkt olarak [collab@ugurucar.work](mailto:collab@ugurucar.work) adresinden bana yazabilirsiniz.
 
 ## Oyun geliştiriciler enflasyonun önüne nasıl geçiyor?
 ##

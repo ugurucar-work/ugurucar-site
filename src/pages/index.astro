@@ -7,6 +7,7 @@ import { PROJECTS, COMPETENCIES, MARQUEE_EXTRA } from '../site';
 const brands = [...PROJECTS, ...MARQUEE_EXTRA];
 const posts = (await getCollection('blog', ({ data }) => !data.draft))
   .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+const visible = posts.filter((p) => !(p.data.lang === 'tr' && p.data.translation));
 const featured = posts.find((p) => p.id === 'the-ai-creative-machine') ?? posts[0];
 const more = posts.filter((p) => p.id !== featured.id).slice(0, 2);
 
@@ -145,7 +146,7 @@ const phones = [
         <p class="eyebrow">Writing</p>
         <h2 class="display sec">Notes from the work</h2>
       </div>
-      <a href="/blog" class="all">All {posts.length} posts →</a>
+      <a href="/blog" class="all">All {visible.length} posts →</a>
     </div>
     <div class="bento">
       <a class="big reveal" href={`/blog/${featured.id}`}>

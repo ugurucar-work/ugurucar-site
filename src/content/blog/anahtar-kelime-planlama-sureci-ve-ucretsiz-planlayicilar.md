@@ -5,6 +5,7 @@ pubDate: "2021-03-09"
 updatedDate: "2021-03-29"
 heroImage: "/images/blog/anahtar-kelime-planlama-sureci-ve-ucretsiz-planlayicilar/00.webp"
 lang: "tr"
+translation: "keyword-planning-process-and-free-keyword-planners"
 originalUrl: "https://www.ugurucar.work/post/anahtar-kelime-planlama-süreci-ve-ücretsiz-planlayıcılar"
 ---
 

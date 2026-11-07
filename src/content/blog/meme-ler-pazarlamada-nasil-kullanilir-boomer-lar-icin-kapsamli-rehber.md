@@ -5,6 +5,7 @@ pubDate: "2021-02-20"
 updatedDate: "2021-03-29"
 heroImage: "/images/blog/meme-ler-pazarlamada-nasil-kullanilir-boomer-lar-icin-kapsamli-rehber/00.webp"
 lang: "tr"
+translation: "how-to-use-memes-in-marketing"
 originalUrl: "https://www.ugurucar.work/post/meme-ler-pazarlamada-nasıl-kullanılır-boomer-lar-için-kapsamlı-rehber"
 ---
 
@@ -215,4 +216,4 @@ Eğer bu yazıyı yararlı bulduysan e-posta bültenime abone olabilir
 
 ya da
 
-Destek olmak istersen [Twitter'dan](https://twitter.com/marketerslens/status/1363129992713039872?s=20) ya da [Linkedin'den](https://www.linkedin.com/feed/update/urn:li:activity:6768899530747334656) bu içerikle ilgili oluşturduğum tanıtıcı gönderiye sevgi gösterebilirsin. <3
+Destek olmak istersen Twitter'dan ya da [Linkedin'den](https://www.linkedin.com/feed/update/urn:li:activity:6768899530747334656) bu içerikle ilgili oluşturduğum tanıtıcı gönderiye sevgi gösterebilirsin. <3

@@ -5,6 +5,7 @@ pubDate: "2022-02-15"
 updatedDate: "2022-02-15"
 heroImage: "/images/blog/influencer-pazarlama/00.webp"
 lang: "tr"
+translation: "influencer-marketing-key-terms-and-campaign-planning"
 originalUrl: "https://www.ugurucar.work/post/influencer-pazarlama"
 ---
 

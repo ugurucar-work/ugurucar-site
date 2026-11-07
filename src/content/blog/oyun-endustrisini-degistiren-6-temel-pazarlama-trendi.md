@@ -5,6 +5,7 @@ pubDate: "2021-02-20"
 updatedDate: "2021-03-09"
 heroImage: "/images/blog/oyun-endustrisini-degistiren-6-temel-pazarlama-trendi/00.webp"
 lang: "tr"
+translation: "6-marketing-trends-changing-the-gaming-industry"
 originalUrl: "https://www.ugurucar.work/post/oyun-endüstrisini-değiştiren-6-temel-pazarlama-trendi"
 ---
 

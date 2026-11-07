@@ -16,7 +16,7 @@ const date = d.pubDate.toLocaleDateString(locale, { year: 'numeric', month: 'lon
     <header class="wrap ph">
       <a href="/blog" class="back">← {d.lang === 'tr' ? 'Tüm yazılar' : 'All posts'}</a>
       <h1 class="display">{d.title}</h1>
-      <p class="meta">Uğur Uçar · {date}</p>
+      <p class="meta">Uğur Uçar · {date}{d.translation && <> · <a class="tr" href={`/blog/${d.translation}`}>{d.lang === 'en' ? 'Türkçe oku' : 'Read in English'}</a></>}</p>
     </header>
     {d.heroImage && <div class="wrap hero"><img src={d.heroImage} alt="" /></div>}
     <div class="prose"><Content /></div>
@@ -27,6 +27,7 @@ const date = d.pubDate.toLocaleDateString(locale, { year: 'numeric', month: 'lon
   .back { color: var(--muted); text-decoration: none; font-size: 14px; }
   h1 { font-size: clamp(32px, 5vw, 52px); line-height: 1.08; margin: 20px 0 12px; }
   .meta { color: var(--muted); font-size: 14px; margin: 0 0 32px; }
+  .meta .tr { color: #b9a3ff; }
   .hero { max-width: 960px; margin-bottom: 40px; }
   .hero img { width: 100%; border-radius: 18px; aspect-ratio: 12/5; object-fit: cover; }
   .hero img[src*='/cover.webp'] { aspect-ratio: 16/9; }

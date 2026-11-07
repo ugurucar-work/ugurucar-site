@@ -11,6 +11,7 @@ const blog = defineCollection({
     heroImage: z.string().optional(),
     lang: z.enum(['tr', 'en']).default('en'),
     originalUrl: z.string().optional(),
+    translation: z.string().optional(), // slug of the same post in the other language
     draft: z.boolean().default(false),
   }),
 });

@@ -5,10 +5,11 @@ pubDate: "2021-04-09"
 updatedDate: "2021-04-21"
 heroImage: "/images/blog/tek-sayfa-pazarlama-plani/00.webp"
 lang: "tr"
+translation: "one-page-marketing-plan"
 originalUrl: "https://www.ugurucar.work/post/tek-sayfa-pazarlama-planı"
 ---
 
-**İlk pazarlama planınızı kolayca hazırlayabilmeniz için taslak oluşturdum ve aşağıda nasıl kullanmanız gerektiğini anlattım.** [Buraya tıklayarak](https://www.marketerslens.com/plan) indirebilir ve çıktısını alarak kullanabilirsiniz. Detaylar için bu yazıdan yararlanabilirsiniz.
+**İlk pazarlama planınızı kolayca hazırlayabilmeniz için taslak oluşturdum ve aşağıda nasıl kullanmanız gerektiğini anlattım.** Buraya tıklayarak indirebilir ve çıktısını alarak kullanabilirsiniz. Detaylar için bu yazıdan yararlanabilirsiniz.
 
 Küçük işletmelerin %50'sinden fazlasının bir pazarlama planı yok. Bunun sebebi ya neden ihtiyacı olduğunu bilmemeleri ya da nasıl hazırlayacaklarını.
 
@@ -58,7 +59,7 @@ Küçük işletmelerin yukarıdaki gibi kapsamlı bir pazarlama planına ihtiyac
 
 Tek sayfa pazarlama planı 3 aşama altında 9 maddeden oluşur.
 
-[Buraya tıklayarak](https://www.marketerslens.com/plan) oluşturduğum taslağı indirebilir, çıktı alarak kullanabilirsiniz.
+Buraya tıklayarak oluşturduğum taslağı indirebilir, çıktı alarak kullanabilirsiniz.
 
 ### Görünüm
 
@@ -111,7 +112,7 @@ Amacın doğrudan satış olduğu reklamlar genelde çok kullanışlı değildir
 
 Sık yapılan diğer bir hata, müşteriden çok kendinize odaklanmaktır. Marketer's Lens'i sosyal medyada takip ediyorsanız, "Hakkımızda" sayfasının sizin hakkınızda olmadığını ve müşteri hakkında olabileceğinden bahsettiğimi hatırlarsınız.
 
-Kaçırdıysanız [**Instagram**](http://instagram.com/marketerslens) adresimden inceleyebilirsiniz.
+Kaçırdıysanız **Instagram** adresimden inceleyebilirsiniz.
 
 **Değer Önerisi**
 
@@ -257,7 +258,7 @@ Dizayn ihtiyaçlarınız için bir profesyonelle görüşmenizi ve hizmet alman�
 Küçük işletme sahiplerinin gmail ya da hotmail gibi uzantılar kullandığını sık sık görüyoruz. Bu profesyonellikten çok uzak. Aşağıdaki e-posta adreslerinden hangisi size daha çok güven veriyor:
 
 - ugur0012@gmail.com
-- ugur.ucar@marketerslens.com
+- collab@ugurucar.work
 
 **Müşteri İlişkileri Yönetimi Yazılımları (CRM)**
 
@@ -470,7 +471,7 @@ Burada yaptığımız şey ağızdan ağıza yayılmayı tetiklemek için müşt
 
 Tek sayfalık pazarlama planını hazırlarken göz önünde bulunduracağınız her adımı kısa ve net bir şekilde inceledik. Şimdi uygulama zamanı.
 
-> [ucaru.marketing@gmail.com](mailto:ucaru.marketing@gmail.com) adresine hazırladığınız pazarlama planlarıyla birlikte bana yazarsanız size tamamen ücretsiz bir şekilde danışmanlık sağlayabilirim. İşletmenizin geleceğini konuşabilir ve problemlerinize birlikte çözüm arayabiliriz.
+> [collab@ugurucar.work](mailto:collab@ugurucar.work) adresine hazırladığınız pazarlama planlarıyla birlikte bana yazarsanız size tamamen ücretsiz bir şekilde danışmanlık sağlayabilirim. İşletmenizin geleceğini konuşabilir ve problemlerinize birlikte çözüm arayabiliriz.
 
 **Son üç tavsiye:**
 
@@ -480,4 +481,4 @@ Tek sayfalık pazarlama planını hazırlarken göz önünde bulunduracağınız
 
 3- **Baştan icat etmeyin -** Sahip olduğunuz birçok problem çoktan başkaları tarafından çözüldü. Bu yazıdaki tavsiyeler işe yarıyor çünkü insanlarla çalışıyorsunuz ve insanlar duygusaldır!
 
-İnsanı anlama hususunda [Marketer's Lens Instagram](http://instagram.com/marketerslens) sayfasında çok değerli pazarlama ipuçları bulabilirsiniz. Lütfen takip edin ve merak ettiğiniz sorular için bana ulaşın!
+İnsanı anlama hususunda Marketer's Lens Instagram sayfasında çok değerli pazarlama ipuçları bulabilirsiniz. Lütfen takip edin ve merak ettiğiniz sorular için bana ulaşın!

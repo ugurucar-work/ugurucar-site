@@ -5,6 +5,7 @@ pubDate: "2022-03-14"
 updatedDate: "2022-03-14"
 heroImage: "/images/blog/nasil-korsan-olunur/00.webp"
 lang: "tr"
+translation: "how-to-be-a-pirate"
 originalUrl: "https://www.ugurucar.work/post/nasıl-korsan-olunur"
 ---
 

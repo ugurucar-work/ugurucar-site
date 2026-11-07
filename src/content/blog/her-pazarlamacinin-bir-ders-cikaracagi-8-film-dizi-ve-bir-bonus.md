@@ -5,6 +5,7 @@ pubDate: "2021-03-12"
 updatedDate: "2021-03-29"
 heroImage: "/images/blog/her-pazarlamacinin-bir-ders-cikaracagi-8-film-dizi-ve-bir-bonus/00.webp"
 lang: "tr"
+translation: "7-films-and-shows-every-marketer-can-learn-from"
 originalUrl: "https://www.ugurucar.work/post/her-pazarlamacının-bir-ders-çıkaracağı-8-film-dizi-ve-bir-bonus"
 ---
 
@@ -120,6 +121,6 @@ Inside Out filminde de belirttiğim gibi duygusal zeka bir satışçı için vaz
 
 Listemizin sonuna geldik, ne düşünüyorsunuz?
 
-Bu filmleri izlemeye zaman bulursan mutlaka yorumlarını bana bildir. Eğer bir sohbet başlatmak istersen seni Marketer's Lens [Twitter](http://twitter.com/marketerslens) ya da [Instagram](http://instagram.com/marketerslens) adresine davet ediyorum.
+Bu filmleri izlemeye zaman bulursan mutlaka yorumlarını bana bildir. Eğer bir sohbet başlatmak istersen seni Marketer's Lens Twitter ya da Instagram adresine davet ediyorum.
 
 İçerikler hoşuna gidiyorsa e-posta bültenime ücretsiz abone olabilirsin. E-posta bülteninde göndereceğim içerikler normalde paylaştığım içeriklerden farklı olacak, bu yüzden kaçırmak istemeyebilirsin.

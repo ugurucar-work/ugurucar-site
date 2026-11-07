@@ -5,6 +5,7 @@ pubDate: "2021-02-02"
 updatedDate: "2021-02-08"
 heroImage: "/images/blog/oyununuzu-nasil-pazarlayacaginizi-ogrenmek-icin-en-iyi-5-kitap/00.webp"
 lang: "tr"
+translation: "5-best-books-for-game-marketing"
 originalUrl: "https://www.ugurucar.work/post/oyununuzu-nasıl-pazarlayacağınızı-öğrenmek-i-çin-en-iyi-5-kitap"
 ---
 
