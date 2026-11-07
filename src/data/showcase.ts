@@ -14,7 +14,7 @@ export interface ShowcaseItem {
   reference?: string;     // URL of the ad this was adapted from (competitor clone)
   referenceImage?: string; // still of the reference, when there is no embeddable link
   referenceLabel?: string; // e.g. 'Competitor UGC ad'
-  group?: 'clone' | 'adkit' | 'variation' | 'best' | 'hook' | 'film' | 'avatar' | 'kinetic-still';
+  group?: 'clone' | 'adkit' | 'variation' | 'best' | 'hook' | 'film' | 'avatar' | 'kinetic-still' | 'explainer';
 }
 
 export const SHOWCASE: ShowcaseItem[] = [
@@ -50,6 +50,9 @@ export const SHOWCASE: ShowcaseItem[] = [
   },
   { app: 'Telicall', type: 'video', src: '/work/telicall/ugc-why-nobody-told-me.mp4', poster: '/work/telicall/ugc-why-nobody-told-me.jpg', title: 'Why did nobody tell me about a second number?', format: 'UGC', ai: true, group: 'best' },
   { app: 'Telicall', type: 'video', src: '/work/telicall/ugc-number-for-signups.mp4', poster: '/work/telicall/ugc-number-for-signups.jpg', title: 'One number for sign-ups, one for me', format: 'UGC', ai: true, group: 'best' },
+  { app: 'Telicall', type: 'video', src: '/work/telicall/kin-explainer-private-number.mp4', poster: '/work/telicall/kin-explainer-private-number.jpg', title: 'A private number, explained in 15 seconds', format: 'Kinetic', ai: true, group: 'explainer' },
+  { app: 'Telicall', type: 'video', src: '/work/telicall/kin-explainer-calls.mp4', poster: '/work/telicall/kin-explainer-calls.jpg', title: 'International calls, explained in 15 seconds', format: 'Kinetic', ai: true, group: 'explainer' },
+  { app: 'Telicall', type: 'video', src: '/work/telicall/kin-explainer-work-line.mp4', poster: '/work/telicall/kin-explainer-work-line.jpg', title: 'A work line, explained in 15 seconds', format: 'Kinetic', ai: true, group: 'explainer' },
   { app: 'Telicall', type: 'video', src: '/work/telicall/adkit-avatar-nightstand.mp4', poster: '/work/telicall/adkit-avatar-nightstand.jpg', title: 'Two WhatsApps, nightstand hook', format: 'Avatar', ai: true, group: 'adkit' },
   { app: 'Telicall', type: 'video', src: '/work/telicall/adkit-avatar-scribble.mp4', poster: '/work/telicall/adkit-avatar-scribble.jpg', title: 'Private number, scribble hook', format: 'Avatar', ai: true, group: 'adkit' },
   { app: 'Telicall', type: 'video', src: '/work/telicall/adkit-kinetic-two-whatsapps.mp4', poster: '/work/telicall/adkit-kinetic-two-whatsapps.jpg', title: '2 WhatsApps on 1 phone', format: 'Kinetic', ai: true, group: 'adkit' },
