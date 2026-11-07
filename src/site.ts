@@ -31,9 +31,9 @@ export const EXPERIENCE = [
 ];
 
 export const PROJECTS = [
+  { name: 'Telicall', tagline: 'Second Phone Number', logo: '/images/projects/telicall.png', color: '#5b3fd6' },
   { name: 'Getcontact', tagline: 'Caller ID & Spam Blocker', logo: '/images/projects/getcontact.png', color: '#2f6bff' },
   { name: 'eSIM io', tagline: 'Travel Internet Data', logo: '/images/projects/esimio.png', color: '#6b6b6b' },
-  { name: 'Telicall', tagline: 'Second Phone Number', logo: '/images/projects/telicall.png', color: '#5b3fd6' },
   { name: 'Hourglass Workout - FitEase', tagline: 'Leg & Bubble Butt Exercises', logo: '/images/projects/fitease.jpg', color: '#9acd32' },
   { name: 'Hancy AI', tagline: 'Face Swap & Hairstyle Changer', logo: '/images/projects/hancy.png', color: '#2fbf8f' },
   { name: 'Joi', tagline: 'Live Stream & Video Chat', logo: '/images/projects/joi.png', color: '#7a4dff' },
