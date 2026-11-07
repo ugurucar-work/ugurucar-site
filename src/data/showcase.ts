@@ -12,6 +12,8 @@ export interface ShowcaseItem {
   ratio?: '9:16' | '1:1' | '4:5' | '16:9';
   ai?: boolean;           // made with the AI pipeline
   reference?: string;     // URL of the ad this was adapted from (competitor clone)
+  referenceImage?: string; // still of the reference, when there is no embeddable link
+  referenceLabel?: string; // e.g. 'Competitor UGC ad'
   group?: 'clone' | 'adkit' | 'variation' | 'best' | 'hook';
 }
 
@@ -27,8 +29,23 @@ export const SHOWCASE: ShowcaseItem[] = [
     format: 'Story film',
     ai: true,
     reference: 'https://www.tiktok.com/@unutulmazreklam/video/7378117805297634565',
+    referenceLabel: 'Viral TikTok story ad',
     group: 'clone',
   },
+  {
+    app: 'Telicall',
+    type: 'video',
+    src: '/work/telicall/clone-ugc-second-number.mp4',
+    poster: '/work/telicall/clone-ugc-second-number.jpg',
+    title: 'Second number UGC, adapted from a competitor ad',
+    format: 'UGC',
+    ai: true,
+    referenceImage: '/work/telicall/clone-ugc-second-number-ref.webp',
+    referenceLabel: 'Competitor UGC ad (Sideline)',
+    group: 'clone',
+  },
+  { app: 'Telicall', type: 'video', src: '/work/telicall/ugc-why-nobody-told-me.mp4', poster: '/work/telicall/ugc-why-nobody-told-me.jpg', title: 'Why did nobody tell me about a second number?', format: 'UGC' },
+  { app: 'Telicall', type: 'video', src: '/work/telicall/ugc-number-for-signups.mp4', poster: '/work/telicall/ugc-number-for-signups.jpg', title: 'One number for sign-ups, one for me', format: 'UGC' },
   { app: 'Telicall', type: 'video', src: '/work/telicall/adkit-avatar-nightstand.mp4', poster: '/work/telicall/adkit-avatar-nightstand.jpg', title: 'Two WhatsApps, nightstand hook', format: 'Avatar', ai: true, group: 'adkit' },
   { app: 'Telicall', type: 'video', src: '/work/telicall/adkit-avatar-scribble.mp4', poster: '/work/telicall/adkit-avatar-scribble.jpg', title: 'Private number, scribble hook', format: 'Avatar', ai: true, group: 'adkit' },
   { app: 'Telicall', type: 'video', src: '/work/telicall/adkit-kinetic-two-whatsapps.mp4', poster: '/work/telicall/adkit-kinetic-two-whatsapps.jpg', title: '2 WhatsApps on 1 phone', format: 'Kinetic', ai: true, group: 'adkit' },
