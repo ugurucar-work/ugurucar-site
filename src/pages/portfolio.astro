@@ -4,7 +4,8 @@ import { COMPETENCIES, ALL_APPS, SOCIALS } from '../site';
 import { SHOWCASE } from '../data/showcase';
 import { getCollection } from 'astro:content';
 
-const work = SHOWCASE;
+// Gallery shows vertical work only, for a consistent grid.
+const work = SHOWCASE.filter((w) => !w.ratio || w.ratio === '9:16');
 const appsWithWork = ALL_APPS.filter((a) => work.some((w) => w.app === a.name));
 const formats = [...new Set(work.map((w) => w.format))];
 const linkedin = SOCIALS.find((s) => s.label === 'LinkedIn')?.href;

@@ -14,10 +14,14 @@ export interface ShowcaseItem {
   reference?: string;     // URL of the ad this was adapted from (competitor clone)
   referenceImage?: string; // still of the reference, when there is no embeddable link
   referenceLabel?: string; // e.g. 'Competitor UGC ad'
-  group?: 'clone' | 'adkit' | 'variation' | 'best' | 'hook';
+  group?: 'clone' | 'adkit' | 'variation' | 'best' | 'hook' | 'film';
 }
 
 export const SHOWCASE: ShowcaseItem[] = [
+  { app: 'Telicall', type: 'video', src: '/work/telicall/film-mexico-city-1998.mp4', poster: '/work/telicall/film-mexico-city-1998.jpg', title: 'Mexico City, 1998', format: 'Story film', ai: true, group: 'film' },
+  { app: 'Telicall', type: 'video', src: '/work/telicall/film-quiet-grew.mp4', poster: '/work/telicall/film-quiet-grew.jpg', title: 'So the quiet grew', format: 'Story film', ai: true, group: 'film' },
+  { app: 'Telicall', type: 'video', src: '/work/telicall/film-fake-number.mp4', poster: '/work/telicall/film-fake-number.jpg', title: 'Get a fake number', format: 'Story film', ai: true, group: 'film' },
+  { app: 'Telicall', type: 'video', src: '/work/telicall/ugc-village-podcast.mp4', poster: '/work/telicall/ugc-village-podcast.jpg', title: 'Calling the village, no internet needed', format: 'UGC', ai: true, group: 'best' },
   { app: 'Telicall', type: 'video', src: '/work/telicall/ai-creator-go-viral.mp4', poster: '/work/telicall/ai-creator-go-viral.jpg', title: 'Why you can\'t go viral abroad', format: 'UGC', ai: true, group: 'best' },
   { app: 'Telicall', type: 'video', src: '/work/telicall/ai-creator-global-number.mp4', poster: '/work/telicall/ai-creator-global-number.jpg', title: 'A UK number from Lagos', format: 'UGC', ai: true, group: 'best' },
   {
@@ -66,4 +70,7 @@ export const SHOWCASE: ShowcaseItem[] = [
   { app: 'Telicall', type: 'image', src: '/work/telicall/sq-comic-went-global.webp', title: 'My page just went global', format: 'Static', ratio: '1:1', ai: true, group: 'adkit' },
   { app: 'Telicall', type: 'image', src: '/work/telicall/sq-honest-table.webp', title: 'The honest table', format: 'Static', ratio: '1:1', ai: true, group: 'adkit' },
   { app: 'Telicall', type: 'image', src: '/work/telicall/sq-lagos-to-london.webp', title: 'Film in Lagos, go global from London', format: 'Static', ratio: '1:1', ai: true, group: 'adkit' },
+  { app: 'Telicall', type: 'video', src: '/work/telicall/ugc-everything-subscription.mp4', poster: '/work/telicall/ugc-everything-subscription.jpg', title: 'Everything is a subscription', format: 'UGC', ai: true },
+  { app: 'Telicall', type: 'video', src: '/work/telicall/ugc-international-client.mp4', poster: '/work/telicall/ugc-international-client.jpg', title: 'Your first international client', format: 'UGC', ai: true },
+  { app: 'Telicall', type: 'video', src: '/work/telicall/ai-pirate-walkthrough.mp4', poster: '/work/telicall/ai-pirate-walkthrough.jpg', title: 'Pirate walkthrough: UK number for verifications', format: 'AI video', ai: true },
 ];

@@ -7,6 +7,7 @@ const kit = SHOWCASE.filter((s) => s.group === 'adkit' && s.type === 'video').sl
 const statics = SHOWCASE.filter((s) => s.group === 'adkit' && s.type === 'image').slice(0, 4);
 const variations = SHOWCASE.filter((s) => s.group === 'variation').slice(0, 3);
 const hooks = SHOWCASE.filter((s) => s.group === 'hook');
+const films = SHOWCASE.filter((s) => s.group === 'film').slice(0, 3);
 const ttId = (u?: string) => u?.match(/tiktok\.com\/.*video\/(\d+)/)?.[1];
 
 const pains = [
@@ -87,7 +88,7 @@ const results = [
             <div class="krow" data-kc="v">{['lily','vincent','ashley','albert','hook-sim','hook-jelly'].map((n) => <i class="ph v img" style={`background-image:url(/images/previews/${n}.webp)`}></i>)}</div>
             <div class="krow two">
               <div data-kc="k">{['kin-two','kin-three','kin-wood'].map((n) => <i class="ph k img" style={`background-image:url(/images/previews/${n}.webp)`}></i>)}</div>
-              <div data-kc="f">{['scandal-story','ai-creator-go-viral','ai-creator-global-number'].map((n) => <i class="ph f img" style={`background-image:url(/work/telicall/${n}.jpg)`}></i>)}</div>
+              <div data-kc="f">{['film-mexico-city-1998','film-quiet-grew','film-fake-number'].map((n) => <i class="ph f img" style={`background-image:url(/work/telicall/${n}.jpg)`}></i>)}</div>
             </div>
             <div class="krow" data-kc="i">{['sq-creator-kit-lagos','sq-neon-go-global','sq-comic-went-global','sq-honest-table','sq-lagos-to-london','static-tiny-rates'].map((n) => <i class="sq img" style={`background-image:url(/work/telicall/${n}.webp)`}></i>)}</div>
           </div>
@@ -245,10 +246,20 @@ const results = [
             </figure>
           ))}
         </div>
+        {films.length > 0 && (
+          <div class="kgrid three">
+            {films.map((k) => (
+              <figure>
+                <video class="auto" src={k.src} poster={k.poster} muted loop playsinline preload="none"></video>
+                <figcaption><b>Story film</b>{k.title}</figcaption>
+              </figure>
+            ))}
+          </div>
+        )}
         {statics.length > 0 && (
           <div class="sgrid">{statics.map((s) => <figure><img src={s.src} alt={s.title} loading="lazy" /><figcaption><b>Static</b>{s.title}</figcaption></figure>)}</div>
         )}
-        <p class="knote">Pieces from Telicall ad kits: avatar, kinetic and static. Tap a video to hear.</p>
+        <p class="knote">Pieces from Telicall ad kits: avatar, kinetic, story film and static. Tap a video to hear.</p>
       </div>
     ) : (
       <div class="slot" data-slot="adkit-example" aria-hidden="true">
@@ -636,6 +647,7 @@ const results = [
   .nf small { color: #8a86a3; font-size: 11px; }
   .nf .close { position: absolute; top: 10px; right: 12px; color: #8a86a3; font-size: 11px; }
   .kgrid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .kgrid.three { grid-template-columns: repeat(3, 1fr); margin-top: 12px; }
   .kgrid figure, .vgrid figure { margin: 0; position: relative; }
   video.auto { width: 100%; aspect-ratio: 9/16; object-fit: cover; border-radius: 14px; background: #000; display: block; cursor: pointer; border: 1px solid #2f2a40; }
   .kgrid figure::after, .vgrid figure::after { content: '🔇'; position: absolute; top: 8px; right: 8px; font-size: 13px; background: rgba(0,0,0,.5); border-radius: 999px; padding: 3px 7px; pointer-events: none; }
@@ -654,8 +666,8 @@ const results = [
   .vhead h3 { font-size: clamp(26px, 3.2vw, 38px); margin: 8px 0 10px; }
   .vhead p { color: var(--muted); margin: 0; }
   .vgrid { display: grid; grid-template-columns: repeat(3, minmax(0, 260px)); gap: 16px; }
-  .vgrid.best { grid-template-columns: repeat(4, 1fr); }
-  @media (max-width: 900px) { .vgrid.best { grid-template-columns: 1fr 1fr; } }
+  .vgrid.best { grid-template-columns: repeat(5, 1fr); gap: 12px; }
+  @media (max-width: 900px) { .vgrid.best { grid-template-columns: repeat(3, 1fr); } }
   .hgrid4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
   .hgrid4 figure { margin: 0; position: relative; }
   .hgrid4 figure::after { content: '🔇'; position: absolute; top: 8px; right: 8px; font-size: 13px; background: rgba(0,0,0,.5); border-radius: 999px; padding: 3px 7px; pointer-events: none; }
