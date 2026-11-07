@@ -63,7 +63,7 @@ Full-stack marketers are the people who:
 - Launch experiments and learn quickly
 - Avoid overengineering and stay outcome-focused
 
-While AI makes specialists more efficient, full-stack marketers are becoming the new marketing strategists—because they understand the whole system.
+While AI makes specialists more efficient, full-stack marketers are becoming the new marketing strategists, because they understand the whole system.
 
 ## 5. Startups Love Full-Stack Marketers
 

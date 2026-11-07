@@ -2,11 +2,14 @@
 import Base from '../layouts/Base.astro';
 import PostCard from '../components/PostCard.astro';
 import { getCollection } from 'astro:content';
-import { PROJECTS, EXPERIENCE, MARQUEE_EXTRA } from '../site';
+import { PROJECTS, COMPETENCIES, MARQUEE_EXTRA } from '../site';
+
 const brands = [...PROJECTS, ...MARQUEE_EXTRA];
 const posts = (await getCollection('blog', ({ data }) => !data.draft))
   .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
-const latest = posts.slice(0, 3);
+const featured = posts.find((p) => p.id === 'the-ai-creative-machine') ?? posts[0];
+const more = posts.filter((p) => p.id !== featured.id).slice(0, 2);
+
 const words = [
   'scroll-stopping', 'UGC', 'thumb-stopping', 'creator-led', 'AI-powered', 'hook-first',
   'unskippable', 'TikTok-native', 'test-winning', 'avatar', 'kinetic', 'story-driven',
@@ -14,35 +17,63 @@ const words = [
   'binge-worthy', 'native-feeling', 'globally-scaled', 'shamelessly honest', 'loud', 'tiny-budget',
 ];
 const stats = [
-  { n: '1000+', l: 'content creators collaborated with' },
-  { n: `${brands.length}`, l: 'apps grown with creative' },
-  { n: '1', l: 'AI creative loop, run every week' },
-  { n: `${posts.length}`, l: 'articles on marketing' },
+  { n: '7', s: 'years', l: 'in growth & creative' },
+  { n: `${brands.length}`, s: 'apps', l: 'grown with creative' },
+  { n: '1000+', s: '', l: 'creators collaborated with' },
+  { n: '10x+', s: '', l: 'more creatives tested weekly with my AI loop' },
 ];
-const tools = ['Claude Code', 'Arcads', 'Higgsfield', 'n8n', 'Meta Ads', 'TikTok One', 'SensorTower', 'Additor'];
+const loop = [
+  { t: 'Research', d: 'Competitor ads, trends and organic hits, collected daily.' },
+  { t: 'Produce', d: 'One concept in, a full ad set out.' },
+  { t: 'Test', d: 'Every piece with a different hook.' },
+  { t: 'Read', d: 'Same window, same lens, every week.' },
+  { t: 'Scale', d: 'Winners pushed, then varied again.' },
+];
+const phones = [
+  { tag: 'Avatar · Hook A', cap: 'Nobody tells you this about your phone', g: 'linear-gradient(160deg,#ff4d4d,#7c1f3a 70%)' },
+  { tag: 'Kinetic', cap: 'WAIT. you still pay for this?', g: 'linear-gradient(160deg,#7c4dff,#1d1440 75%)' },
+  { tag: 'Story film', cap: '3 apps I wish I found sooner', g: 'linear-gradient(160deg,#ff8a5c,#5b2a14 75%)' },
+];
 ---
 <Base>
+  <!-- HERO -->
   <section class="hero">
-    <div class="blobs" aria-hidden="true"><span></span><span></span><span></span></div>
-    <div class="wrap">
-      <p class="eyebrow">Uğur Uçar · Full-stack Creative</p>
-      <h1 class="display">
-        I make
-        <button class="word" type="button" data-words={JSON.stringify(words)} aria-live="polite" aria-label="Change the word">
-          <span class="grad-text" data-word>{words[0]}</span>
-        </button>
-        <br />ads that perform.
-      </h1>
-      <p class="hint" aria-hidden="true">↑ tap the word</p>
-      <p class="lead">I partner with creators and run AI pipelines that research, produce, test and scale ads — every single week.</p>
-      <div class="ctas">
-        <a class="btn" href="/creative-ops">See the machine →</a>
-        <a class="btn ghost" href="/portfolio">Portfolio</a>
-        <a class="btn ghost" href="mailto:collab@ugurucar.work">collab@ugurucar.work</a>
+    <div class="blobs" aria-hidden="true"><span></span><span></span></div>
+    <div class="wrap hero-grid">
+      <div class="hero-copy">
+        <p class="eyebrow">Uğur Uçar · Creative Strategist · Paid UA</p>
+        <h1 class="display">
+          I make
+          <button class="word" type="button" data-words={JSON.stringify(words)} aria-live="polite" aria-label="Change the word">
+            <span class="grad-text" data-word>{words[0]}</span>
+          </button>
+          <br />ads that perform.
+        </h1>
+        <p class="hint" aria-hidden="true">↑ tap the word</p>
+        <p class="lead">Seven years of turning creative into growth for consumer apps. I run paid UA, lead creative strategy, and build AI pipelines that research, produce, test and scale ads every single week.</p>
+        <div class="ctas">
+          <a class="btn" href="mailto:collab@ugurucar.work">Work with me</a>
+          <a class="btn ghost" href="/creative-ops">See my AI workflow</a>
+        </div>
+      </div>
+
+      <div class="stack" aria-hidden="true">
+        {phones.map((p, i) => (
+          <div class={`phone p${i}`} style={`--g:${p.g}`}>
+            <div class="screen">
+              <span class="ptag">{p.tag}</span>
+              <span class="play">▶</span>
+              <p class="pcap">{p.cap}</p>
+              <div class="bars"><i></i><i></i><i></i></div>
+            </div>
+          </div>
+        ))}
+        <div class="badge"><b>Winner</b><span>CPI ↓ · hold rate ↑</span></div>
       </div>
     </div>
   </section>
 
+  <!-- LOGOS -->
   <section class="marquee" aria-label="Apps I've worked on">
     <div class="track">
       {[0, 1].map((k) => (
@@ -55,51 +86,89 @@ const tools = ['Claude Code', 'Arcads', 'Higgsfield', 'n8n', 'Meta Ads', 'TikTok
     </div>
   </section>
 
+  <!-- STATS -->
   <section class="wrap stats">
-    {stats.map((s) => (
-      <div class="stat reveal"><span class="display n">{s.n}</span><span class="l">{s.l}</span></div>
+    {stats.map((s, i) => (
+      <div class="stat reveal" style={`transition-delay:${i * 90}ms`}>
+        <span class="display n">{s.n}<small>{s.s}</small></span>
+        <span class="l">{s.l}</span>
+      </div>
     ))}
   </section>
 
-  <section class="wrap feature reveal">
-    <a href="/creative-ops" class="fcard">
-      <div class="ftext">
-        <p class="eyebrow">Case study</p>
-        <h2 class="display">The AI Creative Machine</h2>
-        <p>One concept in, a complete ad set out. Research, production, testing and scaling — run by AI, steered by me.</p>
-        <span class="more">Open the deck →</span>
-      </div>
-      <img src="/creative-ops/slide-01.webp" alt="The AI Creative Machine deck cover" width="1920" height="1080" loading="lazy" />
-    </a>
-  </section>
-
-  <section class="wrap what">
-    <h2 class="display sec reveal">What I do</h2>
-    <div class="grid4">
-      {EXPERIENCE.map((e, i) => (
-        <article class="reveal" style={`transition-delay:${i * 80}ms`}>
-          <span class="idx">0{i + 1}</span>
-          <h3>{e.title}</h3>
-          <p>{e.text}</p>
-        </article>
+  <!-- COMPETENCIES -->
+  <section class="wrap comp">
+    <div class="sec-head reveal">
+      <p class="eyebrow">What I bring</p>
+      <h2 class="display sec">Core competencies</h2>
+    </div>
+    <ol class="clist">
+      {COMPETENCIES.map((c, i) => (
+        <li class="crow reveal">
+          <span class="cidx display">0{i + 1}</span>
+          <div class="cmain">
+            <h3>{c.title}</h3>
+            <p class="ctags">{c.short}</p>
+          </div>
+          <p class="ctext">{c.text}</p>
+        </li>
       ))}
-    </div>
-    <div class="tools reveal">
-      <span class="eyebrow">Stack</span>
-      {tools.map((t) => <span class="tool">{t}</span>)}
+    </ol>
+  </section>
+
+  <!-- LOOP -->
+  <section class="loopwrap">
+    <div class="wrap">
+      <div class="sec-head reveal">
+        <p class="eyebrow">How I work</p>
+        <h2 class="display sec">One loop. <span class="grad-text">Every week.</span></h2>
+        <p class="sub">Every Monday the loop starts again from what last week's tests taught me. AI does the searching, writing, editing and reading. I approve plans and spend.</p>
+      </div>
+      <ol class="loop">
+        {loop.map((s, i) => (
+          <li class="step reveal" style={`transition-delay:${i * 90}ms`}>
+            <span class="dot">{i + 1}</span>
+            <h3>{s.t}</h3>
+            <p>{s.d}</p>
+          </li>
+        ))}
+      </ol>
+      <a class="loop-cta reveal" href="/creative-ops">Explore the full system: 23 slides →</a>
     </div>
   </section>
 
-  <section class="wrap latest">
-    <div class="head reveal"><h2 class="display sec">Writing</h2><a href="/blog">All posts →</a></div>
-    <div class="grid3">{latest.map((p) => <div class="reveal"><PostCard post={p} /></div>)}</div>
+  <!-- WRITING -->
+  <section class="wrap writing">
+    <div class="sec-head row-head reveal">
+      <div>
+        <p class="eyebrow">Writing</p>
+        <h2 class="display sec">Notes from the work</h2>
+      </div>
+      <a href="/blog" class="all">All {posts.length} posts →</a>
+    </div>
+    <div class="bento">
+      <a class="big reveal" href={`/blog/${featured.id}`}>
+        {featured.data.heroImage && <img src={featured.data.heroImage} alt="" loading="lazy" />}
+        <div class="bigtxt">
+          <span class="pill">Featured</span>
+          <h3>{featured.data.title}</h3>
+          <p>{featured.data.description}</p>
+        </div>
+      </a>
+      <div class="side">
+        {more.map((p) => <div class="reveal"><PostCard post={p} /></div>)}
+      </div>
+    </div>
   </section>
 
+  <!-- CTA -->
   <section class="wrap end reveal">
-    <h2 class="display">Let's make something<br /><span class="grad-text">that performs.</span></h2>
-    <a class="btn" href="mailto:collab@ugurucar.work">collab@ugurucar.work</a>
+    <h2 class="display">Got an app that<br /><span class="grad-text">needs better ads?</span></h2>
+    <p>Paid UA, creative strategy or an AI creative pipeline for your team. Let's talk.</p>
+    <a class="btn big-btn" href="mailto:collab@ugurucar.work">collab@ugurucar.work</a>
   </section>
 </Base>
+
 <script>
   const btn = document.querySelector<HTMLButtonElement>('.word');
   if (btn) {
@@ -130,7 +199,7 @@ const tools = ['Claude Code', 'Arcads', 'Higgsfield', 'n8n', 'Meta Ads', 'TikTok
         ], { duration: 650 + Math.random() * 250, easing: 'cubic-bezier(.2,.8,.3,1)' }).onfinish = () => s.remove();
       }
     };
-    const auto = () => { timer = window.setInterval(() => show(i + 1), 2200); };
+    const auto = () => { timer = window.setInterval(() => show(i + 1), 4500); };
     btn.addEventListener('click', (e) => {
       clearInterval(timer);
       let n = i; while (n === i && words.length > 1) n = Math.floor(Math.random() * words.length);
@@ -138,75 +207,139 @@ const tools = ['Claude Code', 'Arcads', 'Higgsfield', 'n8n', 'Meta Ads', 'TikTok
       const r = label.getBoundingClientRect();
       burst(e.clientX || r.left + r.width / 2, e.clientY || r.top + r.height / 2);
       if (!touched && hint) { touched = true; hint.style.visibility = 'hidden'; }
-      window.setTimeout(auto, 6000);
+      window.setTimeout(auto, 10000);
     });
     if (!reduce) auto();
   }
 </script>
+
 <style>
-  .hero { position: relative; isolation: isolate; padding: 110px 0 90px; overflow: hidden; }
-  .blobs { position: absolute; inset: 0; z-index: -1; filter: blur(70px); opacity: .55; }
-  .blobs span { position: absolute; border-radius: 50%; animation: float 18s ease-in-out infinite alternate; }
-  .blobs span:nth-child(1) { width: 520px; height: 520px; background: var(--accent); top: -180px; right: -120px; }
-  .blobs span:nth-child(2) { width: 460px; height: 460px; background: var(--violet); bottom: -220px; left: -120px; animation-duration: 22s; }
-  .blobs span:nth-child(3) { width: 300px; height: 300px; background: #ff8a5c; top: 30%; left: 45%; opacity: .5; animation-duration: 26s; }
+  /* hero */
+  .hero { position: relative; isolation: isolate; overflow: hidden; padding: 96px 0 88px; }
+  .blobs { position: absolute; inset: 0; z-index: -1; filter: blur(80px); opacity: .5; }
+  .blobs span { position: absolute; border-radius: 50%; animation: float 20s ease-in-out infinite alternate; }
+  .blobs span:nth-child(1) { width: 560px; height: 560px; background: var(--accent); top: -220px; right: -160px; }
+  .blobs span:nth-child(2) { width: 480px; height: 480px; background: var(--violet); bottom: -260px; left: -160px; animation-duration: 24s; }
   @keyframes float { to { transform: translate(-60px, 50px) scale(1.15); } }
-  h1 { font-size: clamp(42px, 8.4vw, 104px); margin: 18px 0 26px; }
-  .word { font: inherit; letter-spacing: inherit; color: inherit; background: none; border: 0; padding: 0; margin: 0; cursor: pointer; position: relative; display: inline-block; text-align: left; -webkit-tap-highlight-color: transparent; }
+  .hero-grid { display: grid; grid-template-columns: 1.25fr .9fr; gap: 40px; align-items: center; }
+  h1 { font-size: clamp(44px, 7vw, 92px); margin: 18px 0 22px; }
+  .word { font: inherit; letter-spacing: inherit; color: inherit; background: none; border: 0; padding: 0; margin: 0; cursor: pointer; display: inline-block; text-align: left; -webkit-tap-highlight-color: transparent; }
   .word span { display: inline-block; padding-bottom: .06em; border-bottom: 3px dashed rgba(255,255,255,.18); transition: border-color .2s; }
   .word:hover span { border-color: rgba(255,255,255,.45); }
   .word:focus-visible { outline: 2px solid var(--accent); outline-offset: 6px; border-radius: 8px; }
   .word.pop span { animation: pop .42s cubic-bezier(.2,1.6,.4,1); }
   @keyframes pop { 0% { transform: scale(.7) rotate(-4deg); opacity: 0; filter: blur(6px); } 100% { transform: none; opacity: 1; filter: none; } }
-  .hint { margin: -12px 0 18px; font-size: 13px; color: var(--muted); letter-spacing: .04em; animation: nudge 2.4s ease-in-out infinite; }
+  .hint { margin: -8px 0 16px; font-size: 13px; color: var(--muted); letter-spacing: .04em; animation: nudge 2.4s ease-in-out infinite; }
   @keyframes nudge { 50% { transform: translateY(-3px); opacity: .6; } }
   :global(.spark) { position: fixed; z-index: 50; width: 8px; height: 8px; border-radius: 2px; pointer-events: none; }
-  .lead { max-width: 560px; font-size: 19px; color: #c8c8cf; }
-  .ctas { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 34px; }
+  .lead { max-width: 540px; font-size: 18px; color: #c8c8cf; }
+  .ctas { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 30px; }
 
+  /* phone stack */
+  .stack { position: relative; height: 480px; }
+  .phone { position: absolute; width: 210px; aspect-ratio: 9/19; border-radius: 34px; padding: 8px; background: #1b1b1f; border: 1px solid #333; box-shadow: 0 40px 80px -30px rgba(0,0,0,.8); animation: bob 6s ease-in-out infinite; }
+  .screen { position: relative; height: 100%; border-radius: 27px; overflow: hidden; background: var(--g); display: flex; flex-direction: column; justify-content: flex-end; padding: 16px; }
+  .p0 { left: 0; top: 40px; transform: rotate(-9deg); z-index: 1; }
+  .p1 { left: 50%; top: 0; translate: -50% 0; z-index: 3; animation-delay: -2s; }
+  .p2 { right: 0; top: 56px; transform: rotate(9deg); z-index: 2; animation-delay: -4s; }
+  @keyframes bob { 50% { margin-top: -12px; } }
+  .ptag { position: absolute; top: 16px; left: 14px; font-size: 11px; font-weight: 600; background: rgba(0,0,0,.35); backdrop-filter: blur(6px); padding: 4px 9px; border-radius: 999px; }
+  .play { position: absolute; top: 42%; left: 50%; translate: -50% -50%; width: 46px; height: 46px; border-radius: 50%; display: grid; place-items: center; background: rgba(255,255,255,.18); backdrop-filter: blur(6px); font-size: 15px; }
+  .pcap { margin: 0 0 12px; font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 17px; line-height: 1.15; text-shadow: 0 2px 10px rgba(0,0,0,.4); }
+  .bars { display: grid; gap: 6px; }
+  .bars i { display: block; height: 6px; border-radius: 4px; background: rgba(255,255,255,.28); }
+  .bars i:nth-child(2) { width: 70%; } .bars i:nth-child(3) { width: 45%; }
+  .badge { position: absolute; z-index: 4; right: 6%; bottom: 8px; background: #0f0f12; border: 1px solid #2f2f36; border-radius: 14px; padding: 10px 14px; display: grid; box-shadow: 0 20px 40px -20px rgba(0,0,0,.9); animation: badge 3s ease-in-out infinite; }
+  .badge b { color: #4ade80; font-size: 14px; }
+  .badge b::before { content: '● '; animation: blink 1.4s infinite; }
+  .badge span { color: var(--muted); font-size: 12px; }
+  @keyframes badge { 50% { transform: translateY(-6px); } }
+  @keyframes blink { 50% { opacity: .3; } }
+
+  /* marquee */
   .marquee { border-block: 1px solid var(--line); padding: 18px 0; overflow: hidden; mask-image: linear-gradient(90deg, transparent, #000 10%, #000 90%, transparent); }
-  .track { display: flex; width: max-content; animation: slide 40s linear infinite; }
+  .track { display: flex; width: max-content; animation: slide 45s linear infinite; }
   .marquee:hover .track { animation-play-state: paused; }
   .row { display: flex; gap: 40px; padding-right: 40px; }
   .chip { display: inline-flex; align-items: center; gap: 10px; font-weight: 600; white-space: nowrap; color: #d4d4d8; }
   .chip img { border-radius: 7px; }
   @keyframes slide { to { transform: translateX(-50%); } }
 
-  .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; padding-top: 72px; padding-bottom: 24px; }
-  .stat { border-left: 1px solid var(--line); padding-left: 18px; }
-  .n { display: block; font-size: clamp(40px, 6vw, 68px); }
+  /* stats */
+  .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; padding-top: 72px; }
+  .stat { border-left: 2px solid; border-image: linear-gradient(var(--accent), var(--violet)) 1; padding-left: 18px; }
+  .n { display: block; font-size: clamp(44px, 6vw, 72px); }
+  .n small { font-size: .32em; margin-left: 6px; color: var(--muted); letter-spacing: 0; }
   .l { color: var(--muted); font-size: 14px; }
 
-  .feature { padding-top: 64px; }
-  .fcard { display: grid; grid-template-columns: 1fr 1.25fr; gap: 32px; align-items: center; text-decoration: none; padding: 28px; border-radius: 24px; border: 1px solid #2c2350;
-    background: radial-gradient(120% 120% at 0% 0%, rgba(124,77,255,.28), transparent 55%), var(--bg-2); transition: border-color .3s, transform .3s; }
-  .fcard:hover { border-color: var(--violet); transform: translateY(-3px); }
-  .fcard h2 { font-size: clamp(32px, 4.4vw, 52px); margin: 8px 0 14px; }
-  .fcard p { color: var(--muted); margin: 0 0 18px; }
-  .fcard img { border-radius: 14px; box-shadow: 0 30px 60px -20px rgba(124,77,255,.45); }
-  .more { font-weight: 600; color: #b9a3ff; }
+  /* sections */
+  .sec-head { margin-bottom: 32px; }
+  .sec { font-size: clamp(36px, 5.6vw, 64px); margin: 6px 0 0; }
+  .sub { color: var(--muted); max-width: 620px; margin: 16px 0 0; font-size: 17px; }
 
-  .what, .latest { padding-top: 96px; }
-  .sec { font-size: clamp(36px, 6vw, 64px); margin: 0 0 28px; }
-  .grid4 { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 18px; }
-  .grid4 article { background: var(--bg-2); border: 1px solid var(--line); border-radius: 18px; padding: 24px; }
-  .idx { font-family: 'Space Grotesk', sans-serif; color: var(--accent); font-weight: 700; }
-  .grid4 h3 { margin: 8px 0; font-size: 19px; }
-  .grid4 p { margin: 0; color: var(--muted); font-size: 15px; }
-  .tools { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-top: 22px; }
-  .tools .eyebrow { margin-right: 6px; }
-  .tool { border: 1px solid var(--line); border-radius: 999px; padding: 6px 14px; font-size: 14px; color: #d4d4d8; }
-  .head { display: flex; justify-content: space-between; align-items: baseline; }
-  .head a { color: var(--muted); text-decoration: none; }
-  .grid3 { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 28px; }
+  /* competencies */
+  .comp { padding-top: 110px; }
+  .clist { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--line); }
+  .crow { display: grid; grid-template-columns: 90px 1fr 1.25fr; gap: 24px; align-items: baseline; padding: 28px 16px; border-bottom: 1px solid var(--line); border-radius: 4px; transition: background .3s; }
+  .crow:hover { background: linear-gradient(90deg, rgba(255,77,77,.08), rgba(124,77,255,.08)); }
+  .cidx { font-size: 34px; color: #3f3f46; transition: color .3s; }
+  .crow:hover .cidx { color: var(--accent); }
+  .crow h3 { margin: 0; font-size: clamp(22px, 2.6vw, 30px); font-family: 'Space Grotesk', sans-serif; letter-spacing: -0.02em; }
+  .ctags { margin: 4px 0 0; color: #b9a3ff; font-size: 13px; }
+  .ctext { margin: 0; color: var(--muted); font-size: 15.5px; }
 
-  .end { text-align: center; padding-top: 120px; }
-  .end h2 { font-size: clamp(40px, 7vw, 88px); margin: 0 0 32px; }
+  /* loop */
+  .loopwrap { margin-top: 110px; padding: 96px 0; background: radial-gradient(80% 120% at 50% 0%, rgba(124,77,255,.18), transparent 70%), #0d0b14; border-block: 1px solid #221c3a; }
+  .loop { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(5, 1fr); gap: 14px; position: relative; }
+  .loop::before { content: ''; position: absolute; top: 22px; left: 8%; right: 8%; height: 2px; background: linear-gradient(90deg, var(--accent), var(--violet)); opacity: .5; }
+  .step { position: relative; text-align: center; padding: 0 6px; }
+  .dot { position: relative; z-index: 1; display: inline-grid; place-items: center; width: 46px; height: 46px; border-radius: 50%; background: #0d0b14; border: 2px solid var(--violet); font-weight: 700; font-family: 'Space Grotesk', sans-serif; }
+  .step:last-child .dot { background: var(--violet); }
+  .step h3 { margin: 14px 0 6px; font-size: 19px; }
+  .step p { margin: 0; color: var(--muted); font-size: 14px; }
+  .loop-cta { display: inline-block; margin-top: 40px; color: #b9a3ff; font-weight: 600; text-decoration: none; }
+  .loop-cta:hover { color: #fff; }
 
+  /* writing */
+  .writing { padding-top: 110px; }
+  .row-head { display: flex; justify-content: space-between; align-items: flex-end; gap: 16px; }
+  .all { color: var(--muted); text-decoration: none; white-space: nowrap; }
+  .bento { display: grid; grid-template-columns: 1.35fr 1fr; gap: 28px; }
+  .big { position: relative; display: block; border-radius: 20px; overflow: hidden; text-decoration: none; border: 1px solid var(--line); min-height: 420px; background: var(--bg-2); }
+  .big img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 70% 30%; transition: transform .6s; }
+  .big:hover img { transform: scale(1.03); }
+  .bigtxt { position: absolute; inset: auto 0 0 0; padding: 28px; background: linear-gradient(transparent, rgba(0,0,0,.88) 45%); }
+  .pill { font-size: 11px; text-transform: uppercase; letter-spacing: .1em; background: var(--accent); padding: 4px 10px; border-radius: 999px; font-weight: 700; }
+  .bigtxt h3 { margin: 12px 0 8px; font-size: clamp(22px, 2.6vw, 30px); line-height: 1.15; }
+  .bigtxt p { margin: 0; color: #c8c8cf; font-size: 15px; max-width: 520px; }
+  .side { display: grid; gap: 28px; align-content: start; }
+
+  /* end */
+  .end { text-align: center; padding-top: 130px; }
+  .end h2 { font-size: clamp(40px, 7vw, 88px); margin: 0 0 18px; }
+  .end p { color: var(--muted); margin: 0 0 30px; font-size: 17px; }
+  .big-btn { font-size: 17px; padding: 15px 26px; }
+
+  @media (max-width: 900px) {
+    .hero-grid { grid-template-columns: 1fr; }
+    .stack { height: 380px; max-width: 420px; width: 100%; margin: 10px auto 0; }
+    .phone { width: 160px; border-radius: 28px; }
+    .screen { border-radius: 22px; padding: 12px; }
+    .pcap { font-size: 14px; }
+    .loop { grid-template-columns: 1fr; gap: 22px; }
+    .loop::before { top: 0; bottom: 0; left: 22px; right: auto; width: 2px; height: auto; background: linear-gradient(var(--accent), var(--violet)); }
+    .step { text-align: left; display: grid; grid-template-columns: 46px 1fr; column-gap: 16px; }
+    .step .dot { grid-row: span 2; }
+    .step h3 { margin: 2px 0 2px; }
+    .bento { grid-template-columns: 1fr; }
+    .big { min-height: 360px; }
+  }
   @media (max-width: 760px) {
-    .stats { grid-template-columns: 1fr 1fr; row-gap: 28px; }
-    .fcard { grid-template-columns: 1fr; padding: 20px; }
-    .fcard img { order: -1; }
-    .hero { padding: 80px 0 64px; }
+    .hero { padding: 64px 0 56px; }
+    .stats { grid-template-columns: 1fr 1fr; row-gap: 30px; }
+    .crow { grid-template-columns: 52px 1fr; padding: 22px 6px; }
+    .cidx { font-size: 24px; }
+    .ctext { grid-column: 2; }
+    .row-head { flex-direction: column; align-items: flex-start; }
   }
 </style>

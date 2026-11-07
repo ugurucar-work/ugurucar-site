@@ -1,6 +1,6 @@
 export const SITE = {
   name: 'Uğur Uçar',
-  title: 'Uğur Uçar — Full-stack Creative & UGC Strategist',
+  title: 'Uğur Uçar | Creative Strategist & Paid UA',
   description:
     'I partner with global content creators and make high-performing Influencer & UGC videos. I also build AI tools to automate creative production.',
 };
@@ -11,22 +11,31 @@ export const SOCIALS = [
   { label: 'Instagram', href: 'https://instagram.com/ugurucar.ai' },
 ];
 
-export const EXPERIENCE = [
+export const COMPETENCIES = [
+  {
+    title: 'Paid UA',
+    short: 'Meta · TikTok · Google Ads',
+    text: 'I plan, launch and scale paid user acquisition for consumer apps. Creative is my main lever: structured tests, clean reads and fast scaling of winners.',
+  },
+  {
+    title: 'Creative Strategy',
+    short: 'Angles · hooks · testing roadmaps',
+    text: 'Creative roadmaps, angles and hooks built from competitor intel, trend data and our own test results, for performance campaigns across global markets.',
+  },
+  {
+    title: 'AI Creative Production',
+    short: 'Arcads · Higgsfield · n8n · Claude Code',
+    text: 'AI pipelines that turn one concept into a full ad set: avatar clips, kinetic ads, story films and statics, fact checked and on brand.',
+  },
+  {
+    title: 'Creator & Influencer Marketing',
+    short: '1000+ creators · TikTok One',
+    text: 'Sourcing, briefing and managing creators end to end across telecom, lifestyle, social and tech apps, from first message to delivered content.',
+  },
   {
     title: 'Social Media',
-    text: 'Managed the organic presence of multiple lifestyle, entertainment, and AI brands across TikTok, Instagram and LinkedIn. Also an influencer on Instagram & TikTok with a rapidly growing audience.',
-  },
-  {
-    title: 'Content Strategy',
-    text: 'Develop creative roadmaps and UGC-driven concepts for performance campaigns across global markets. Collaborated with 1000+ content creators to produce thumb-stopping assets for TikTok, Reels, and Shorts.',
-  },
-  {
-    title: 'Full-stack Creative',
-    text: 'Design and run AI-driven pipelines (Arcads, Higgsfield, n8n and custom automations) to produce ad images and videos at scale, owning creative strategy end-to-end from concept to performance.',
-  },
-  {
-    title: 'Influencer Marketing',
-    text: 'Hands-on experience managing end-to-end creator collaborations across telecommunications, lifestyle, social, and tech verticals — from sourcing and briefing to coordinating deliverables.',
+    short: 'TikTok · Instagram · LinkedIn',
+    text: 'Organic presence for lifestyle, entertainment and AI brands, plus my own growing creator accounts.',
   },
 ];
 

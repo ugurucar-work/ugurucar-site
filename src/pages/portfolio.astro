@@ -1,6 +1,6 @@
 ---
 import Base from '../layouts/Base.astro';
-import { EXPERIENCE, PROJECTS } from '../site';
+import { COMPETENCIES, PROJECTS } from '../site';
 ---
 <Base title="Portfolio" description="Creative portfolio: UGC, influencer marketing, content strategy and AI-driven creative production.">
   <section class="hero">
@@ -16,10 +16,10 @@ import { EXPERIENCE, PROJECTS } from '../site';
   </section>
 
   <section class="wrap block">
-    <h2 class="display sec">Work experience</h2>
+    <h2 class="display sec">Core competencies</h2>
     <div class="exp">
-      {EXPERIENCE.map((e) => (
-        <article><h3>{e.title}</h3><p>{e.text}</p></article>
+      {COMPETENCIES.map((e, i) => (
+        <article><span class="idx">0{i + 1}</span><h3>{e.title}</h3><p class="short">{e.short}</p><p>{e.text}</p></article>
       ))}
     </div>
   </section>
@@ -63,7 +63,9 @@ import { EXPERIENCE, PROJECTS } from '../site';
   .sub { color: var(--muted); max-width: 640px; margin: -16px 0 32px; }
   .exp { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 20px; }
   .exp article { background: var(--bg-2); border: 1px solid var(--line); border-radius: 16px; padding: 24px; }
-  .exp h3 { margin: 0 0 8px; font-size: 18px; }
+  .exp h3 { margin: 6px 0 4px; font-size: 18px; }
+  .idx { font-family: 'Space Grotesk', sans-serif; color: var(--accent); font-weight: 700; font-size: 14px; }
+  .exp .short { color: #b9a3ff; font-size: 13px; margin: 0 0 10px; }
   .exp p { margin: 0; color: var(--muted); font-size: 15px; }
   .projects { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 16px; }
   .proj {

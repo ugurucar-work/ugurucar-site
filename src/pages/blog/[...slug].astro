@@ -29,6 +29,7 @@ const date = d.pubDate.toLocaleDateString(locale, { year: 'numeric', month: 'lon
   .meta { color: var(--muted); font-size: 14px; margin: 0 0 32px; }
   .hero { max-width: 960px; margin-bottom: 40px; }
   .hero img { width: 100%; border-radius: 18px; aspect-ratio: 12/5; object-fit: cover; }
+  .hero img[src*='/cover.webp'] { aspect-ratio: 16/9; }
   .prose { max-width: var(--prose); margin: 0 auto; padding: 0 20px; font-size: 18px; line-height: 1.75; color: #dcdce0; overflow-wrap: break-word; }
   .prose :global(h2) { font-size: 30px; line-height: 1.2; margin: 48px 0 12px; color: var(--fg); scroll-margin-top: 80px; }
   .prose :global(h3) { font-size: 23px; margin: 36px 0 8px; color: var(--fg); scroll-margin-top: 80px; }

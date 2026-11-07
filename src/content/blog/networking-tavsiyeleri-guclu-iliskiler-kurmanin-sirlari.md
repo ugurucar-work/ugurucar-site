@@ -18,7 +18,7 @@ Bu yüzden hem fiziksel konferansların hem de COVID dönemindeki dijital toplan
 
 > Güçlü bir kişisel markanız varsa, insanlar sizinle konferanslarda iletişim kurmak isteyecektir.
 
-– Leonard Kim
+*Leonard Kim*
 
 Bu elbette uzun ve uğraş gerektiren bir süreç ancak pazarlama konferansına Philip Kotler olarak gidiyorsanız, ilgiyi üzerinize çekeceğinize emin olabilirsiniz. Profesyonel kişisel markanızı oluşturmak için en iyi başlangıç Linkedin üzerinde olacaktır. Bir blog başlatabilir, sosyal medyada yararlı içerikler oluşturabilirsiniz.
 
@@ -30,31 +30,31 @@ Zaman yönetimi bu toplantıların çok kritik bir konusu. Eğer hem kendi zaman
 
 > Satış için oradaysanız, tanıştığınız kişilerden kendileri hakkında bir şeyler dinleyin. Bu iyi bir insan olmak için değil, satış konuşmasına başlamadan önce onları nitelendirmek için.
 
-– Keegan Vance Forte
+*Keegan Vance Forte*
 
 Satışın en önemli kısmı karşınızdaki insanı dinleyebilmek ve ihtiyaçlarını okuyabilmektir. Karşınızdaki insanın kendi ihtiyaçlarını gözardı etmemeli ve sizinle daha açık olabilmesi için onlar hakkında bir şeyler öğrenmelisiniz. Bu aynı zamanda ne tür bir satış stratejisi izleyeceğiniz hakkında da değerli fikirler sunacaktır.
 
 > "Merhaba, ikimizin de X konferansına katıldığımızı fark ettim" diyen kişiselleştirilmiş bir LinkedIn mesajına bayılıyorum.
 
-– Claire Trévien
+*Claire Trévien*
 
 Kişiselleştirilmiş içerik ve ürünler trendi giderek büyüyor. Tanışmak için de böyle stratejiler izlemeniz çok akıllıca olacaktır. Bu insani ilişkiler kurmanıza fayda sağlar. Ayrıca hangimiz inbox’ımızda bir yeni mesaj görmekten hoşlanmıyoruz?
 
 > Ayağa kalk ve sadece gözlem yap.
 
-– C.D. Houston
+*C.D. Houston*
 
 Şahsen yeni girdiğim ortamda yapacağım ilk iş gözlem yapmak olur, sessizce oturur ve insanları izlerim. Bu onlar hakkında çok fazla fikir verir ve bir sonraki hamlemi planlamama yardımcı olur. Sadece gözlemleyerek çok fazla şey öğrenebilirsiniz.
 
 > Eğlenceli bir maske takın. İnsanlara gelip sizinle konuşma fırsatı verir.
 
-– Lisa Dougherty
+*Lisa Dougherty*
 
 Bu günlük hayatta da faydalı olabilecek bir tavsiye. Hızlı tüketilen medya içeriklerinin hemen ardından tişörtleri, anahtarlıkları, kostümleri üretilir ve satılır. Bu insanların bir gruba ait olma ihtiyacını besler ve sohbetin başlangıcı için kıvılcım yaratır. (Katıldığınız konferansın içeriğine göre akıllıca bir seçim yapmayı gözardı etmeyin…)
 
 > Bloglarını, kitaplarını veya sunumlarını neden beğeniyor olduğunuzu konuşmacılara anlatarak kendinizi tanıtın.
 
-– Roger C. Parker
+*Roger C. Parker*
 
 İnsanlar ürettikleri iş hakkında konuşmayı sever, pozitif ve negative eleştirilere açık olur. Çünkü gerçekten bir değer üreten insanlar işlerini iyileştirebilmenin eleştiriden geçtiğini bilir.
 
@@ -66,19 +66,19 @@ Kalabalık gruplarda favori insanlarımdır; az konuşan insana söz hakkı vere
 
 > Yalnız olan birini görürseniz, onu başka biriyle tanıştırın, ister iyi bir arkadaş olsun, isterse beş dakika önce tanıştığınız biri olsun.
 
-– Kyle Akerman
+*Kyle Akerman*
 
 Yazının başında bahsettiğim gibi, herkes benzer sosyal yeteneklere sahip değil, bazen ufak bir itiş gücü gerekebilir. Bu itiş gücü olun.
 
 > Yemeğin yanında kalın ve konuşma size gelsin.
 
-– Daniel Kingsley Daines-Hutt
+*Daniel Kingsley Daines-Hutt*
 
 Bir keresinde birlikte yemek yemenin en sağlam ilişkilerin temellerini attığına dair bir yazı okumuştum...
 
 > Her akşamın sonunda o gün tanıştığınız kişilere e-posta gönderin. Sizi zihinlerinde sağlamlaştırmaya yardımcı olacaktır.
 
-– Tyler Logtenberg
+*Tyler Logtenberg*
 
 Tembel olmayın ve follow-up e-maili atın.. İlişkinizi sürdürebilmek için sohbetin devam etmesini sağlayın.
 
@@ -95,23 +95,23 @@ Benim tavsiyelerim:
 
 > Konferans uygulamasını yalnızca konuşmacılarla değil, aynı zamanda katılımcılarla da bağlantı kurmak için kullanın… özellikle LinkedIn'de.
 
-– Paula Monroy
+*Paula Monroy*
 
 > Oturum başlamadan önce sorular sorun veya diğer katılımcılarla sohbet edin. Bir izleyici ilginç veya faydalı bir soru sorduğunda onu tebrik edin
 
-– Ann Gynn
+*Ann Gynn*
 
 > Oturumlar sırasında kameranızı açın. Birçoğumuz videoda olmaktan haz etmiyoruz ama aynı durumda olan başkalarıyla tanışmanın en iyi yolu bu.
 
-– Andrea Larick
+*Andrea Larick*
 
 > Etkinliğin bir uygulaması varsa sağlam bir profil oluşturun ve sosyal medya bağlantılarınızı ekleyin.
 
-– Lisa Dougherty
+*Lisa Dougherty*
 
 > Dizüstü bilgisayarınızı bir TV'ye bağlayın ve konferansı bir TV programı gibi izleyin. E-postalarla meşgul olmamanız ve dikkatinizin dağılmaması için birebirdir.
 
-– Amie Cangelosi
+*Amie Cangelosi*
 
 **Yukarıdaki bazı tavsiyeleri not alın ve bir sonraki konferansta kullanmayı deneyin. Eğer etkili olduysa benimle tanışmak ve tecrübelerinizi aktarmak için** [**ucaru.marketing@gmail.com**](mailto:ucaru.marketing@gmail.com) **adresinden bana bir e-posta göndermeyi de unutmayın.**
 

@@ -100,7 +100,7 @@ Gemi tamiri için arz ve talep dengesi korsanların dezavantajına çalışır �
 
 İnsan tamiri içinse tayfanın yara alacağı, uzuvlarının kopacağı ve sakatlanacağı neredeyse kesindir. Ancak kime ve ne zaman olacağı piyango gibidir. Bu yüzden Sefer Sözleşmesinde bir çeşit iş kazası sigortası üzerine anlaşılır ve personel sağlık harcamaları korsan gemisine gider olarak yazılır.
 
-*Gelir – (Personel harcamaları + Tamir + Ekipman ve Erzak) = Kar*
+*Gelir - (Personel harcamaları + Tamir + Ekipman ve Erzak) = Kar*
 
 ![](/images/blog/nasil-korsan-olunur/03.png)
 

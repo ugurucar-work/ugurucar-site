@@ -2,7 +2,7 @@
 title: "The AI Creative Machine: How I Turned a Creative Funnel Into a System That Runs Itself"
 description: "Research, production, testing and scaling, run as one weekly AI loop. What it does, how it works, and what changed once the work around creative stopped being the bottleneck."
 pubDate: "2026-11-07"
-heroImage: "/creative-ops/slide-01.webp"
+heroImage: "/images/blog/the-ai-creative-machine/cover.webp"
 lang: "en"
 ---
 

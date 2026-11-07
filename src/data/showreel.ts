@@ -20,7 +20,7 @@ export const SHOWREEL: ShowreelProject[] = [
   {
     slug: 'telicall',
     name: 'Telicall',
-    tagline: 'Second Phone Number — AI ad kit outputs',
+    tagline: 'Second Phone Number · AI ad kit outputs',
     logo: '/images/projects/telicall.png',
     clips: [],
   },
