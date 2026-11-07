@@ -274,20 +274,7 @@ const results = [
         {kinStills.length > 0 && (
           <div class="sgrid">{kinStills.map((s) => <figure><img src={s.src} alt={s.title} loading="lazy" /><figcaption><b>Kinetic</b>{s.title}</figcaption></figure>)}</div>
         )}
-        {films.length > 0 && (
-          <div class="kgrid three">
-            {films.map((k) => (
-              <figure>
-                <video class="auto" src={k.src} poster={k.poster} muted loop playsinline preload="none"></video>
-                <figcaption><b>Story film</b>{k.title}</figcaption>
-              </figure>
-            ))}
-          </div>
-        )}
-        {statics.length > 0 && (
-          <div class="sgrid">{statics.map((s) => <figure><img src={s.src} alt={s.title} loading="lazy" /><figcaption><b>Static</b>{s.title}</figcaption></figure>)}</div>
-        )}
-        <p class="knote">Pieces from Telicall ad kits: avatar, kinetic, story film and static. Tap a video to hear.</p>
+        <p class="knote">Pieces from Telicall ad kits: avatar and kinetic. Tap a video to hear.</p>
       </div>
     ) : (
       <div class="slot" data-slot="adkit-example" aria-hidden="true">
