@@ -22,9 +22,9 @@ const nav = [
   <title>{fullTitle}</title>
   <meta name="description" content={description} />
   <link rel="canonical" href={canonical} />
-  <link rel="icon" href="/favicon.ico?v=2" sizes="any" />
-  <link rel="icon" href="/favicon.svg?v=2" type="image/svg+xml" />
-  <link rel="apple-touch-icon" href="/apple-touch-icon.png?v=2" />
+  <link rel="icon" href="/favicon.ico?v=3" sizes="any" />
+  <link rel="icon" href="/favicon.svg?v=3" type="image/svg+xml" />
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png?v=3" />
   <link rel="manifest" href="/site.webmanifest" />
   <meta name="theme-color" content="#0a0a0b" />
   <link rel="alternate" type="application/rss+xml" title={SITE.name} href="/rss.xml" />
@@ -43,7 +43,10 @@ const nav = [
 <body>
   <header class="site-header">
     <div class="wrap bar">
-      <a href="/" class="logo">ugur<span>ucar</span></a>
+      <a href="/" class="logo" aria-label="Uğur Uçar, home">
+        <svg class="mark" viewBox="0 0 64 64" aria-hidden="true"><defs><linearGradient id="lg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ff4d4d"/><stop offset="1" stop-color="#7c4dff"/></linearGradient></defs><rect width="64" height="64" rx="16" fill="url(#lg)"/><path d="M18 17v16c0 9.5 5.2 14.5 14 14.5S46 42.5 46 33V17h-7.5v16c0 4.8-2.1 7.4-6.5 7.4s-6.5-2.6-6.5-7.4V17z" fill="#fff"/></svg>
+        <span class="wm"><b>Uğur Uçar</b><small>Creative · Paid UA</small></span>
+      </a>
       <nav>
         {nav.map((n) => <a href={n.href} class={path.startsWith(n.href) ? 'active' : ''}>{n.label}</a>)}
       </nav>
@@ -69,10 +72,15 @@ const nav = [
 <style>
   .site-header { position: sticky; top: 0; z-index: 10; background: rgba(10,10,11,.75); backdrop-filter: blur(12px); border-bottom: 1px solid var(--line); }
   .bar { display: flex; align-items: center; justify-content: space-between; height: 60px; }
-  .logo { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 20px; text-decoration: none; letter-spacing: -0.02em; }
-  .logo span { color: var(--accent); }
+  .logo { display: inline-flex; align-items: center; gap: 10px; text-decoration: none; }
+  .mark { width: 32px; height: 32px; flex: none; transition: transform .3s cubic-bezier(.2,1.5,.4,1); }
+  .logo:hover .mark { transform: rotate(-8deg) scale(1.06); }
+  .wm { display: grid; line-height: 1.05; white-space: nowrap; }
+  @media (max-width: 560px) { .wm small { display: none; } }
+  .wm b { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 17px; letter-spacing: -0.02em; }
+  .wm small { font-size: 11px; color: var(--muted); letter-spacing: .04em; }
   nav { display: flex; gap: 18px; }
-  @media (max-width: 420px) { nav { gap: 12px; } nav a { font-size: 14px; } .logo { font-size: 18px; } }
+  @media (max-width: 420px) { nav { gap: 12px; } nav a { font-size: 14px; } .mark { width: 30px; height: 30px; } .wm { display: none; } nav a { white-space: nowrap; } }
   nav a { text-decoration: none; color: var(--muted); font-size: 15px; font-weight: 500; }
   nav a:hover, nav a.active { color: var(--fg); }
   .site-footer { border-top: 1px solid var(--line); margin-top: 96px; padding: 32px 0; color: var(--muted); font-size: 14px; }
