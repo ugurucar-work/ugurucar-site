@@ -61,4 +61,9 @@ export const SHOWCASE: ShowcaseItem[] = [
   { app: 'Telicall', type: 'image', src: '/work/telicall/static-uk-number.webp', title: 'Your own UK number', format: 'Static', ai: true, group: 'adkit' },
   { app: 'Telicall', type: 'image', src: '/work/telicall/static-call-detected.webp', title: 'International call detected', format: 'Static', ai: true, group: 'adkit' },
   { app: 'Telicall', type: 'image', src: '/work/telicall/static-travel-work.webp', title: 'You travel for work', format: 'Static', ai: true, group: 'adkit' },
+  { app: 'Telicall', type: 'image', src: '/work/telicall/sq-creator-kit-lagos.webp', title: 'Creator kit, Lagos edition', format: 'Static', ratio: '1:1', ai: true, group: 'adkit' },
+  { app: 'Telicall', type: 'image', src: '/work/telicall/sq-neon-go-global.webp', title: '+44, go global', format: 'Static', ratio: '1:1', ai: true, group: 'adkit' },
+  { app: 'Telicall', type: 'image', src: '/work/telicall/sq-comic-went-global.webp', title: 'My page just went global', format: 'Static', ratio: '1:1', ai: true, group: 'adkit' },
+  { app: 'Telicall', type: 'image', src: '/work/telicall/sq-honest-table.webp', title: 'The honest table', format: 'Static', ratio: '1:1', ai: true, group: 'adkit' },
+  { app: 'Telicall', type: 'image', src: '/work/telicall/sq-lagos-to-london.webp', title: 'Film in Lagos, go global from London', format: 'Static', ratio: '1:1', ai: true, group: 'adkit' },
 ];

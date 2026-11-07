@@ -75,13 +75,22 @@ const results = [
           <a class="btn ghost" href="mailto:collab@ugurucar.work">collab@ugurucar.work</a>
         </div>
       </div>
-      <div class="slot hero-slot" data-slot="hero-example" aria-hidden="true">
-        <div class="kit">
+      <div class="slot hero-slot" data-slot="hero-example">
+        <div class="kit" data-kit>
           <div class="kh"><b>Ad Kit · Concept A</b><span class="ok">Delivered</span></div>
-          <div class="ktabs"><span class="on">All 18</span><span>Avatars 6</span><span>Kinetic 3</span><span>Films 3</span><span>Images 6</span></div>
-          <div class="krow">{['lily','vincent','ashley','albert','hook-sim','hook-jelly'].map((n) => <i class="ph v img" style={`background-image:url(/images/previews/${n}.webp)`}></i>)}</div>
-          <div class="krow two"><div>{['adkit-kinetic-two-whatsapps','adkit-kinetic-three-steps','hook-wooden-sim'].map((n) => <i class="ph k img" style={`background-image:url(/work/telicall/${n}.jpg)`}></i>)}</div><div>{['scandal-story','ai-creator-go-viral','ai-creator-global-number'].map((n) => <i class="ph f img" style={`background-image:url(/work/telicall/${n}.jpg)`}></i>)}</div></div>
-          <div class="krow">{['static-tiny-rates','static-uk-number','static-call-detected','static-travel-work','static-tiny-rates','static-uk-number'].map((n) => <i class="sq img" style={`background-image:url(/work/telicall/${n}.webp)`}></i>)}</div>
+          <div class="ktabs" role="group" aria-label="Filter ad kit">
+            {[['all','All',18],['v','Avatars',6],['k','Kinetic',3],['f','Films',3],['i','Images',6]].map(([k,l,n], i) => (
+              <button type="button" class={i === 0 ? 'on' : ''} data-kf={k}>{l} {n}</button>
+            ))}
+          </div>
+          <div class="kbody" aria-hidden="true">
+            <div class="krow" data-kc="v">{['lily','vincent','ashley','albert','hook-sim','hook-jelly'].map((n) => <i class="ph v img" style={`background-image:url(/images/previews/${n}.webp)`}></i>)}</div>
+            <div class="krow two">
+              <div data-kc="k">{['kin-two','kin-three','kin-wood'].map((n) => <i class="ph k img" style={`background-image:url(/images/previews/${n}.webp)`}></i>)}</div>
+              <div data-kc="f">{['scandal-story','ai-creator-go-viral','ai-creator-global-number'].map((n) => <i class="ph f img" style={`background-image:url(/work/telicall/${n}.jpg)`}></i>)}</div>
+            </div>
+            <div class="krow" data-kc="i">{['sq-creator-kit-lagos','sq-neon-go-global','sq-comic-went-global','sq-honest-table','sq-lagos-to-london','static-tiny-rates'].map((n) => <i class="sq img" style={`background-image:url(/work/telicall/${n}.webp)`}></i>)}</div>
+          </div>
         </div>
       </div>
     </div>
@@ -427,6 +436,25 @@ const results = [
 </Base>
 
 <script>
+  document.querySelectorAll<HTMLElement>('[data-kit]').forEach((kit) => {
+    const tabs = [...kit.querySelectorAll<HTMLButtonElement>('[data-kf]')];
+    const groups = [...kit.querySelectorAll<HTMLElement>('[data-kc]')];
+    tabs.forEach((b) => b.addEventListener('click', () => {
+      const f = b.dataset.kf;
+      tabs.forEach((x) => x.classList.toggle('on', x === b));
+      kit.classList.toggle('filtered', f !== 'all');
+      groups.forEach((g) => {
+        const on = f === 'all' || g.dataset.kc === f;
+        g.classList.toggle('off', !on);
+        if (on) {
+          g.querySelectorAll<HTMLElement>('i').forEach((it, n) => {
+            it.classList.remove('pop'); void it.offsetWidth;
+            it.style.animationDelay = `${n * 45}ms`; it.classList.add('pop');
+          });
+        }
+      });
+    }));
+  });
   document.querySelectorAll<HTMLButtonElement>('[data-clone]').forEach((b) => b.addEventListener('click', () => {
     const n = b.dataset.clone;
     document.querySelectorAll<HTMLButtonElement>('[data-clone]').forEach((x) => x.classList.toggle('on', x === b));
@@ -533,8 +561,23 @@ const results = [
   .kh { display: flex; justify-content: space-between; align-items: center; font-size: 15px; }
   .ok { background: #dcfce7; color: #15803d; font-size: 11px; font-weight: 700; padding: 3px 9px; border-radius: 999px; }
   .ktabs { display: flex; flex-wrap: wrap; gap: 6px; margin: 10px 0; }
-  .ktabs span { font-size: 11px; padding: 4px 10px; border-radius: 999px; border: 1px solid #d6d3e6; }
+  .ktabs button { font: inherit; font-size: 11px; font-weight: 600; color: #1b1531; background: #fff; padding: 5px 11px; border-radius: 999px; border: 1px solid #d6d3e6; cursor: pointer; transition: background .25s, color .25s, transform .15s; }
+  .ktabs button:hover { border-color: #5b2fd6; }
+  .ktabs button:active { transform: scale(.94); }
   .ktabs .on { background: #5b2fd6; color: #fff; border-color: transparent; }
+  .kbody { pointer-events: none; user-select: none; }
+  .kbody [data-kc], .kbody .krow.two { transition: opacity .35s ease, transform .35s ease, max-height .45s ease, margin .35s ease, padding .35s ease, filter .35s; max-height: 260px; }
+  .kbody .off { opacity: 0; transform: scale(.92); filter: blur(4px); max-height: 0 !important; padding-block: 0 !important; margin-top: 0 !important; border-width: 0 !important; overflow: hidden; }
+  .krow.two:has(> .off) { grid-template-columns: 1fr; }
+  .krow.two > .off { display: none; }
+  .krow.two:not(:has(> :not(.off))) { display: none; }
+  .kit.filtered [data-kc]:not(.off) { flex-wrap: wrap; }
+  .kit.filtered [data-kc]:not(.off) .ph { width: 54px; }
+  .kit.filtered [data-kc]:not(.off) .sq { width: 54px; height: 54px; }
+  .ph.img, .sq.img { background-size: cover !important; background-position: center !important; }
+  .ph, .sq { transition: width .35s ease, height .35s ease; }
+  .pop { animation: kpop .45s cubic-bezier(.2,1.5,.4,1) both; }
+  @keyframes kpop { 0% { opacity: 0; transform: translateY(10px) scale(.6) rotate(-6deg); } 100% { opacity: 1; transform: none; } }
   .krow { display: flex; gap: 8px; padding: 10px; background: #fff; border: 1px solid #ecebf3; border-radius: 12px; margin-top: 8px; }
   .krow.two { gap: 8px; padding: 0; background: none; border: 0; display: grid; grid-template-columns: 1fr 1fr; }
   .krow.two > div { display: flex; gap: 8px; padding: 10px; background: #fff; border: 1px solid #ecebf3; border-radius: 12px; }
