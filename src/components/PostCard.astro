@@ -1,0 +1,21 @@
+---
+interface Props { post: any }
+const { post } = Astro.props;
+const d = post.data;
+const date = d.pubDate.toLocaleDateString(d.lang === 'tr' ? 'tr-TR' : 'en-US', { year: 'numeric', month: 'short', day: 'numeric' });
+---
+<a class="card" href={`/blog/${post.id}`}>
+  {d.heroImage && <div class="thumb"><img src={d.heroImage} alt="" loading="lazy" /></div>}
+  <div class="meta"><span class="lang">{d.lang.toUpperCase()}</span><span>{date}</span></div>
+  <h3>{d.title}</h3>
+</a>
+<style>
+  .card { display: flex; flex-direction: column; gap: 10px; text-decoration: none; }
+  .thumb { aspect-ratio: 16/9; border-radius: 14px; overflow: hidden; background: var(--bg-2); border: 1px solid var(--line); }
+  .thumb img { width: 100%; height: 100%; object-fit: cover; transition: transform .4s; }
+  .card:hover .thumb img { transform: scale(1.04); }
+  .meta { display: flex; gap: 10px; font-size: 13px; color: var(--muted); }
+  .lang { border: 1px solid var(--line); border-radius: 6px; padding: 0 6px; font-size: 11px; }
+  h3 { margin: 0; font-size: 18px; line-height: 1.35; font-weight: 600; }
+  .card:hover h3 { color: var(--accent); }
+</style>

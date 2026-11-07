@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://www.ugurucar.work/sitemap-index.xml

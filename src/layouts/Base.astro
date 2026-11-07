@@ -1,0 +1,69 @@
+---
+import '../styles/global.css';
+import { SITE, SOCIALS } from '../site';
+interface Props { title?: string; description?: string; image?: string; lang?: string; }
+const { title, description = SITE.description, image, lang = 'en' } = Astro.props;
+const fullTitle = title ? `${title} | ${SITE.name}` : SITE.title;
+const canonical = new URL(Astro.url.pathname, Astro.site);
+const ogImage = image ? new URL(image, Astro.site).href : undefined;
+const path = Astro.url.pathname;
+const nav = [
+  { href: '/portfolio', label: 'Portfolio' },
+  { href: '/blog', label: 'Blog' },
+  { href: '/connect', label: 'Connect' },
+];
+---
+<!doctype html>
+<html lang={lang}>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{fullTitle}</title>
+  <meta name="description" content={description} />
+  <link rel="canonical" href={canonical} />
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <link rel="alternate" type="application/rss+xml" title={SITE.name} href="/rss.xml" />
+  <meta property="og:title" content={fullTitle} />
+  <meta property="og:description" content={description} />
+  <meta property="og:url" content={canonical} />
+  <meta property="og:type" content={image ? 'article' : 'website'} />
+  {ogImage && <meta property="og:image" content={ogImage} />}
+  <meta name="twitter:card" content={ogImage ? 'summary_large_image' : 'summary'} />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="wrap bar">
+      <a href="/" class="logo">ugur<span>ucar</span></a>
+      <nav>
+        {nav.map((n) => <a href={n.href} class={path.startsWith(n.href) ? 'active' : ''}>{n.label}</a>)}
+      </nav>
+    </div>
+  </header>
+  <main><slot /></main>
+  <footer class="site-footer">
+    <div class="wrap foot">
+      <span>© {new Date().getFullYear()} {SITE.name}</span>
+      <div class="socials">
+        {SOCIALS.map((s) => <a href={s.href} target="_blank" rel="noopener">{s.label}</a>)}
+      </div>
+    </div>
+  </footer>
+</body>
+</html>
+<style>
+  .site-header { position: sticky; top: 0; z-index: 10; background: rgba(10,10,11,.75); backdrop-filter: blur(12px); border-bottom: 1px solid var(--line); }
+  .bar { display: flex; align-items: center; justify-content: space-between; height: 60px; }
+  .logo { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 20px; text-decoration: none; letter-spacing: -0.02em; }
+  .logo span { color: var(--accent); }
+  nav { display: flex; gap: 20px; }
+  nav a { text-decoration: none; color: var(--muted); font-size: 15px; font-weight: 500; }
+  nav a:hover, nav a.active { color: var(--fg); }
+  .site-footer { border-top: 1px solid var(--line); margin-top: 96px; padding: 32px 0; color: var(--muted); font-size: 14px; }
+  .foot { display: flex; flex-wrap: wrap; gap: 16px; justify-content: space-between; }
+  .socials { display: flex; flex-wrap: wrap; gap: 16px; }
+  .socials a { text-decoration: none; }
+  .socials a:hover { color: var(--fg); }
+</style>

@@ -1,0 +1,36 @@
+---
+import Base from '../layouts/Base.astro';
+import PostCard from '../components/PostCard.astro';
+import { getCollection } from 'astro:content';
+const posts = (await getCollection('blog', ({ data }) => !data.draft))
+  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()).slice(0, 3);
+---
+<Base>
+  <section class="hero">
+    <div class="glow"></div>
+    <div class="wrap">
+      <p class="eyebrow">Full-stack Creative · UGC · Influencer Marketing</p>
+      <h1 class="display">I make creators<br/>perform.</h1>
+      <p class="lead">I partner with global content creators to make high-performing Influencer & UGC videos — and build AI tools that automate the process.</p>
+      <div class="ctas">
+        <a class="btn" href="/portfolio">View portfolio</a>
+        <a class="btn ghost" href="/blog">Read the blog</a>
+        <a class="btn ghost" href="/connect">Connect</a>
+      </div>
+    </div>
+  </section>
+  <section class="wrap latest">
+    <div class="head"><h2>Latest writing</h2><a href="/blog">All posts →</a></div>
+    <div class="grid">{posts.map((p) => <PostCard post={p} />)}</div>
+  </section>
+</Base>
+<style>
+  .hero { position: relative; isolation: isolate; padding: 120px 0 96px; }
+  h1 { font-size: clamp(48px, 10vw, 120px); margin: 16px 0 24px; }
+  .lead { max-width: 560px; font-size: 18px; color: var(--muted); }
+  .ctas { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 32px; }
+  .head { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 24px; }
+  .head h2 { margin: 0; font-size: 28px; }
+  .head a { color: var(--muted); text-decoration: none; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 28px; }
+</style>

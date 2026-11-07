@@ -1,0 +1,38 @@
+---
+import Base from '../../layouts/Base.astro';
+import PostCard from '../../components/PostCard.astro';
+import { getCollection } from 'astro:content';
+const posts = (await getCollection('blog', ({ data }) => !data.draft))
+  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+---
+<Base title="Blog" description="Notes on UGC, influencer marketing, game marketing and the full-stack marketer in the age of AI.">
+  <section class="wrap top">
+    <p class="eyebrow">Blog</p>
+    <h1 class="display">Marketer's notes</h1>
+    <div class="filters" role="group" aria-label="Language">
+      <button data-f="all" class="on">All</button>
+      <button data-f="en">English</button>
+      <button data-f="tr">Türkçe</button>
+    </div>
+  </section>
+  <section class="wrap grid">
+    {posts.map((p) => <div data-lang={p.data.lang}><PostCard post={p} /></div>)}
+  </section>
+</Base>
+<script>
+  const btns = document.querySelectorAll<HTMLButtonElement>('.filters button');
+  btns.forEach((b) => b.addEventListener('click', () => {
+    btns.forEach((x) => x.classList.toggle('on', x === b));
+    document.querySelectorAll<HTMLElement>('[data-lang]').forEach((el) => {
+      el.hidden = b.dataset.f !== 'all' && el.dataset.lang !== b.dataset.f;
+    });
+  }));
+</script>
+<style>
+  .top { padding: 80px 20px 32px; }
+  h1 { font-size: clamp(44px, 8vw, 88px); margin: 8px 0 24px; }
+  .filters { display: flex; gap: 8px; }
+  .filters button { background: transparent; color: var(--muted); border: 1px solid var(--line); border-radius: 999px; padding: 8px 16px; font: inherit; font-size: 14px; cursor: pointer; }
+  .filters button.on { background: var(--fg); color: var(--bg); border-color: var(--fg); }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 36px 28px; }
+</style>

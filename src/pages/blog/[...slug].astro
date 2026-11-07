@@ -1,0 +1,43 @@
+---
+import Base from '../../layouts/Base.astro';
+import { getCollection, render } from 'astro:content';
+export async function getStaticPaths() {
+  const posts = await getCollection('blog', ({ data }) => !data.draft);
+  return posts.map((post) => ({ params: { slug: post.id }, props: { post } }));
+}
+const { post } = Astro.props;
+const { Content } = await render(post);
+const d = post.data;
+const locale = d.lang === 'tr' ? 'tr-TR' : 'en-US';
+const date = d.pubDate.toLocaleDateString(locale, { year: 'numeric', month: 'long', day: 'numeric' });
+---
+<Base title={d.title} description={d.description} image={d.heroImage} lang={d.lang}>
+  <article class="post">
+    <header class="wrap ph">
+      <a href="/blog" class="back">← {d.lang === 'tr' ? 'Tüm yazılar' : 'All posts'}</a>
+      <h1 class="display">{d.title}</h1>
+      <p class="meta">Uğur Uçar · {date}</p>
+    </header>
+    {d.heroImage && <div class="wrap hero"><img src={d.heroImage} alt="" /></div>}
+    <div class="prose"><Content /></div>
+  </article>
+</Base>
+<style>
+  .ph { max-width: var(--prose); padding-top: 64px; }
+  .back { color: var(--muted); text-decoration: none; font-size: 14px; }
+  h1 { font-size: clamp(32px, 5vw, 52px); line-height: 1.08; margin: 20px 0 12px; }
+  .meta { color: var(--muted); font-size: 14px; margin: 0 0 32px; }
+  .hero { max-width: 960px; margin-bottom: 40px; }
+  .hero img { width: 100%; border-radius: 18px; aspect-ratio: 12/5; object-fit: cover; }
+  .prose { max-width: var(--prose); margin: 0 auto; padding: 0 20px; font-size: 18px; line-height: 1.75; color: #dcdce0; overflow-wrap: break-word; }
+  .prose :global(h2) { font-size: 30px; line-height: 1.2; margin: 48px 0 12px; color: var(--fg); scroll-margin-top: 80px; }
+  .prose :global(h3) { font-size: 23px; margin: 36px 0 8px; color: var(--fg); scroll-margin-top: 80px; }
+  .prose :global(h4) { font-size: 19px; margin: 28px 0 8px; color: var(--fg); }
+  .prose :global(a) { color: var(--accent); }
+  .prose :global(img) { border-radius: 12px; margin: 28px auto; }
+  .prose :global(blockquote) { margin: 28px 0; padding: 4px 20px; border-left: 3px solid var(--accent); color: var(--fg); font-style: italic; }
+  .prose :global(table) { width: 100%; border-collapse: collapse; font-size: 15px; display: block; overflow-x: auto; }
+  .prose :global(td), .prose :global(th) { border: 1px solid var(--line); padding: 8px 10px; }
+  .prose :global(hr) { border: 0; border-top: 1px solid var(--line); margin: 40px 0; }
+  .prose :global(pre) { padding: 16px; border-radius: 10px; overflow-x: auto; }
+</style>

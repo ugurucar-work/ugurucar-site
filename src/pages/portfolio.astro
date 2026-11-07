@@ -1,0 +1,67 @@
+---
+import Base from '../layouts/Base.astro';
+import { EXPERIENCE, PROJECTS } from '../site';
+---
+<Base title="Portfolio" description="Creative portfolio: UGC, influencer marketing, content strategy and AI-driven creative production.">
+  <section class="hero">
+    <div class="glow"></div>
+    <div class="wrap">
+      <p class="eyebrow">Creative</p>
+      <h1 class="display">Portfolio</h1>
+      <div class="intro">
+        <p>I partner with global content creators and make high-performing Influencer & UGC videos.</p>
+        <p>I find the right people for the right job. I also create AI tools to automate the process.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="wrap block">
+    <h2 class="display sec">Work experience</h2>
+    <div class="exp">
+      {EXPERIENCE.map((e) => (
+        <article><h3>{e.title}</h3><p>{e.text}</p></article>
+      ))}
+    </div>
+  </section>
+
+  <section class="wrap block">
+    <h2 class="display sec">Projects</h2>
+    <p class="sub">A selection of apps and digital products supported through content strategy, creator partnerships, and performance-driven marketing.</p>
+    <div class="projects">
+      {PROJECTS.map((p) => (
+        <article class="proj" style={`--c:${p.color}`}>
+          <img src={p.logo} alt={`${p.name} logo`} width="64" height="64" loading="lazy" />
+          <div><h3>{p.name}</h3><p>{p.tagline}</p></div>
+        </article>
+      ))}
+    </div>
+  </section>
+
+  <section class="wrap block cta">
+    <h2 class="display sec">Let's work together</h2>
+    <a class="btn" href="/connect">Get in touch</a>
+  </section>
+</Base>
+<style>
+  .hero { position: relative; isolation: isolate; padding: 100px 0 64px; }
+  h1 { font-size: clamp(64px, 16vw, 200px); margin: 8px 0 32px; text-transform: uppercase; }
+  .intro { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 24px; color: var(--muted); font-size: 17px; max-width: 900px; }
+  .intro p { margin: 0; }
+  .block { padding: 56px 20px; }
+  .sec { font-size: clamp(36px, 6vw, 64px); margin: 0 0 32px; text-transform: uppercase; }
+  .sub { color: var(--muted); max-width: 640px; margin: -16px 0 32px; }
+  .exp { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 20px; }
+  .exp article { background: var(--bg-2); border: 1px solid var(--line); border-radius: 16px; padding: 24px; }
+  .exp h3 { margin: 0 0 8px; font-size: 18px; }
+  .exp p { margin: 0; color: var(--muted); font-size: 15px; }
+  .projects { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 16px; }
+  .proj {
+    display: flex; gap: 16px; align-items: center; padding: 22px; border-radius: 18px;
+    border: 1px solid var(--line);
+    background: radial-gradient(120% 140% at 100% 0%, color-mix(in srgb, var(--c) 45%, transparent), transparent 60%), var(--bg-2);
+  }
+  .proj img { border-radius: 14px; flex: none; }
+  .proj h3 { margin: 0; font-size: 18px; }
+  .proj p { margin: 2px 0 0; color: var(--muted); font-size: 14px; }
+  .cta { text-align: center; }
+</style>
