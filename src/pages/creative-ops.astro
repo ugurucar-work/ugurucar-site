@@ -20,6 +20,21 @@ const glance = [
   { t: 'Creators & launch', i: ['TikTok One briefs and videos', 'Influencer search and AI outreach', 'Naming, sizing and upload'] },
 ];
 const loop = ['Research', 'Produce', 'Test', 'Read', 'Scale'];
+const rivals = [
+  { n: 'TextNow', c: '#7b2ff7', a: 87, d: 187, s: [3, 5, 4, 7, 9, 12, 14] },
+  { n: 'Roamless', c: '#0ea5e9', a: 222, d: 119, s: [8, 9, 11, 10, 12, 13, 15] },
+  { n: 'Rakuten Viber', c: '#7360f2', a: 157, d: 71, s: [6, 6, 7, 9, 8, 10, 11] },
+  { n: 'Yolla', c: '#f59e0b', a: 30, d: 73, s: [2, 3, 3, 6, 8, 9, 13] },
+  { n: 'Rebtel', c: '#e11d48', a: 64, d: 69, s: [5, 4, 6, 6, 7, 8, 9] },
+  { n: 'Talk360', c: '#10b981', a: 10, d: 44, s: [1, 2, 2, 4, 5, 7, 9] },
+];
+const feed = [
+  { k: 'need', t: 'Feedback needed · high', d: 'Image 14 still shows last month\'s promo. Remove it from future tests?', a: ['Remove', 'Keep'] },
+  { k: 'need', t: 'Feedback needed', d: 'Avatar clip 3 says the brand name with a strong accent. Add a logo pop at 0:04?', a: ['Yes, add it', 'Skip'] },
+  { k: 'done', t: 'Creator brief ready', d: '"The two tap setup, shown on camera"', m: 'Fri 16:30' },
+  { k: 'done', t: 'Rule added to skill', d: '"No script fonts next to the logo"', m: 'Thu 11:05' },
+  { k: 'done', t: 'edit_video', d: 'Edit 2 · 0 credits', m: 'Tue 15:22' },
+];
 const runSteps = [
   ['Find the winners', 'done'], ['Cut new hooks onto winning videos', 'done'], ['Vary the winning images', 'done'],
   ['Avatar clips for the winning angle', 'run'], ['AI video variations', 'q'], ['Visual scroll-stopper hooks', 'q'],
@@ -123,11 +138,21 @@ const results = [
       </ul>
     </div>
     <div class="slot" data-slot="research-example" aria-hidden="true">
-      <div class="mock">
-        <div class="mh"><b>Competitor intel</b><span>Today</span></div>
-        {['Problem / solution hook · 9:16', 'Price question · kinetic', 'Testimonial · creator', 'Before / after · static'].map((t, i) => (
-          <div class="mrow"><i class={`thumb t${i}`}></i><div><b>{t}</b><span>Why it works: hook in 1.2s, clear proof, native feel</span></div><em>Reach ↑</em></div>
-        ))}
+      <div class="mock intel">
+        <div class="mh"><div><small>Tracked competitors · Meta</small><b>Competitor Intel</b></div><span class="live">● Checked 07:00</span></div>
+        <div class="ihead"><span>Competitor</span><span>Active ads</span><span>New · 7d</span><span>Trend</span></div>
+        {rivals.map((r) => {
+          const max = Math.max(...r.s);
+          return (
+            <div class="irow">
+              <span class="who"><i style={`background:${r.c}`}>{r.n[0]}</i><span class="nm">{r.n}</span></span>
+              <b>{r.a}</b>
+              <em>+{r.d}</em>
+              <span class="spark">{r.s.map((v) => <i style={`height:${(v / max) * 100}%;background:${r.c}`}></i>)}</span>
+            </div>
+          );
+        })}
+        <div class="ifoot"><span>Top reach today</span><div>{[0,1,2,3,4].map((n) => <i class={`thumb t${n % 4}`}></i>)}</div></div>
       </div>
     </div>
   </section>
@@ -216,11 +241,19 @@ const results = [
       </div>
     </div>
     <div class="slot" data-slot="feedback-example" aria-hidden="true">
-      <div class="mock feed">
-        <div class="mh"><b>Needs you</b><span class="new">3 new</span></div>
-        <div class="msg"><i>C</i><div><span>Ad Kit · Concept B</span><p>Film 2 opens on a face-up phone instead of face-down. Keep it, or regenerate?</p><div class="acts"><em class="p">Keep it</em><em>Regenerate</em></div></div></div>
-        <div class="msg"><i>C</i><div><span>Monday run · avatar clips</span><p>The presenter says the brand name with a strong accent. Add a logo pop at that moment?</p><div class="acts"><em class="p">Yes, add it</em><em>Resolve</em></div></div></div>
-        <div class="msg"><i>C</i><div><span>Feedback · yesterday</span><p>Resolved: "No script fonts next to the logo" is now a rule in the skill.</p></div></div>
+      <div class="mock notif">
+        <div class="mh"><b>Notifications</b><span class="bell">🔔<i>2</i></span></div>
+        {feed.map((f) => (
+          <div class={`nf ${f.k}`}>
+            <span class="dot"></span>
+            <div>
+              <b>{f.t}</b>
+              <p>{f.d}</p>
+              {f.a ? <div class="acts">{f.a.map((x, i) => <em class={i === 0 ? 'p' : ''}>{x}</em>)}</div> : <small>{f.m}</small>}
+            </div>
+            {f.k === 'done' && <span class="close">✕</span>}
+          </div>
+        ))}
       </div>
     </div>
   </section>
@@ -420,6 +453,32 @@ const results = [
   .clone .arrow { align-self: center; }
   .src { font-size: 12px; color: var(--muted); text-align: center; text-decoration: none; }
   a.src:hover { color: #fff; }
+  .intel .mh small { display: block; font-size: 10px; letter-spacing: .14em; text-transform: uppercase; color: #6b6787; }
+  .live { color: #16a34a !important; font-weight: 700; }
+  .ihead, .irow { display: grid; grid-template-columns: 1.6fr .8fr .8fr 1fr; gap: 8px; align-items: center; }
+  .ihead { font-size: 11px; color: #6b6787; padding: 6px 8px; border-bottom: 1px solid #e6e4ef; }
+  .irow { padding: 9px 8px; border-bottom: 1px solid #f0eff5; }
+  .irow:hover { background: #fff; }
+  .who { display: flex; align-items: center; gap: 8px; font-weight: 700; font-size: 13px; white-space: nowrap; overflow: hidden; }
+  .who i { flex: none; display: grid; place-items: center; width: 24px; height: 24px; border-radius: 7px; color: #fff; font-style: normal; font-size: 12px; }
+  .who .nm { overflow: hidden; text-overflow: ellipsis; }
+  .irow b { font-size: 14px; }
+  .irow em { font-style: normal; color: #16a34a; font-weight: 700; font-size: 13px; }
+  .spark { display: flex; align-items: flex-end; gap: 3px; height: 24px; }
+  .spark i { flex: 1; border-radius: 2px; opacity: .85; min-height: 3px; }
+  .ifoot { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-top: 12px; font-size: 11px; color: #6b6787; }
+  .ifoot div { display: flex; gap: 6px; }
+  .ifoot .thumb { width: 30px; height: 44px; border-radius: 6px; }
+  .notif .bell { position: relative; font-size: 16px; }
+  .notif .bell i { position: absolute; top: -6px; right: -10px; background: #dc2626; color: #fff; font-style: normal; font-size: 10px; font-weight: 700; border-radius: 999px; padding: 1px 6px; }
+  .nf { position: relative; display: grid; grid-template-columns: 10px 1fr; gap: 10px; padding: 12px; border-radius: 12px; margin-top: 8px; border: 1px solid #ecebf3; background: #fff; }
+  .nf.need { background: #fdf3dc; border-color: #b08a2e; }
+  .nf .dot { width: 8px; height: 8px; border-radius: 50%; margin-top: 6px; background: #16a34a; }
+  .nf.need .dot { background: #6b5a3a; }
+  .nf b { font-size: 13px; }
+  .nf p { margin: 2px 0 6px; font-size: 12.5px; color: #4b4763; }
+  .nf small { color: #8a86a3; font-size: 11px; }
+  .nf .close { position: absolute; top: 10px; right: 12px; color: #8a86a3; font-size: 11px; }
   .fan { position: relative; height: 300px; }
   .fan .ph { position: absolute; width: 130px; border-radius: 16px; top: 30px; left: 50%; box-shadow: 0 20px 40px -15px #000; }
   .fan .ph::after { font-size: 18px; }
