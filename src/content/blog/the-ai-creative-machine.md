@@ -4,7 +4,6 @@ description: "Research, production, testing and scaling, run as one weekly AI lo
 pubDate: "2026-11-07"
 heroImage: "/creative-ops/slide-01.webp"
 lang: "en"
-draft: true
 ---
 
 Creative is the biggest lever in performance marketing. Everyone agrees on that. What nobody talks about is how much of a creative strategist's week has nothing to do with creative at all.
@@ -19,16 +18,21 @@ So I stopped trying to work faster and built a machine instead.
 
 Before the how, here's what changed:
 
-| | Before | After |
-|---|---|---|
-| Time from concept to a launch-ready ad set | **[X days]** | **[X hours]** |
-| Creatives tested per week | **[X]** | **[X]** |
-| Share of tests that produce a winner | **[X%]** | **[X%]** |
-| Winners found per month | **[X]** | **[X]** |
-| Production cost per creative | **[$X]** | **[$X]** |
-| Hours I spend on manual production per week | **[X]** | **[X]** |
+- **Days → same day.** A concept that used to take days to turn into a launch-ready ad set now ships the same day.
+- **10x+ creatives tested.** We test an order of magnitude more creatives every week, across four formats.
+- **3x+ winners.** We find three times or more winners, and they get scaled and iterated in days, not weeks.
+- **Production → strategy.** Most of the manual production work is now automated, so my week moved from *making* ads to *deciding* which ads should exist.
 
-**[One sentence on the headline result, e.g. "We now find X times more winners with the same budget."]**
+And the system behind it, by the numbers:
+
+| | |
+|---|---|
+| **20+** | skills: written AI playbooks, one per job |
+| **12** | connected tools driven by those skills |
+| **1** | concept in, a full ad kit out (avatars, kinetic, films, images) |
+| **9** | steps in the Monday run, each with its own skill |
+| **4** | weekly action lists for every live creative |
+| **1000+** | creators I've worked with, now with AI-written briefs |
 
 ## One loop, run every week
 
@@ -82,7 +86,7 @@ Every piece gets a *different* hook mechanic, so one test teaches me more. Every
 
 ![One concept, one approval: an 18-piece ad kit with avatars, kinetic ads, films and images](/creative-ops/slide-11.webp)
 
-**[Optional: "A kit like this used to take X days and Y people. Now it takes X hours."]**
+What used to take days of briefs, edits and back-and-forth now ships the same day.
 
 ## The Monday run: last week's winners become this week's tests
 
@@ -140,7 +144,11 @@ None of this works without guardrails:
 
 ## What I learned
 
-**[2–3 short personal lessons in your own words. For example: what surprised you, what you'd do differently, what a creative strategist's job looks like now.]**
+**Volume only matters if the loop closes.** Making ten times more ads is easy with AI. Making ten times more ads that each teach you something is the hard part. That only works when every test feeds straight back into next week's production.
+
+**The playbook is the product.** The AI models change every few months. The skills, my own way of researching, briefing, editing and reading tests, written down, are what make the output consistent.
+
+**Guardrails create speed.** Hard budget limits, one fact sheet and approval before spend sound like brakes. In practice they're what let me hand the machine more work without checking every step.
 
 The biggest shift isn't speed. It's that my job moved from *making* ads to *deciding* which ads should exist. The machine runs. I steer.
 
