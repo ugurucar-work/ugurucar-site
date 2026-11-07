@@ -6,7 +6,12 @@ import { PROJECTS, EXPERIENCE } from '../site';
 const posts = (await getCollection('blog', ({ data }) => !data.draft))
   .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
 const latest = posts.slice(0, 3);
-const words = ['UGC', 'avatar', 'kinetic', 'story', 'scroll-stopping'];
+const words = [
+  'scroll-stopping', 'UGC', 'thumb-stopping', 'creator-led', 'AI-powered', 'hook-first',
+  'unskippable', 'TikTok-native', 'test-winning', 'avatar', 'kinetic', 'story-driven',
+  'meme-worthy', 'data-backed', 'high-converting', 'Reels-ready', 'weirdly good',
+  'binge-worthy', 'native-feeling', 'globally-scaled', 'shamelessly honest', 'loud', 'tiny-budget',
+];
 const stats = [
   { n: '1000+', l: 'content creators collaborated with' },
   { n: `${PROJECTS.length}`, l: 'apps grown with creative' },
@@ -20,11 +25,14 @@ const tools = ['Claude Code', 'Arcads', 'Higgsfield', 'n8n', 'Meta Ads', 'TikTok
     <div class="blobs" aria-hidden="true"><span></span><span></span><span></span></div>
     <div class="wrap">
       <p class="eyebrow">Uğur Uçar · Full-stack Creative</p>
-      <h1 class="display" aria-label="I build AI machines that make ads that perform.">
-        I build AI machines<br />that make
-        <span class="rot" aria-hidden="true">{words.map((w) => <span class="grad-text">{w}</span>)}</span><br />
-        ads.
+      <h1 class="display">
+        I make
+        <button class="word" type="button" data-words={JSON.stringify(words)} aria-live="polite" aria-label="Change the word">
+          <span class="grad-text" data-word>{words[0]}</span>
+        </button>
+        <br />ads that perform.
       </h1>
+      <p class="hint" aria-hidden="true">↑ tap the word</p>
       <p class="lead">I partner with creators and run AI pipelines that research, produce, test and scale ads — every single week.</p>
       <div class="ctas">
         <a class="btn" href="/creative-ops">See the machine →</a>
@@ -91,6 +99,49 @@ const tools = ['Claude Code', 'Arcads', 'Higgsfield', 'n8n', 'Meta Ads', 'TikTok
     <a class="btn" href="mailto:collab@ugurucar.work">collab@ugurucar.work</a>
   </section>
 </Base>
+<script>
+  const btn = document.querySelector<HTMLButtonElement>('.word');
+  if (btn) {
+    const words: string[] = JSON.parse(btn.dataset.words || '[]');
+    const label = btn.querySelector<HTMLElement>('[data-word]')!;
+    const hint = document.querySelector<HTMLElement>('.hint');
+    const colors = ['#ff4d4d', '#ff8a5c', '#7c4dff', '#ffd166', '#f4f4f5'];
+    const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    let i = 0, timer: number | undefined, touched = false;
+    const show = (n: number) => {
+      i = (n + words.length) % words.length;
+      label.textContent = words[i];
+      btn.classList.remove('pop'); void btn.offsetWidth; btn.classList.add('pop');
+    };
+    const burst = (x: number, y: number) => {
+      if (reduce) return;
+      for (let k = 0; k < 18; k++) {
+        const s = document.createElement('span');
+        s.className = 'spark';
+        s.style.left = x + 'px'; s.style.top = y + 'px';
+        s.style.background = colors[k % colors.length];
+        document.body.appendChild(s);
+        const a = (Math.PI * 2 * k) / 18 + Math.random() * .4;
+        const d = 50 + Math.random() * 70;
+        s.animate([
+          { transform: 'translate(-50%,-50%) scale(1) rotate(0deg)', opacity: 1 },
+          { transform: `translate(calc(-50% + ${Math.cos(a) * d}px), calc(-50% + ${Math.sin(a) * d}px)) scale(.3) rotate(${Math.random() * 360}deg)`, opacity: 0 },
+        ], { duration: 650 + Math.random() * 250, easing: 'cubic-bezier(.2,.8,.3,1)' }).onfinish = () => s.remove();
+      }
+    };
+    const auto = () => { timer = window.setInterval(() => show(i + 1), 2200); };
+    btn.addEventListener('click', (e) => {
+      clearInterval(timer);
+      let n = i; while (n === i && words.length > 1) n = Math.floor(Math.random() * words.length);
+      show(n);
+      const r = label.getBoundingClientRect();
+      burst(e.clientX || r.left + r.width / 2, e.clientY || r.top + r.height / 2);
+      if (!touched && hint) { touched = true; hint.style.visibility = 'hidden'; }
+      window.setTimeout(auto, 6000);
+    });
+    if (!reduce) auto();
+  }
+</script>
 <style>
   .hero { position: relative; isolation: isolate; padding: 110px 0 90px; overflow: hidden; }
   .blobs { position: absolute; inset: 0; z-index: -1; filter: blur(70px); opacity: .55; }
@@ -100,19 +151,15 @@ const tools = ['Claude Code', 'Arcads', 'Higgsfield', 'n8n', 'Meta Ads', 'TikTok
   .blobs span:nth-child(3) { width: 300px; height: 300px; background: #ff8a5c; top: 30%; left: 45%; opacity: .5; animation-duration: 26s; }
   @keyframes float { to { transform: translate(-60px, 50px) scale(1.15); } }
   h1 { font-size: clamp(42px, 8.4vw, 104px); margin: 18px 0 26px; }
-  .rot { display: inline-grid; vertical-align: bottom; height: 1em; overflow: hidden; }
-  .rot > span { grid-area: 1 / 1; animation: rot 10s infinite; opacity: 0; line-height: 1; padding-bottom: .08em; }
-  .rot > span:nth-child(1) { animation-delay: 0s; }
-  .rot > span:nth-child(2) { animation-delay: 2s; }
-  .rot > span:nth-child(3) { animation-delay: 4s; }
-  .rot > span:nth-child(4) { animation-delay: 6s; }
-  .rot > span:nth-child(5) { animation-delay: 8s; }
-  @keyframes rot {
-    0% { opacity: 0; transform: translateY(60%); }
-    4%, 18% { opacity: 1; transform: none; }
-    22%, 100% { opacity: 0; transform: translateY(-60%); }
-  }
-  @media (prefers-reduced-motion: reduce) { .rot > span:first-child { opacity: 1; } }
+  .word { font: inherit; letter-spacing: inherit; color: inherit; background: none; border: 0; padding: 0; margin: 0; cursor: pointer; position: relative; display: inline-block; text-align: left; -webkit-tap-highlight-color: transparent; }
+  .word span { display: inline-block; padding-bottom: .06em; border-bottom: 3px dashed rgba(255,255,255,.18); transition: border-color .2s; }
+  .word:hover span { border-color: rgba(255,255,255,.45); }
+  .word:focus-visible { outline: 2px solid var(--accent); outline-offset: 6px; border-radius: 8px; }
+  .word.pop span { animation: pop .42s cubic-bezier(.2,1.6,.4,1); }
+  @keyframes pop { 0% { transform: scale(.7) rotate(-4deg); opacity: 0; filter: blur(6px); } 100% { transform: none; opacity: 1; filter: none; } }
+  .hint { margin: -12px 0 18px; font-size: 13px; color: var(--muted); letter-spacing: .04em; animation: nudge 2.4s ease-in-out infinite; }
+  @keyframes nudge { 50% { transform: translateY(-3px); opacity: .6; } }
+  :global(.spark) { position: fixed; z-index: 50; width: 8px; height: 8px; border-radius: 2px; pointer-events: none; }
   .lead { max-width: 560px; font-size: 19px; color: #c8c8cf; }
   .ctas { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 34px; }
 
