@@ -1,7 +1,7 @@
 // Creative examples shown on /portfolio (gallery) and /creative-ops.
 // Put files in public/work/<app>/ (or use a full URL if hosted elsewhere, e.g. R2).
 // Videos: H.264 MP4, 720p, under ~8 MB. Give each a poster JPG (first frame).
-export type Format = 'Avatar' | 'UGC' | 'Influencer' | 'Kinetic' | 'Story film' | 'AI video' | 'Static';
+export type Format = 'Hook' | 'Avatar' | 'UGC' | 'Influencer' | 'Kinetic' | 'Story film' | 'AI video' | 'Static';
 export interface ShowcaseItem {
   app: string;            // must match a project name, e.g. 'Telicall'
   type: 'video' | 'image';
@@ -18,8 +18,8 @@ export interface ShowcaseItem {
 }
 
 export const SHOWCASE: ShowcaseItem[] = [
-  { app: 'Telicall', type: 'video', src: '/work/telicall/ai-creator-go-viral.mp4', poster: '/work/telicall/ai-creator-go-viral.jpg', title: 'Why you can\'t go viral abroad', format: 'AI video', ai: true, group: 'best' },
-  { app: 'Telicall', type: 'video', src: '/work/telicall/ai-creator-global-number.mp4', poster: '/work/telicall/ai-creator-global-number.jpg', title: 'A UK number from Lagos', format: 'AI video', ai: true, group: 'best' },
+  { app: 'Telicall', type: 'video', src: '/work/telicall/ai-creator-go-viral.mp4', poster: '/work/telicall/ai-creator-go-viral.jpg', title: 'Why you can\'t go viral abroad', format: 'UGC', ai: true, group: 'best' },
+  { app: 'Telicall', type: 'video', src: '/work/telicall/ai-creator-global-number.mp4', poster: '/work/telicall/ai-creator-global-number.jpg', title: 'A UK number from Lagos', format: 'UGC', ai: true, group: 'best' },
   {
     app: 'Telicall',
     type: 'video',
@@ -53,10 +53,10 @@ export const SHOWCASE: ShowcaseItem[] = [
   { app: 'Telicall', type: 'video', src: '/work/telicall/variation-presenter-a.mp4', poster: '/work/telicall/variation-presenter-a.jpg', title: 'Winner variation, presenter A', format: 'AI video', ai: true, group: 'variation' },
   { app: 'Telicall', type: 'video', src: '/work/telicall/variation-presenter-b.mp4', poster: '/work/telicall/variation-presenter-b.jpg', title: 'Winner variation, presenter B', format: 'AI video', ai: true, group: 'variation' },
   { app: 'Telicall', type: 'video', src: '/work/telicall/variation-presenter-c.mp4', poster: '/work/telicall/variation-presenter-c.jpg', title: 'Winner variation, presenter C', format: 'AI video', ai: true, group: 'variation' },
-  { app: 'Telicall', type: 'video', src: '/work/telicall/hook-sim-under-skin.mp4', poster: '/work/telicall/hook-sim-under-skin.jpg', title: 'SIM card under the skin', format: 'AI video', ai: true, group: 'hook' },
-  { app: 'Telicall', type: 'video', src: '/work/telicall/hook-id-in-jelly.mp4', poster: '/work/telicall/hook-id-in-jelly.jpg', title: 'ID card cut out of jelly', format: 'AI video', ai: true, group: 'hook' },
-  { app: 'Telicall', type: 'video', src: '/work/telicall/hook-jelly-phone.mp4', poster: '/work/telicall/hook-jelly-phone.jpg', title: 'Jelly phone eats a SIM', format: 'AI video', ai: true, group: 'hook' },
-  { app: 'Telicall', type: 'video', src: '/work/telicall/hook-wooden-sim.mp4', poster: '/work/telicall/hook-wooden-sim.jpg', title: 'Sanding a wooden SIM', format: 'AI video', ai: true, group: 'hook' },
+  { app: 'Telicall', type: 'video', src: '/work/telicall/hook-sim-under-skin.mp4', poster: '/work/telicall/hook-sim-under-skin.jpg', title: 'SIM card under the skin', format: 'Hook', ai: true, group: 'hook' },
+  { app: 'Telicall', type: 'video', src: '/work/telicall/hook-id-in-jelly.mp4', poster: '/work/telicall/hook-id-in-jelly.jpg', title: 'ID card cut out of jelly', format: 'Hook', ai: true, group: 'hook' },
+  { app: 'Telicall', type: 'video', src: '/work/telicall/hook-jelly-phone.mp4', poster: '/work/telicall/hook-jelly-phone.jpg', title: 'Jelly phone eats a SIM', format: 'Hook', ai: true, group: 'hook' },
+  { app: 'Telicall', type: 'video', src: '/work/telicall/hook-wooden-sim.mp4', poster: '/work/telicall/hook-wooden-sim.jpg', title: 'Sanding a wooden SIM', format: 'Hook', ai: true, group: 'hook' },
   { app: 'Telicall', type: 'image', src: '/work/telicall/static-tiny-rates.webp', title: 'Real calls. Tiny rates.', format: 'Static', ai: true, group: 'adkit' },
   { app: 'Telicall', type: 'image', src: '/work/telicall/static-uk-number.webp', title: 'Your own UK number', format: 'Static', ai: true, group: 'adkit' },
   { app: 'Telicall', type: 'image', src: '/work/telicall/static-call-detected.webp', title: 'International call detected', format: 'Static', ai: true, group: 'adkit' },
