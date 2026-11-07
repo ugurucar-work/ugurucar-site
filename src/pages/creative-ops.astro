@@ -8,6 +8,18 @@ const statics = SHOWCASE.filter((s) => s.group === 'adkit' && s.type === 'image'
 const variations = SHOWCASE.filter((s) => s.group === 'variation').slice(0, 3);
 const hooks = SHOWCASE.filter((s) => s.group === 'hook');
 const films = SHOWCASE.filter((s) => s.group === 'film').slice(0, 3);
+const imgVars = [
+  { h: 'from $0.01', b: ['200+ destinations', 'Landlines and mobiles', 'Rate shown first', 'Works on WiFi'], c: 'Start With $0.25 Credit', light: true, win: true },
+  { list: ['200+ destinations', 'Landlines and mobiles', 'Rate shown before you dial', 'Works on WiFi'], c: 'Start With $0.25 Credit' },
+  { h: 'from $0.01', phone: true, c: 'Start With $0.25 Credit' },
+  { h: 'No SIM needed', b: ['Works on WiFi', 'Ready in 60 seconds', 'No new SIM card', 'Keep your number'], c: 'Get $0.25 Free Credit' },
+  { h: 'No surprise bill', b: ['Rate shown first', 'No contract', 'No monthly plan', 'Pay as you use'], c: 'Get $0.25 Free Credit' },
+  { h: 'Clear on both ends', b: ['HD voice quality', 'Landlines and mobiles', 'Works on WiFi', '200+ destinations'], c: 'Get $0.25 Free Credit' },
+  { h: 'Your number stays private', b: ['A separate number', '+44 UK number', 'Real number hidden', 'Cancel anytime'], c: 'Get Your Second Number' },
+  { h: 'Call home tonight', b: ['200+ destinations', 'Landlines and mobiles', 'Works on WiFi', 'Calls from $0.01'], c: 'Get $0.25 Free Credit' },
+  { h: 'from $0.01', hand: true, c: 'Start With $0.25 Credit' },
+  { diag: 'from $0.01', c: 'Start With $0.25 Credit' },
+];
 const ttId = (u?: string) => u?.match(/tiktok\.com\/.*video\/(\d+)/)?.[1];
 
 const pains = [
@@ -320,6 +332,31 @@ const results = [
       </div>
     </section>
   )}
+
+  <section class="wrap varis reveal">
+    <div class="vhead">
+      <p class="eyebrow">Variation engine · statics</p>
+      <h3 class="display">One winning image. Ten new tests.</h3>
+      <p>The run takes a winning static and changes one thing at a time: the headline angle, the proof points, the layout or the visual. Same brand system, same offer, ten clean reads on what moves the number.</p>
+    </div>
+    <div class="ivgrid" aria-hidden="true">
+      {imgVars.map((v, i) => (
+        <div class={`iv ${v.light ? 'light' : ''} ${v.win ? 'win' : ''}`}>
+          {v.win && <span class="wtag">Winner</span>}
+          {!v.win && <span class="vtag">V{i}</span>}
+          {!v.list && !v.diag && <b class="brand">Telicall</b>}
+          {v.list && <ul class="vlist">{v.list.map((x) => <li>✓ {x}</li>)}</ul>}
+          {v.list && <span class="mini">from $0.01</span>}
+          {v.h && <span class={`pill ${v.h.length > 14 ? 'long' : ''}`}>{v.h}</span>}
+          {v.phone && <i class="vphone"></i>}
+          {v.hand && <i class="vphone tilt"></i>}
+          {v.diag && <><b class="brand top">Telicall</b><span class="vband">{v.diag}</span></>}
+          {v.b && <div class="vb">{v.b.map((x) => <span>● {x}</span>)}</div>}
+          <span class={`cta ${v.diag ? 'bottom' : ''}`}>{v.c}</span>
+        </div>
+      ))}
+    </div>
+  </section>
 
   <!-- FEATURE: FEEDBACK -->
   <section class="wrap feat reveal">
@@ -674,6 +711,32 @@ const results = [
   .hgrid4 figure.sound::after { content: '🔊'; }
   .hgrid4 figcaption { font-size: 13px; color: var(--muted); margin-top: 6px; text-align: center; }
   @media (max-width: 760px) { .hgrid4 { grid-template-columns: 1fr 1fr; } }
+  .ivgrid { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 12px; }
+  .iv { position: relative; aspect-ratio: 1; min-width: 0; border-radius: 14px; overflow: hidden; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 7%; padding: 8%; color: #fff; text-align: center;
+    background: linear-gradient(135deg, #5b21b6 0%, #7e22ce 45%, #a21caf 100%); container-type: inline-size; border: 1px solid rgba(255,255,255,.08); }
+  .iv.light { background: linear-gradient(160deg, #fff, #ebe9f5); color: #2e1065; }
+  .iv.win { outline: 3px solid #4ade80; outline-offset: -3px; box-shadow: 0 0 40px -6px rgba(74,222,128,.55); }
+  .wtag, .vtag { position: absolute; top: 6px; left: 6px; font-size: 9px; font-weight: 800; padding: 2px 7px; border-radius: 999px; letter-spacing: .04em; }
+  .wtag { background: #16a34a; color: #fff; }
+  .vtag { background: rgba(0,0,0,.35); color: #e9d5ff; }
+  .brand { font-family: 'Space Grotesk', sans-serif; font-size: 11cqw; letter-spacing: -.02em; }
+  .iv .pill { background: #22c55e; color: #fff; border-radius: 999px; padding: 4% 9%; font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 11cqw; line-height: 1.05; }
+  .iv .pill.long { font-size: 8.5cqw; }
+  .vb { display: grid; grid-template-columns: 1fr 1fr; gap: 2px 6px; font-size: 4cqw; opacity: .9; text-align: left; }
+  .cta { background: #fff; color: #4c1d95; border-radius: 999px; padding: 3% 7%; font-weight: 700; font-size: 5.2cqw; white-space: nowrap; }
+  .iv.light .cta { background: #3b0764; color: #fff; }
+  .vlist { list-style: none; margin: 0; padding: 0; font-weight: 700; font-size: 6.4cqw; line-height: 1.35; }
+  .mini { background: #22c55e; border-radius: 999px; padding: 2% 6%; font-weight: 700; font-size: 5cqw; }
+  .vphone { position: absolute; z-index: 0; width: 42%; aspect-ratio: 9/18; border-radius: 12% / 6%; border: 3px solid #111; background: linear-gradient(#1f1147, #6d28d9); opacity: .9; }
+  .vphone.tilt { transform: rotate(-22deg) translate(10%, 22%); right: 8%; background: linear-gradient(#e5e7eb, #9ca3af); }
+  .iv > *:not(.vphone):not(.vband) { position: relative; z-index: 1; }
+  .vband { position: absolute; z-index: 0; left: -20%; right: -20%; top: 38%; transform: rotate(-32deg); background: #22c55e; font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 17cqw; padding: 2% 0; }
+  .iv > .wtag, .iv > .vtag { position: absolute !important; z-index: 2; top: 7px; left: 7px; }
+  .iv > .brand.top { position: absolute !important; top: 9%; }
+  .iv > .cta.bottom { position: absolute !important; bottom: 9%; }
+  .vphone.tilt { transform: rotate(-22deg); right: -4%; top: 48%; }
+  .vb { width: 100%; }
+  @media (max-width: 760px) { .ivgrid { grid-template-columns: repeat(2, minmax(0, 1fr)); } .ivgrid .iv:nth-child(n+7) { display: none; } }
   .vgrid figcaption { font-size: 13px; color: var(--muted); margin-top: 6px; text-align: center; }
   @media (max-width: 560px) { .vgrid { grid-template-columns: repeat(3, 1fr); gap: 8px; } .vgrid.best { grid-template-columns: 1fr 1fr; } }
   .fan { position: relative; height: 300px; }
