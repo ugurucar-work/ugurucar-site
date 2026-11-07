@@ -2,7 +2,8 @@
 import Base from '../layouts/Base.astro';
 import PostCard from '../components/PostCard.astro';
 import { getCollection } from 'astro:content';
-import { PROJECTS, EXPERIENCE } from '../site';
+import { PROJECTS, EXPERIENCE, MARQUEE_EXTRA } from '../site';
+const brands = [...PROJECTS, ...MARQUEE_EXTRA];
 const posts = (await getCollection('blog', ({ data }) => !data.draft))
   .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
 const latest = posts.slice(0, 3);
@@ -14,7 +15,7 @@ const words = [
 ];
 const stats = [
   { n: '1000+', l: 'content creators collaborated with' },
-  { n: `${PROJECTS.length}`, l: 'apps grown with creative' },
+  { n: `${brands.length}`, l: 'apps grown with creative' },
   { n: '1', l: 'AI creative loop, run every week' },
   { n: `${posts.length}`, l: 'articles on marketing' },
 ];
@@ -46,7 +47,7 @@ const tools = ['Claude Code', 'Arcads', 'Higgsfield', 'n8n', 'Meta Ads', 'TikTok
     <div class="track">
       {[0, 1].map((k) => (
         <div class="row" aria-hidden={k === 1 ? 'true' : undefined}>
-          {PROJECTS.map((p) => (
+          {brands.map((p) => (
             <span class="chip"><img src={p.logo} alt="" width="28" height="28" loading="lazy" />{p.name}</span>
           ))}
         </div>
@@ -164,7 +165,7 @@ const tools = ['Claude Code', 'Arcads', 'Higgsfield', 'n8n', 'Meta Ads', 'TikTok
   .ctas { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 34px; }
 
   .marquee { border-block: 1px solid var(--line); padding: 18px 0; overflow: hidden; mask-image: linear-gradient(90deg, transparent, #000 10%, #000 90%, transparent); }
-  .track { display: flex; width: max-content; animation: slide 30s linear infinite; }
+  .track { display: flex; width: max-content; animation: slide 40s linear infinite; }
   .marquee:hover .track { animation-play-state: paused; }
   .row { display: flex; gap: 40px; padding-right: 40px; }
   .chip { display: inline-flex; align-items: center; gap: 10px; font-weight: 600; white-space: nowrap; color: #d4d4d8; }

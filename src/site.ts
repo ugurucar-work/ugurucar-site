@@ -39,3 +39,10 @@ export const PROJECTS = [
   { name: 'Joi', tagline: 'Live Stream & Video Chat', logo: '/images/projects/joi.png', color: '#7a4dff' },
   { name: 'Juds', tagline: 'AI Friend & Chat', logo: '/images/projects/juds.png', color: '#f2c200' },
 ];
+
+// Extra apps shown only in the homepage logo marquee.
+export const MARQUEE_EXTRA = [
+  { name: 'DramaDash', logo: '/images/projects/dramadash.png' },
+  { name: 'Gaze', logo: '/images/projects/gaze.png' },
+  { name: 'Waplog', logo: '/images/projects/waplog.png' },
+];
