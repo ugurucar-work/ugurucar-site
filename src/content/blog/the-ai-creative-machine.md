@@ -28,7 +28,7 @@ And the system behind it, by the numbers:
 | | |
 |---|---|
 | **20+** | skills: written AI playbooks, one per job |
-| **12** | connected tools driven by those skills |
+| **14** | connected tools driven by those skills |
 | **1** | concept in, a full ad kit out (avatars, kinetic, films, images) |
 | **9** | steps in the Monday run, each with its own skill |
 | **4** | weekly action lists for every live creative |

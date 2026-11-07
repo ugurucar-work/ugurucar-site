@@ -44,7 +44,7 @@ const runSteps = [
   ['Avatar clips for the winning angle', 'run'], ['AI video variations', 'q'], ['Visual scroll-stopper hooks', 'q'],
   ['Kinetic text ads', 'q'], ['Facts and brand check', 'q'], ['Report to Slack and dashboard', 'q'],
 ];
-const tools = ['Claude Code', 'Higgsfield', 'Arcads', 'Meta Ads', 'TikTok Ads', 'Adjust', 'Additor', 'SensorTower', 'Google Drive', 'Slack', 'Design system', 'Local render stack'];
+const tools = ['Claude Code', 'Higgsfield', 'Arcads', 'Latted', 'Meta Ads', 'TikTok Ads', 'Adjust', 'Additor', 'SensorTower', 'Spiral.ad', 'Google Drive', 'Slack', 'Design system', 'Local render stack'];
 const guards = [
   { t: 'Approval before spend', d: 'Every paid generation shows its plan and cost first. Budgets have hard limits.' },
   { t: 'One source of facts', d: 'Prices and claims come from one fact sheet. A lint blocks anything else.' },
@@ -136,7 +136,7 @@ const results = [
       <p>My research no longer starts from a blank page. Ads, trends and organic hits are collected automatically, so every brief is built on evidence.</p>
       <ul class="ticks">
         <li><b>Explore</b> TikTok trends, YouTube, Google Ads and live Meta ad search in one place.</li>
-        <li><b>Competitor intel</b> Competitor videos pulled automatically, widest-reach ads checked every morning.</li>
+        <li><b>Competitor intel</b> Competitor videos pulled automatically from SensorTower and Spiral.ad, widest-reach ads checked every morning.</li>
         <li><b>Image ads</b> Last week's competitor image ads, pulled and analyzed.</li>
         <li><b>Trending</b> Organic TikTok, Instagram and X posts ranked by how fast they grow.</li>
       </ul>
@@ -357,7 +357,7 @@ const results = [
     <div class="wrap">
       <div class="head reveal center">
         <p class="eyebrow">The engine underneath</p>
-        <h2 class="display sec">20+ skills. 12 connected tools.</h2>
+        <h2 class="display sec">20+ skills. {tools.length} connected tools.</h2>
         <p class="sub">A skill is a playbook the AI follows. I built each one over months and trained it on my own test results plus outside references, so the AI works the way I work.</p>
       </div>
       <div class="chips reveal">{tools.map((t) => <span>{t}</span>)}</div>
