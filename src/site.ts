@@ -9,8 +9,6 @@ export const SOCIALS = [
   { label: 'LinkedIn', href: 'https://www.linkedin.com/in/ucarugur/' },
   { label: 'TikTok', href: 'https://tiktok.com/@ugurucar.ai' },
   { label: 'Instagram', href: 'https://instagram.com/ugurucar.ai' },
-  { label: "Marketer's Lens IG", href: 'https://instagram.com/marketerslens' },
-  { label: "Marketer's Lens LinkedIn", href: 'https://www.linkedin.com/company/marketerslens' },
 ];
 
 export const EXPERIENCE = [
