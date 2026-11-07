@@ -1,7 +1,7 @@
 ---
 import Base from '../layouts/Base.astro';
 import { SHOWCASE } from '../data/showcase';
-const aiWork = SHOWCASE.filter((s) => s.ai).slice(0, 8);
+const aiWork = SHOWCASE.filter((s) => s.group === 'best');
 const clone = SHOWCASE.find((s) => s.group === 'clone' && s.reference);
 const kit = SHOWCASE.filter((s) => s.group === 'adkit').slice(0, 4);
 const variations = SHOWCASE.filter((s) => s.group === 'variation').slice(0, 3);
@@ -354,11 +354,18 @@ const results = [
 
   {aiWork.length > 0 && (
     <section class="wrap block" id="outputs">
-      <div class="head reveal"><p class="eyebrow">Made by the machine</p><h2 class="display sec">Output examples</h2></div>
-      <div class="outs">
-        {aiWork.map((w) => w.type === 'video'
-          ? <figure><video src={w.src} poster={w.poster} muted loop playsinline preload="none" controls></video><figcaption>{w.app} · {w.format}</figcaption></figure>
-          : <figure><img src={w.src} alt={w.title} loading="lazy" /><figcaption>{w.app} · {w.format}</figcaption></figure>)}
+      <div class="head reveal">
+        <p class="eyebrow">Made by the machine</p>
+        <h2 class="display sec">AI creators that feel real</h2>
+        <p class="sub">Fully AI-generated creator ads made with Higgsfield: script, presenter, edit, captions and end card, all from the pipeline. Tap a video to hear it.</p>
+      </div>
+      <div class="vgrid best">
+        {aiWork.map((w) => (
+          <figure>
+            <video class="auto" src={w.src} poster={w.poster} muted loop playsinline preload="none"></video>
+            <figcaption>{w.title}</figcaption>
+          </figure>
+        ))}
       </div>
       <a class="more" href="/portfolio#work">See all creative work →</a>
     </section>
@@ -412,6 +419,7 @@ const results = [
   .head.center { text-align: center; margin-inline: auto; }
   .sec { font-size: clamp(32px, 4.6vw, 54px); margin: 8px 0 0; }
   .sub { color: var(--muted); font-size: 17px; margin: 16px auto 0; max-width: 640px; }
+  .head:not(.center) .sub { margin-left: 0; }
 
   .g4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
   .g3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
@@ -543,8 +551,9 @@ const results = [
   .vhead h3 { font-size: clamp(26px, 3.2vw, 38px); margin: 8px 0 10px; }
   .vhead p { color: var(--muted); margin: 0; }
   .vgrid { display: grid; grid-template-columns: repeat(3, minmax(0, 260px)); gap: 16px; }
+  .vgrid.best { grid-template-columns: repeat(auto-fill, minmax(220px, 300px)); }
   .vgrid figcaption { font-size: 13px; color: var(--muted); margin-top: 6px; text-align: center; }
-  @media (max-width: 560px) { .vgrid { grid-template-columns: repeat(3, 1fr); gap: 8px; } }
+  @media (max-width: 560px) { .vgrid { grid-template-columns: repeat(3, 1fr); gap: 8px; } .vgrid.best { grid-template-columns: 1fr 1fr; } }
   .fan { position: relative; height: 300px; }
   .fan .ph { position: absolute; width: 130px; border-radius: 16px; top: 30px; left: 50%; box-shadow: 0 20px 40px -15px #000; }
   .fan .ph::after { font-size: 18px; }

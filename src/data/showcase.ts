@@ -12,10 +12,12 @@ export interface ShowcaseItem {
   ratio?: '9:16' | '1:1' | '4:5' | '16:9';
   ai?: boolean;           // made with the AI pipeline
   reference?: string;     // URL of the ad this was adapted from (competitor clone)
-  group?: 'clone' | 'adkit' | 'variation';
+  group?: 'clone' | 'adkit' | 'variation' | 'best';
 }
 
 export const SHOWCASE: ShowcaseItem[] = [
+  { app: 'Telicall', type: 'video', src: '/work/telicall/ai-creator-go-viral.mp4', poster: '/work/telicall/ai-creator-go-viral.jpg', title: 'Why you can\'t go viral abroad', format: 'AI video', ai: true, group: 'best' },
+  { app: 'Telicall', type: 'video', src: '/work/telicall/ai-creator-global-number.mp4', poster: '/work/telicall/ai-creator-global-number.jpg', title: 'A UK number from Lagos', format: 'AI video', ai: true, group: 'best' },
   {
     app: 'Telicall',
     type: 'video',
