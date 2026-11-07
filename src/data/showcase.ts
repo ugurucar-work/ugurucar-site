@@ -11,6 +11,18 @@ export interface ShowcaseItem {
   format: Format;
   ratio?: '9:16' | '1:1' | '4:5' | '16:9';
   ai?: boolean;           // made with the AI pipeline
+  reference?: string;     // URL of the ad this was adapted from (competitor clone)
 }
 
-export const SHOWCASE: ShowcaseItem[] = [];
+export const SHOWCASE: ShowcaseItem[] = [
+  {
+    app: 'Telicall',
+    type: 'video',
+    src: '/work/telicall/scandal-story.mp4',
+    poster: '/work/telicall/scandal-story.jpg',
+    title: 'Scandal story, adapted from a viral reference',
+    format: 'Story film',
+    ai: true,
+    reference: 'https://www.tiktok.com/@unutulmazreklam/video/7378117805297634565',
+  },
+];

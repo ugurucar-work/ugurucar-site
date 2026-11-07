@@ -2,6 +2,8 @@
 import Base from '../layouts/Base.astro';
 import { SHOWCASE } from '../data/showcase';
 const aiWork = SHOWCASE.filter((s) => s.ai).slice(0, 8);
+const clone = SHOWCASE.find((s) => s.reference && s.type === 'video');
+const tiktokId = clone?.reference?.match(/video\/(\d+)/)?.[1];
 
 const pains = [
   { t: 'Scattered research', d: 'Competitor ads, trends and organic hits lived in ten different tabs.' },
@@ -142,13 +144,29 @@ const results = [
         <li><b>Credit permission</b> Free edit tools first. AI credits only when approved, up to a cap.</li>
       </ul>
     </div>
-    <div class="slot" data-slot="production-example" aria-hidden="true">
-      <div class="ba">
-        <div><span class="lbl">Reference</span><i class="ph big ref"></i></div>
-        <div class="arrow">→</div>
-        <div><span class="lbl">On brand</span><i class="ph big out"></i></div>
+    {clone && tiktokId ? (
+      <div class="slot clone">
+        <div class="cl">
+          <span class="lbl">Reference</span>
+          <div class="frame"><iframe src={`https://www.tiktok.com/player/v1/${tiktokId}?music_info=0&description=0&rel=0`} title="Reference ad on TikTok" loading="lazy" allow="encrypted-media; fullscreen" allowfullscreen></iframe></div>
+          <a class="src" href={clone.reference} target="_blank" rel="noopener">View on TikTok ↗</a>
+        </div>
+        <div class="arrow" aria-hidden="true">→</div>
+        <div class="cl">
+          <span class="lbl">Rebuilt for {clone.app}</span>
+          <div class="frame out"><video src={clone.src} poster={clone.poster} controls playsinline preload="metadata"></video></div>
+          <span class="src">{clone.format} · brand end card</span>
+        </div>
       </div>
-    </div>
+    ) : (
+      <div class="slot" data-slot="production-example" aria-hidden="true">
+        <div class="ba">
+          <div><span class="lbl">Reference</span><i class="ph big ref"></i></div>
+          <div class="arrow">→</div>
+          <div><span class="lbl">On brand</span><i class="ph big out"></i></div>
+        </div>
+      </div>
+    )}
   </section>
 
   <!-- FEATURE: AD KIT -->
@@ -394,6 +412,14 @@ const results = [
   .ref { background: linear-gradient(160deg,#4b5563,#111827); filter: grayscale(.4); }
   .out { background: linear-gradient(160deg,#ff4d4d,#7c4dff); box-shadow: 0 20px 50px -15px rgba(124,77,255,.7); }
   .arrow { font-size: 28px; color: var(--violet); }
+  .clone { grid-template-columns: 1fr auto 1fr; gap: 12px; align-items: start; }
+  .cl { display: grid; gap: 8px; }
+  .frame { aspect-ratio: 9/16; border-radius: 16px; overflow: hidden; background: #000; border: 1px solid #2f2a40; }
+  .frame.out { border-color: var(--violet); box-shadow: 0 20px 50px -15px rgba(124,77,255,.6); }
+  .frame iframe, .frame video { width: 100%; height: 100%; border: 0; display: block; object-fit: cover; }
+  .clone .arrow { align-self: center; }
+  .src { font-size: 12px; color: var(--muted); text-align: center; text-decoration: none; }
+  a.src:hover { color: #fff; }
   .fan { position: relative; height: 300px; }
   .fan .ph { position: absolute; width: 130px; border-radius: 16px; top: 30px; left: 50%; box-shadow: 0 20px 40px -15px #000; }
   .fan .ph::after { font-size: 18px; }
