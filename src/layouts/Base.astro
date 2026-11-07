@@ -1,8 +1,8 @@
 ---
 import '../styles/global.css';
 import { SITE, SOCIALS } from '../site';
-interface Props { title?: string; description?: string; image?: string; lang?: string; }
-const { title, description = SITE.description, image, lang = 'en' } = Astro.props;
+interface Props { title?: string; description?: string; image?: string; lang?: string; article?: boolean; }
+const { title, description = SITE.description, image = '/og/home.jpg', lang = 'en', article = false } = Astro.props;
 const fullTitle = title ? `${title} | ${SITE.name}` : SITE.title;
 const canonical = new URL(Astro.url.pathname, Astro.site);
 const ogImage = image ? new URL(image, Astro.site).href : undefined;
@@ -31,9 +31,11 @@ const nav = [
   <meta property="og:title" content={fullTitle} />
   <meta property="og:description" content={description} />
   <meta property="og:url" content={canonical} />
-  <meta property="og:type" content={image ? 'article' : 'website'} />
-  {ogImage && <meta property="og:image" content={ogImage} />}
-  <meta name="twitter:card" content={ogImage ? 'summary_large_image' : 'summary'} />
+  <meta property="og:type" content={article ? 'article' : 'website'} />
+  <meta property="og:site_name" content={SITE.name} />
+  <meta property="og:image" content={ogImage} />
+  {ogImage?.endsWith('/og.jpg') || ogImage?.includes('/og/') ? <><meta property="og:image:width" content="1200" /><meta property="og:image:height" content="630" /></> : null}
+  <meta name="twitter:card" content="summary_large_image" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet" />

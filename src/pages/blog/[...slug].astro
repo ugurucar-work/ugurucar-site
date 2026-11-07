@@ -11,7 +11,7 @@ const d = post.data;
 const locale = d.lang === 'tr' ? 'tr-TR' : 'en-US';
 const date = d.pubDate.toLocaleDateString(locale, { year: 'numeric', month: 'long', day: 'numeric' });
 ---
-<Base title={d.title} description={d.description} image={d.heroImage} lang={d.lang}>
+<Base title={d.title} description={d.description} image={d.heroImage?.replace(/\/cover\.webp$/, '/og.jpg')} lang={d.lang} article>
   <article class="post">
     <header class="wrap ph">
       <a href="/blog" class="back">← {d.lang === 'tr' ? 'Tüm yazılar' : 'All posts'}</a>
