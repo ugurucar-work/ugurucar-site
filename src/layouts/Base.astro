@@ -9,6 +9,7 @@ const ogImage = image ? new URL(image, Astro.site).href : undefined;
 const path = Astro.url.pathname;
 const nav = [
   { href: '/portfolio', label: 'Portfolio' },
+  { href: '/creative-ops', label: 'AI Work' },
   { href: '/blog', label: 'Blog' },
   { href: '/connect', label: 'Connect' },
 ];
@@ -58,7 +59,8 @@ const nav = [
   .bar { display: flex; align-items: center; justify-content: space-between; height: 60px; }
   .logo { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 20px; text-decoration: none; letter-spacing: -0.02em; }
   .logo span { color: var(--accent); }
-  nav { display: flex; gap: 20px; }
+  nav { display: flex; gap: 18px; }
+  @media (max-width: 420px) { nav { gap: 12px; } nav a { font-size: 14px; } .logo { font-size: 18px; } }
   nav a { text-decoration: none; color: var(--muted); font-size: 15px; font-weight: 500; }
   nav a:hover, nav a.active { color: var(--fg); }
   .site-footer { border-top: 1px solid var(--line); margin-top: 96px; padding: 32px 0; color: var(--muted); font-size: 14px; }

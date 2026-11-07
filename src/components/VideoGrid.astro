@@ -1,0 +1,29 @@
+---
+import type { Clip } from '../data/showreel';
+interface Props { clips: Clip[] }
+const { clips } = Astro.props;
+---
+<div class="vgrid">
+  {clips.map((c) => (
+    <figure class={`clip r-${(c.ratio ?? '9:16').replace(':', 'x')}`}>
+      <video src={c.src} poster={c.poster} controls playsinline preload={c.poster ? 'none' : 'metadata'}></video>
+      <figcaption><span class="fmt">{c.format}</span>{c.title}</figcaption>
+    </figure>
+  ))}
+</div>
+<script>
+  // Only one video plays at a time.
+  document.addEventListener('play', (e) => {
+    document.querySelectorAll('video').forEach((v) => { if (v !== e.target) v.pause(); });
+  }, true);
+</script>
+<style>
+  .vgrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 18px; }
+  .clip { margin: 0; }
+  .clip video { width: 100%; border-radius: 14px; background: #000; border: 1px solid var(--line); display: block; aspect-ratio: 9/16; object-fit: cover; }
+  .r-1x1 video { aspect-ratio: 1/1; } .r-4x5 video { aspect-ratio: 4/5; } .r-16x9 video { aspect-ratio: 16/9; }
+  .r-16x9 { grid-column: span 2; }
+  figcaption { margin-top: 8px; font-size: 14px; color: var(--muted); display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+  .fmt { font-size: 11px; text-transform: uppercase; letter-spacing: .08em; border: 1px solid var(--line); border-radius: 6px; padding: 1px 6px; color: var(--fg); }
+  @media (max-width: 480px) { .vgrid { grid-template-columns: 1fr 1fr; gap: 12px; } .r-16x9 { grid-column: span 2; } }
+</style>

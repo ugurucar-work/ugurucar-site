@@ -1,0 +1,57 @@
+---
+import Base from '../layouts/Base.astro';
+import SlideDeck from '../components/SlideDeck.astro';
+import VideoGrid from '../components/VideoGrid.astro';
+import { SLIDES, DECK_PDF } from '../data/creative-ops';
+import { SHOWREEL } from '../data/showreel';
+const projects = SHOWREEL.filter((p) => p.clips.length > 0);
+---
+<Base title="The AI Creative Machine" description="How I turned a creative funnel into an AI system that researches, produces, tests and scales ads every week." image="/creative-ops/slide-01.webp">
+  <section class="hero">
+    <div class="glow"></div>
+    <div class="wrap">
+      <p class="eyebrow">Creative Ops · Case study</p>
+      <h1 class="display">The AI Creative Machine</h1>
+      <p class="lead">How I turned a creative funnel into a system that runs itself — research, production, testing and scaling in one weekly loop. The machine runs. I steer.</p>
+    </div>
+  </section>
+
+  <section class="wrap">
+    <SlideDeck slides={SLIDES} pdf={DECK_PDF} />
+  </section>
+
+  {projects.length > 0 && (
+    <section class="wrap reel" id="outputs">
+      <p class="eyebrow">AI output packs</p>
+      <h2 class="display sec">Made by the machine</h2>
+      {projects.map((p) => (
+        <div class="proj" id={p.slug}>
+          <div class="ph">
+            {p.logo && <img src={p.logo} alt="" width="44" height="44" />}
+            <div><h3>{p.name}</h3><p>{p.tagline}</p></div>
+          </div>
+          <VideoGrid clips={p.clips} />
+        </div>
+      ))}
+    </section>
+  )}
+
+  <section class="wrap cta">
+    <h2 class="display sec">Want a machine like this?</h2>
+    <a class="btn" href="/connect">Let's talk</a>
+  </section>
+</Base>
+<style>
+  .hero { position: relative; isolation: isolate; padding: 96px 0 40px; }
+  .hero .glow::before { background: radial-gradient(circle, rgba(110,60,230,.45), transparent 60%); }
+  h1 { font-size: clamp(44px, 9vw, 104px); margin: 10px 0 20px; }
+  .lead { color: var(--muted); font-size: 18px; max-width: 640px; }
+  .reel { padding-top: 88px; }
+  .sec { font-size: clamp(32px, 5vw, 56px); margin: 8px 0 32px; text-transform: uppercase; }
+  .proj { margin-bottom: 56px; }
+  .ph { display: flex; gap: 14px; align-items: center; margin-bottom: 20px; }
+  .ph img { border-radius: 10px; }
+  .ph h3 { margin: 0; font-size: 22px; }
+  .ph p { margin: 0; color: var(--muted); font-size: 14px; }
+  .cta { text-align: center; padding-top: 88px; }
+</style>

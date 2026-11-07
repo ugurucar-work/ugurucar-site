@@ -37,6 +37,17 @@ import { EXPERIENCE, PROJECTS } from '../site';
     </div>
   </section>
 
+  <section class="wrap block">
+    <a class="feature" href="/creative-ops">
+      <img src="/creative-ops/slide-01.webp" alt="The AI Creative Machine presentation cover" loading="lazy" width="1920" height="1080" />
+      <div>
+        <p class="eyebrow">Case study</p>
+        <h3>The AI Creative Machine</h3>
+        <p>How I turned a creative funnel into a system that runs itself. See the full deck and AI ad outputs →</p>
+      </div>
+    </a>
+  </section>
+
   <section class="wrap block cta">
     <h2 class="display sec">Let's work together</h2>
     <a class="btn" href="/connect">Get in touch</a>
@@ -64,4 +75,10 @@ import { EXPERIENCE, PROJECTS } from '../site';
   .proj h3 { margin: 0; font-size: 18px; }
   .proj p { margin: 2px 0 0; color: var(--muted); font-size: 14px; }
   .cta { text-align: center; }
+  .feature { display: grid; grid-template-columns: 1.3fr 1fr; gap: 28px; align-items: center; text-decoration: none; padding: 18px; border: 1px solid var(--line); border-radius: 20px; background: var(--bg-2); }
+  .feature:hover { border-color: #6e3ce6; }
+  .feature img { border-radius: 12px; }
+  .feature h3 { font-size: 28px; margin: 6px 0 8px; }
+  .feature p { color: var(--muted); margin: 0; }
+  @media (max-width: 720px) { .feature { grid-template-columns: 1fr; } }
 </style>
