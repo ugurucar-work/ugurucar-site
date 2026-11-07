@@ -18,8 +18,10 @@ const words = [
 ];
 const stats = [
   { n: '7', s: 'years', l: 'in growth & creative' },
-  { n: `${brands.length}`, s: 'apps', l: 'grown with creative' },
+  { n: '10,000+', s: '', l: 'AI creatives produced' },
+  { n: '20+', s: 'countries', l: 'localized marketing for' },
   { n: '1000+', s: '', l: 'creators collaborated with' },
+  { n: `${brands.length}`, s: 'apps', l: 'grown with creative' },
   { n: '10x+', s: '', l: 'more creatives tested weekly with my AI loop' },
 ];
 const loop = [
@@ -266,7 +268,7 @@ const phones = [
   @keyframes slide { to { transform: translateX(-50%); } }
 
   /* stats */
-  .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; padding-top: 72px; }
+  .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 40px 16px; padding-top: 72px; }
   .stat { border-left: 2px solid; border-image: linear-gradient(var(--accent), var(--violet)) 1; padding-left: 18px; }
   .n { display: block; font-size: clamp(44px, 6vw, 72px); }
   .n small { font-size: .32em; margin-left: 6px; color: var(--muted); letter-spacing: 0; }
@@ -336,7 +338,9 @@ const phones = [
   }
   @media (max-width: 760px) {
     .hero { padding: 64px 0 56px; }
-    .stats { grid-template-columns: 1fr 1fr; row-gap: 30px; }
+    .stats { grid-template-columns: 1fr 1fr; row-gap: 30px; column-gap: 12px; }
+    .stat { padding-left: 12px; min-width: 0; }
+    .n { font-size: 36px; }
     .crow { grid-template-columns: 52px 1fr; padding: 22px 6px; }
     .cidx { font-size: 24px; }
     .ctext { grid-column: 2; }

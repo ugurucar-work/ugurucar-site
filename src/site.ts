@@ -20,12 +20,12 @@ export const COMPETENCIES = [
   {
     title: 'Creative Strategy',
     short: 'Angles · hooks · testing roadmaps',
-    text: 'Creative roadmaps, angles and hooks built from competitor intel, trend data and our own test results, for performance campaigns across global markets.',
+    text: 'Creative roadmaps, angles and hooks built from competitor intel, trend data and our own test results, for performance campaigns localized across 20+ countries.',
   },
   {
     title: 'AI Creative Production',
     short: 'Arcads · Higgsfield · n8n · Claude Code',
-    text: 'AI pipelines that turn one concept into a full ad set: avatar clips, kinetic ads, story films and statics, fact checked and on brand.',
+    text: 'AI pipelines that turn one concept into a full ad set: avatar clips, kinetic ads, story films and statics. 10,000+ AI creatives produced, fact checked and on brand.',
   },
   {
     title: 'Creator & Influencer Marketing',
