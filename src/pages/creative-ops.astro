@@ -78,8 +78,8 @@ const results = [
         <div class="kit">
           <div class="kh"><b>Ad Kit · Concept A</b><span class="ok">Delivered</span></div>
           <div class="ktabs"><span class="on">All 18</span><span>Avatars 6</span><span>Kinetic 3</span><span>Films 3</span><span>Images 6</span></div>
-          <div class="krow">{[0,1,2,3,4,5].map(() => <i class="ph v"></i>)}</div>
-          <div class="krow two"><div>{[0,1,2].map(() => <i class="ph k"></i>)}</div><div>{[0,1,2].map((n) => <i class={`ph f f${n}`}></i>)}</div></div>
+          <div class="krow">{['lily','vincent','ashley','albert','hook-sim','hook-jelly'].map((n) => <i class="ph v img" style={`background-image:url(/images/previews/${n}.webp)`}></i>)}</div>
+          <div class="krow two"><div>{['adkit-kinetic-two-whatsapps','adkit-kinetic-three-steps','hook-wooden-sim'].map((n) => <i class="ph k img" style={`background-image:url(/work/telicall/${n}.jpg)`}></i>)}</div><div>{['scandal-story','ai-creator-go-viral','ai-creator-global-number'].map((n) => <i class="ph f img" style={`background-image:url(/work/telicall/${n}.jpg)`}></i>)}</div></div>
           <div class="krow">{[0,1,2,3,4,5].map(() => <i class="sq"></i>)}</div>
         </div>
       </div>
@@ -513,6 +513,7 @@ const results = [
   .ph { display: block; width: 40px; aspect-ratio: 9/16; border-radius: 7px; position: relative; }
   .ph::after { content: '▶'; position: absolute; inset: 0; display: grid; place-items: center; color: rgba(255,255,255,.85); font-size: 10px; font-style: normal; }
   .ph.v { background: linear-gradient(160deg,#a78bfa,#5b2fd6); }
+  .ph.img { background-size: cover; background-position: center; }
   .ph.k { background: linear-gradient(160deg,#3b2a8f,#120b33); }
   .ph.f0 { background: linear-gradient(160deg,#fdba74,#c2410c); } .ph.f1 { background: linear-gradient(160deg,#7dd3fc,#0e4a6e); } .ph.f2 { background: linear-gradient(160deg,#c4b5fd,#4c1d95); }
   .sq { display: block; width: 40px; height: 40px; border-radius: 7px; background: linear-gradient(160deg,#e0f2fe,#7dd3fc); }
