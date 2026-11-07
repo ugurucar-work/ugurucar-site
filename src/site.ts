@@ -45,4 +45,5 @@ export const MARQUEE_EXTRA = [
   { name: 'DramaDash', logo: '/images/projects/dramadash.png' },
   { name: 'Gaze', logo: '/images/projects/gaze.png' },
   { name: 'Waplog', logo: '/images/projects/waplog.png' },
+  { name: 'Nozy', logo: '/images/projects/nozy.png' },
 ];
