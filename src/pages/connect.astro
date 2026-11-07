@@ -9,6 +9,7 @@ import { SOCIALS } from '../site';
       <p class="eyebrow">Connect</p>
       <h1 class="display">Let's connect</h1>
       <p class="lead">Working on UGC, influencer campaigns or AI-driven creative production? Reach out on any channel below.</p>
+      <a class="mail" href="mailto:ugur.ucar97@gmail.com">ugur.ucar97@gmail.com</a>
       <div class="links">
         {SOCIALS.map((s) => <a href={s.href} target="_blank" rel="noopener">{s.label} <span>↗</span></a>)}
       </div>
@@ -19,6 +20,8 @@ import { SOCIALS } from '../site';
   .hero { position: relative; isolation: isolate; padding: 100px 0 40px; }
   h1 { font-size: clamp(48px, 10vw, 110px); margin: 8px 0 24px; }
   .lead { color: var(--muted); font-size: 18px; max-width: 560px; }
+  .mail { display: inline-block; margin-top: 28px; font-size: clamp(20px, 4vw, 28px); font-weight: 600; color: var(--accent); text-decoration: none; overflow-wrap: anywhere; }
+  .mail:hover { text-decoration: underline; }
   .links { display: grid; gap: 10px; max-width: 560px; margin-top: 36px; }
   .links a { display: flex; justify-content: space-between; padding: 18px 22px; border: 1px solid var(--line); border-radius: 14px; background: var(--bg-2); text-decoration: none; font-weight: 600; }
   .links a:hover { border-color: var(--accent); }
