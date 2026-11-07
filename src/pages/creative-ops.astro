@@ -1,57 +1,486 @@
 ---
 import Base from '../layouts/Base.astro';
-import SlideDeck from '../components/SlideDeck.astro';
 import VideoGrid from '../components/VideoGrid.astro';
-import { SLIDES, DECK_PDF } from '../data/creative-ops';
 import { SHOWREEL } from '../data/showreel';
-const projects = SHOWREEL.filter((p) => p.clips.length > 0);
+const reel = SHOWREEL.filter((p) => p.clips.length > 0);
+
+const pains = [
+  { t: 'Scattered research', d: 'Competitor ads, trends and organic hits live in ten different tabs.' },
+  { t: 'Manual production', d: 'Every variation is a ticket, a brief and a wait.' },
+  { t: 'Uneven test reading', d: 'A different window, a different lens and a different conclusion every week.' },
+  { t: 'Stalled winners', d: 'Good ads get found, then never scaled or iterated in time.' },
+];
+const glance = [
+  { t: 'Research', i: ['Daily competitor ad tracking', 'Weekly market report analysis', 'Trend and organic post scans'] },
+  { t: 'Production', i: ['Any ad adapted from a link', 'Avatar, kinetic and story videos', 'Edit requests with versions'] },
+  { t: 'Ad kits', i: ['One concept to a full test set', 'A different hook per piece', 'Fact check and final QC'] },
+  { t: 'Testing', i: ['Weekly winner detection', 'Variations of every winner', 'The weekly test report'] },
+  { t: 'Performance', i: ['Live view across platforms', 'Fatigue and unscaled winners', 'Hooked but weak, and variate lists'] },
+  { t: 'Creators & launch', i: ['TikTok One briefs and videos', 'Influencer search and AI outreach', 'Naming, sizing and upload'] },
+];
+const loop = ['Research', 'Produce', 'Test', 'Read', 'Scale'];
+const runSteps = [
+  ['Find the winners', 'done'], ['Cut new hooks onto winning videos', 'done'], ['Vary the winning images', 'done'],
+  ['Avatar clips for the winning angle', 'run'], ['AI video variations', 'q'], ['Visual scroll-stopper hooks', 'q'],
+  ['Kinetic text ads', 'q'], ['Facts and brand check', 'q'], ['Report to Slack and dashboard', 'q'],
+];
+const tools = ['Claude Code', 'Higgsfield', 'Arcads', 'Meta Ads', 'TikTok Ads', 'Adjust', 'Additor', 'SensorTower', 'Google Drive', 'Slack', 'Design system', 'Local render stack'];
+const guards = [
+  { t: 'Approval before spend', d: 'Every paid generation shows its plan and cost first. Budgets have hard limits.' },
+  { t: 'One source of facts', d: 'Prices and claims come from one fact sheet. A lint blocks anything else.' },
+  { t: 'Read only on ad accounts', d: 'The system reads campaigns. Changes happen only in the launch layer, with approval.' },
+  { t: 'One design system', d: 'Official logo, end cards and colors. The AI never redraws the brand.' },
+  { t: 'Quality check last', d: 'Every video and image is reviewed before it is marked done.' },
+  { t: 'Feedback that sticks', d: 'Notes become rules for the next run and are written into the skills.' },
+];
+const results = [
+  { n: 'Same day', l: 'from concept to a launch-ready ad set, instead of days' },
+  { n: '10x+', l: 'more creatives tested every week' },
+  { n: '3x+', l: 'more winners found, scaled in days not weeks' },
+  { n: '10,000+', l: 'AI creatives produced so far' },
+];
+const offers = [
+  { t: 'Creative audit', d: 'A deep read of your ad account and competitors: what is tiring, what won but never scaled, and which angles you have not tested yet.', b: 'Start here' },
+  { t: 'Build your machine', d: 'I set up the research, production and testing loop for your brand: skills, tools, fact sheet, design system and the weekly run.', b: 'Most popular', hot: true },
+  { t: 'Run it with you', d: 'Ongoing creative strategy and production. Every Monday your winners become next week\'s tests, and you approve the plan.', b: 'Ongoing' },
+];
+const faqs = [
+  { q: 'Do I need to replace my team or my creators?', a: 'No. The machine takes over research, production busywork and test reading. Your team and your creators focus on strategy and the content only humans can make.' },
+  { q: 'Which platforms does it work with?', a: 'Meta, TikTok and Google for paid UA, plus TikTok One and influencer channels for creator content. Ads are sized for 9:16, 1:1 and 4:5.' },
+  { q: 'Will AI make claims we cannot back up?', a: 'Every claim is checked against one fact sheet before anything ships, and every paid generation needs approval first.' },
+  { q: 'How fast can we start?', a: 'The audit takes about a week. A first ad kit usually ships in the first two weeks of a build.' },
+];
 ---
-<Base title="The AI Creative Machine" description="How I turned a creative funnel into an AI system that researches, produces, tests and scales ads every week." image="/creative-ops/slide-01.webp">
+<Base title="AI Creative Machine" description="A creative system that researches, produces, tests and scales your ads every week. AI does the work, you keep the keys." image="/images/blog/the-ai-creative-machine/cover.jpg">
+
+  <!-- HERO -->
   <section class="hero">
-    <div class="glow"></div>
-    <div class="wrap">
-      <p class="eyebrow">Creative Ops · Case study</p>
-      <h1 class="display">The AI Creative Machine</h1>
-      <p class="lead">How I turned a creative funnel into a system that runs itself: research, production, testing and scaling in one weekly loop. The machine runs. I steer.</p>
+    <div class="glowv" aria-hidden="true"></div>
+    <div class="wrap hgrid">
+      <div>
+        <p class="eyebrow">AI Creative Machine</p>
+        <h1 class="display">Your ads, researched, made, tested and scaled. <span class="grad-text">Every week.</span></h1>
+        <p class="lead">A creative system built on AI skills and real performance data. One concept goes in, a launch-ready ad set comes out, and last week's winners become this week's tests. AI does the work. You keep the keys.</p>
+        <div class="ctas">
+          <a class="btn" href="mailto:collab@ugurucar.work?subject=AI%20Creative%20Machine">Book a call</a>
+          <a class="btn ghost" href="#how">See how it works</a>
+        </div>
+      </div>
+      <div class="slot hero-slot" data-slot="hero-example" aria-hidden="true">
+        <div class="kit">
+          <div class="kh"><b>Ad Kit · Concept A</b><span class="ok">Delivered</span></div>
+          <div class="ktabs"><span class="on">All 18</span><span>Avatars 6</span><span>Kinetic 3</span><span>Films 3</span><span>Images 6</span></div>
+          <div class="krow">{[0,1,2,3,4,5].map(() => <i class="ph v"></i>)}</div>
+          <div class="krow two"><div>{[0,1,2].map(() => <i class="ph k"></i>)}</div><div>{[0,1,2].map((n) => <i class={`ph f f${n}`}></i>)}</div></div>
+          <div class="krow">{[0,1,2,3,4,5].map(() => <i class="sq"></i>)}</div>
+        </div>
+      </div>
     </div>
   </section>
 
-  <section class="wrap">
-    <SlideDeck slides={SLIDES} pdf={DECK_PDF} />
+  <!-- PROBLEM -->
+  <section class="wrap block">
+    <div class="head reveal">
+      <p class="eyebrow">The problem</p>
+      <h2 class="display sec">Creative is the lever. The work around it is the bottleneck.</h2>
+    </div>
+    <div class="g4">
+      {pains.map((p, i) => <article class="card reveal" style={`transition-delay:${i * 80}ms`}><span class="x">✕</span><h3>{p.t}</h3><p>{p.d}</p></article>)}
+    </div>
   </section>
 
-  {projects.length > 0 && (
-    <section class="wrap reel" id="outputs">
-      <p class="eyebrow">AI output packs</p>
-      <h2 class="display sec">Made by the machine</h2>
-      {projects.map((p) => (
-        <div class="proj" id={p.slug}>
-          <div class="ph">
-            {p.logo && <img src={p.logo} alt="" width="44" height="44" />}
-            <div><h3>{p.name}</h3><p>{p.tagline}</p></div>
-          </div>
-          <VideoGrid clips={p.clips} />
-        </div>
+  <!-- AT A GLANCE -->
+  <section class="wrap block">
+    <div class="head reveal">
+      <p class="eyebrow">What the machine runs</p>
+      <h2 class="display sec">Six jobs, handled every week</h2>
+    </div>
+    <div class="g3">
+      {glance.map((g, i) => (
+        <article class={`card glance reveal ${i === 5 ? 'hot' : ''}`} style={`transition-delay:${i * 60}ms`}>
+          <h3>{g.t}</h3>
+          <ul>{g.i.map((x) => <li>{x}</li>)}</ul>
+        </article>
       ))}
+    </div>
+  </section>
+
+  <!-- LOOP -->
+  <section class="band" id="how">
+    <div class="wrap">
+      <div class="head reveal center">
+        <p class="eyebrow">How it works</p>
+        <h2 class="display sec">One loop. Run every Monday.</h2>
+        <p class="sub">Every week the loop starts again from what last week's tests taught us. I approve plans and spend. AI does the searching, writing, editing and reading.</p>
+      </div>
+      <ol class="loop reveal">
+        {loop.map((s, i) => <li><span>{i + 1}</span>{s}</li>)}
+      </ol>
+    </div>
+  </section>
+
+  <!-- FEATURE: RESEARCH -->
+  <section class="wrap feat reveal">
+    <div class="ftext">
+      <p class="eyebrow">01 · Research</p>
+      <h2 class="display">Briefs start from what already works</h2>
+      <p>Research no longer starts from a blank page. Ads, trends and organic hits are collected automatically, so every brief is built on evidence.</p>
+      <ul class="ticks">
+        <li><b>Explore</b> TikTok trends, YouTube, Google Ads and live Meta ad search in one place.</li>
+        <li><b>Competitor intel</b> Competitor videos pulled automatically, widest-reach ads checked every morning.</li>
+        <li><b>Image ads</b> Last week's competitor image ads, pulled and analyzed.</li>
+        <li><b>Trending</b> Organic TikTok, Instagram and X posts ranked by how fast they grow.</li>
+      </ul>
+    </div>
+    <div class="slot" data-slot="research-example" aria-hidden="true">
+      <div class="mock">
+        <div class="mh"><b>Competitor intel</b><span>Today</span></div>
+        {['Problem / solution hook · 9:16', 'Price question · kinetic', 'Testimonial · creator', 'Before / after · static'].map((t, i) => (
+          <div class="mrow"><i class={`thumb t${i}`}></i><div><b>{t}</b><span>Why it works: hook in 1.2s, clear proof, native feel</span></div><em>Reach ↑</em></div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- FEATURE: PRODUCTION -->
+  <section class="wrap feat flip reveal">
+    <div class="ftext">
+      <p class="eyebrow">02 · Production</p>
+      <h2 class="display">From a link to a finished ad</h2>
+      <p>Paste any ad you like. It comes back rebuilt for your brand, with your design system and end card, and tracked end to end.</p>
+      <div class="pipe"><span>Queued</span><span>In production</span><span>Delivered</span><span class="on">Uploaded</span></div>
+      <ul class="ticks">
+        <li><b>Edit requests</b> Write what should change. Every version stays: Original, Edit 1, Edit 2.</li>
+        <li><b>Credit permission</b> Free edit tools first. AI credits only when approved, up to a cap.</li>
+      </ul>
+    </div>
+    <div class="slot" data-slot="production-example" aria-hidden="true">
+      <div class="ba">
+        <div><span class="lbl">Reference</span><i class="ph big ref"></i></div>
+        <div class="arrow">→</div>
+        <div><span class="lbl">Your brand</span><i class="ph big out"></i></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FEATURE: AD KIT -->
+  <section class="wrap feat reveal">
+    <div class="ftext">
+      <p class="eyebrow">03 · Ad Kit</p>
+      <h2 class="display">One prompt in. A complete ad set out.</h2>
+      <p>Type one concept. The kit comes back as a launch-ready test set behind a single approval. Every piece gets a different hook mechanic, every claim is checked, and a final quality check runs before it is marked done.</p>
+      <div class="fmt">
+        <div><b>Avatar clips</b><span>AI presenters, each script with its own hook, captions and app proof.</span></div>
+        <div><b>Kinetic ads</b><span>Animated typography with real app screens, rendered at no credit cost.</span></div>
+        <div><b>Story films</b><span>Short, mid and long narrative films with dialogue and end card.</span></div>
+        <div><b>Static images</b><span>Several layouts, each checked for on-image text errors.</span></div>
+      </div>
+    </div>
+    <div class="slot" data-slot="adkit-example" aria-hidden="true">
+      <div class="fan">{[0,1,2,3].map((n) => <i class={`ph fan${n}`}></i>)}</div>
+    </div>
+  </section>
+
+  <!-- FEATURE: MONDAY RUN -->
+  <section class="wrap feat flip reveal">
+    <div class="ftext">
+      <p class="eyebrow">04 · Creative testing</p>
+      <h2 class="display">The Monday run: last week's winners become this week's tests</h2>
+      <p>One orchestrated run, one skill per step. It finds the winners by sales and cost per install, then builds the next round around them, inside a credit budget with a hard limit.</p>
+    </div>
+    <div class="slot" data-slot="monday-example" aria-hidden="true">
+      <div class="mock">
+        <div class="mh"><b>Monday run</b><span>9 steps</span></div>
+        {runSteps.map(([t, s], i) => (
+          <div class="step"><span class="num">{i + 1}</span><b>{t}</b><em class={s}>{s === 'done' ? 'Done' : s === 'run' ? 'Running' : 'Queued'}</em></div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- FEATURE: FEEDBACK -->
+  <section class="wrap feat reveal">
+    <div class="ftext">
+      <p class="eyebrow">05 · Feedback loop</p>
+      <h2 class="display">Every note becomes a rule</h2>
+      <p>When the machine is unsure, a question lands in the dashboard like a social feed. You answer or leave a note, the AI fixes the output, and the note is written into the skill so every next run follows it.</p>
+      <div class="two">
+        <div><b class="good">Fixed for good</b><span>Wrong fonts, prices outside the rules, kits missing pieces, films without captions.</span></div>
+        <div><b class="eye">Still needs an eye</b><span>AI faces drifting, garbled screen text, bold claims. Taste stays human.</span></div>
+      </div>
+    </div>
+    <div class="slot" data-slot="feedback-example" aria-hidden="true">
+      <div class="mock feed">
+        <div class="mh"><b>Needs you</b><span class="new">3 new</span></div>
+        <div class="msg"><i>C</i><div><span>Ad Kit · Concept B</span><p>Film 2 opens on a face-up phone instead of face-down. Keep it, or regenerate?</p><div class="acts"><em class="p">Keep it</em><em>Regenerate</em></div></div></div>
+        <div class="msg"><i>C</i><div><span>Monday run · avatar clips</span><p>The presenter says the brand name with a strong accent. Add a logo pop at that moment?</p><div class="acts"><em class="p">Yes, add it</em><em>Resolve</em></div></div></div>
+        <div class="msg"><i>C</i><div><span>Feedback · yesterday</span><p>Resolved: "No script fonts next to the logo" is now a rule in the skill.</p></div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FEATURE: PERFORMANCE -->
+  <section class="wrap feat flip reveal">
+    <div class="ftext">
+      <p class="eyebrow">06 · Performance</p>
+      <h2 class="display">Four lists. Each with a reason and a next step.</h2>
+      <p>Live numbers from Meta, TikTok and Google, read only. Every week each creative is sorted into an action list, and any item goes to production in one click with the brief already filled in.</p>
+    </div>
+    <div class="slot" data-slot="performance-example" aria-hidden="true">
+      <div class="lists">
+        <div><b>Creative fatigue</b><span>Results slide while frequency climbs.</span><em>New opening, same body</em></div>
+        <div><b>Winners not scaled</b><span>Won the test, never left test budget.</span><em>Scale recommendation</em></div>
+        <div><b>Hooked, low results</b><span>Strong hook and hold, weak conversion.</span><em>Keep hook, rewrite body</em></div>
+        <div><b>Variate</b><span>Proven winners ready to iterate.</span><em>Change one thing at a time</em></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FEATURE: CREATORS & LAUNCH -->
+  <section class="wrap feat reveal">
+    <div class="ftext">
+      <p class="eyebrow">07 · Creators & launch</p>
+      <h2 class="display">Creator content at scale, then live without manual steps</h2>
+      <ul class="ticks">
+        <li><b>TikTok One</b> Fact-checked campaign briefs, live listings by country, incoming creator videos with hook and hold rates.</li>
+        <li><b>Influencer</b> Find creators by topic or lookalike, AI-written outreach sent after approval, budget and deliverables in one pipeline.</li>
+        <li><b>Launch layer</b> Every creative named, resized to 9:16, 1:1 and 4:5, and uploaded to Meta and TikTok, with a person approving spend.</li>
+      </ul>
+    </div>
+    <div class="slot" data-slot="creators-example" aria-hidden="true">
+      <div class="kanban">
+        {['Found', 'Contacted', 'Briefed', 'Delivered'].map((c, i) => (
+          <div><b>{c}</b>{Array.from({ length: 3 - (i > 1 ? 1 : 0) }).map(() => <i></i>)}</div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ENGINE -->
+  <section class="band">
+    <div class="wrap">
+      <div class="head reveal center">
+        <p class="eyebrow">The engine underneath</p>
+        <h2 class="display sec">20+ skills. 12 connected tools.</h2>
+        <p class="sub">A skill is a playbook the AI follows. Each one was built over months and trained on real test results plus outside references, so the AI works the way a senior creative strategist works.</p>
+      </div>
+      <div class="chips reveal">{tools.map((t) => <span>{t}</span>)}</div>
+    </div>
+  </section>
+
+  <!-- RESULTS -->
+  <section class="wrap block">
+    <div class="head reveal">
+      <p class="eyebrow">Results</p>
+      <h2 class="display sec">What changes when the bottleneck is gone</h2>
+    </div>
+    <div class="res">
+      {results.map((r, i) => <div class="reveal" style={`transition-delay:${i * 80}ms`}><span class="display">{r.n}</span><p>{r.l}</p></div>)}
+    </div>
+  </section>
+
+  {reel.length > 0 && (
+    <section class="wrap block" id="outputs">
+      <div class="head reveal"><p class="eyebrow">Made by the machine</p><h2 class="display sec">Output examples</h2></div>
+      {reel.map((p) => <VideoGrid clips={p.clips} />)}
     </section>
   )}
 
-  <section class="wrap cta">
-    <h2 class="display sec">Want a machine like this?</h2>
-    <a class="btn" href="/connect">Let's talk</a>
+  <!-- GUARDRAILS -->
+  <section class="wrap block">
+    <div class="head reveal">
+      <p class="eyebrow">Guardrails</p>
+      <h2 class="display sec">AI does the work. You keep the keys.</h2>
+    </div>
+    <div class="g3">
+      {guards.map((g, i) => <article class="card reveal" style={`transition-delay:${i * 60}ms`}><span class="lock">●</span><h3>{g.t}</h3><p>{g.d}</p></article>)}
+    </div>
+  </section>
+
+  <!-- OFFERS -->
+  <section class="wrap block" id="work-together">
+    <div class="head reveal center">
+      <p class="eyebrow">Work together</p>
+      <h2 class="display sec">Three ways to start</h2>
+    </div>
+    <div class="g3 offers">
+      {offers.map((o) => (
+        <article class={`card offer reveal ${o.hot ? 'hot' : ''}`}>
+          <span class="tag">{o.b}</span>
+          <h3>{o.t}</h3>
+          <p>{o.d}</p>
+          <a class={`btn ${o.hot ? '' : 'ghost'}`} href={`mailto:collab@ugurucar.work?subject=${encodeURIComponent(o.t)}`}>Get in touch</a>
+        </article>
+      ))}
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="wrap block faq">
+    <div class="head reveal"><p class="eyebrow">FAQ</p><h2 class="display sec">Questions</h2></div>
+    {faqs.map((f) => <details class="reveal"><summary>{f.q}</summary><p>{f.a}</p></details>)}
+  </section>
+
+  <section class="wrap end reveal">
+    <h2 class="display">The machine runs.<br /><span class="grad-text">You steer.</span></h2>
+    <div class="ctas center"><a class="btn" href="mailto:collab@ugurucar.work?subject=AI%20Creative%20Machine">Book a call</a><a class="btn ghost" href="/blog/the-ai-creative-machine">Read the full story</a></div>
   </section>
 </Base>
+
 <style>
-  .hero { position: relative; isolation: isolate; padding: 96px 0 40px; }
-  .hero .glow::before { background: radial-gradient(circle, rgba(110,60,230,.45), transparent 60%); }
-  h1 { font-size: clamp(44px, 9vw, 104px); margin: 10px 0 20px; }
-  .lead { color: var(--muted); font-size: 18px; max-width: 640px; }
-  .reel { padding-top: 88px; }
-  .sec { font-size: clamp(32px, 5vw, 56px); margin: 8px 0 32px; text-transform: uppercase; }
-  .proj { margin-bottom: 56px; }
-  .ph { display: flex; gap: 14px; align-items: center; margin-bottom: 20px; }
-  .ph img { border-radius: 10px; }
-  .ph h3 { margin: 0; font-size: 22px; }
-  .ph p { margin: 0; color: var(--muted); font-size: 14px; }
-  .cta { text-align: center; padding-top: 88px; }
+  .hero { position: relative; isolation: isolate; overflow: hidden; padding: 90px 0 70px; }
+  .glowv { position: absolute; inset: 0; z-index: -1; background: radial-gradient(700px 500px at 80% 20%, rgba(124,77,255,.4), transparent 70%), radial-gradient(500px 400px at 0% 100%, rgba(255,77,77,.25), transparent 70%); }
+  .hgrid { display: grid; grid-template-columns: 1.1fr 1fr; gap: 48px; align-items: center; }
+  h1 { font-size: clamp(38px, 5.6vw, 72px); margin: 14px 0 20px; }
+  .lead { color: #c8c8cf; font-size: 18px; max-width: 560px; }
+  .ctas { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 28px; }
+  .ctas.center { justify-content: center; }
+
+  .block { padding-top: 100px; }
+  .head { margin-bottom: 30px; max-width: 760px; }
+  .head.center { text-align: center; margin-inline: auto; }
+  .sec { font-size: clamp(32px, 4.6vw, 54px); margin: 8px 0 0; }
+  .sub { color: var(--muted); font-size: 17px; margin: 16px auto 0; max-width: 640px; }
+
+  .g4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+  .g3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  .card { background: var(--bg-2); border: 1px solid var(--line); border-radius: 18px; padding: 24px; }
+  .card h3 { margin: 6px 0 8px; font-size: 19px; }
+  .card p { margin: 0; color: var(--muted); font-size: 15px; }
+  .x { color: var(--accent); font-weight: 700; }
+  .lock { color: var(--violet); font-size: 12px; }
+  .glance h3 { color: #b9a3ff; }
+  .glance ul { margin: 0; padding-left: 18px; color: #d4d4d8; font-size: 15px; display: grid; gap: 4px; }
+  .glance.hot { background: linear-gradient(140deg, #5b2fd6, #3a1d8f); border-color: transparent; }
+  .glance.hot h3 { color: #fff; }
+
+  .band { margin-top: 100px; padding: 90px 0; background: radial-gradient(80% 120% at 50% 0%, rgba(124,77,255,.18), transparent 70%), #0d0b14; border-block: 1px solid #221c3a; }
+  .loop { list-style: none; padding: 0; margin: 36px auto 0; display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; }
+  .loop li { display: flex; align-items: center; gap: 10px; padding: 14px 22px; border-radius: 999px; border: 1px solid #3a2f66; background: #141022; font-weight: 600; font-size: 17px; position: relative; }
+  .loop li:not(:last-child)::after { content: '→'; position: absolute; right: -14px; color: var(--violet); }
+  .loop li:last-child { background: var(--violet); border-color: transparent; }
+  .loop span { display: grid; place-items: center; width: 26px; height: 26px; border-radius: 50%; background: rgba(255,255,255,.12); font-size: 13px; }
+
+  /* features */
+  .feat { display: grid; grid-template-columns: 1fr 1fr; gap: 56px; align-items: center; padding-top: 110px; }
+  .feat.flip .ftext { order: 2; }
+  .ftext h2 { font-size: clamp(30px, 3.8vw, 46px); margin: 10px 0 16px; }
+  .ftext > p { color: var(--muted); font-size: 16.5px; margin: 0 0 18px; }
+  .ticks { list-style: none; margin: 0; padding: 0; display: grid; gap: 12px; }
+  .ticks li { color: var(--muted); font-size: 15px; padding-left: 26px; position: relative; }
+  .ticks li::before { content: '✓'; position: absolute; left: 0; color: #4ade80; font-weight: 700; }
+  .ticks b { color: var(--fg); margin-right: 6px; }
+  .pipe { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 18px; }
+  .pipe span { padding: 8px 14px; border-radius: 999px; border: 1px solid var(--line); font-size: 14px; font-weight: 600; }
+  .pipe span.on { background: var(--violet); border-color: transparent; }
+  .fmt { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .fmt div { border: 1px solid var(--line); border-radius: 14px; padding: 14px; }
+  .fmt b { display: block; margin-bottom: 4px; }
+  .fmt span { color: var(--muted); font-size: 14px; }
+  .two { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .two div { border: 1px solid var(--line); border-radius: 14px; padding: 14px; font-size: 14px; color: var(--muted); }
+  .two b { display: block; margin-bottom: 4px; }
+  .good { color: #4ade80; } .eye { color: #fbbf24; }
+
+  /* example slots: illustrated until real examples land */
+  .slot { position: relative; border-radius: 22px; padding: 22px; background: radial-gradient(120% 100% at 100% 0%, rgba(124,77,255,.22), transparent 60%), #111016; border: 1px solid #262236; min-height: 320px; display: grid; align-items: center; }
+  .mock { background: #f6f6fa; color: #1b1531; border-radius: 16px; padding: 16px; box-shadow: 0 30px 60px -30px #000; font-size: 13px; }
+  .mh { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; font-size: 15px; }
+  .mh span { color: #6b6787; font-size: 12px; }
+  .mrow { display: grid; grid-template-columns: 44px 1fr auto; gap: 12px; align-items: center; padding: 10px; border-radius: 12px; background: #fff; margin-top: 8px; border: 1px solid #ecebf3; }
+  .mrow b { display: block; font-size: 13px; } .mrow span { color: #6b6787; font-size: 12px; }
+  .mrow em { font-style: normal; color: #16a34a; font-weight: 700; font-size: 12px; }
+  .thumb { display: block; width: 44px; height: 60px; border-radius: 8px; }
+  .t0 { background: linear-gradient(160deg,#a78bfa,#5b2fd6); } .t1 { background: linear-gradient(160deg,#3b2a8f,#120b33); } .t2 { background: linear-gradient(160deg,#fdba74,#c2410c); } .t3 { background: linear-gradient(160deg,#e0f2fe,#7dd3fc); }
+  .step { display: grid; grid-template-columns: 26px 1fr auto; gap: 10px; align-items: center; padding: 8px 4px; border-bottom: 1px solid #ecebf3; }
+  .num { display: grid; place-items: center; width: 24px; height: 24px; border-radius: 50%; background: #5b2fd6; color: #fff; font-size: 11px; font-weight: 700; }
+  .step em { font-style: normal; font-size: 11px; font-weight: 700; padding: 3px 9px; border-radius: 999px; }
+  .step em.done { background: #dcfce7; color: #15803d; } .step em.run { background: #ede9fe; color: #5b2fd6; } .step em.q { background: #f1f1f5; color: #6b6787; }
+  .feed .new { background: #fee2e2; color: #dc2626; padding: 2px 8px; border-radius: 999px; font-weight: 700; }
+  .msg { display: grid; grid-template-columns: 32px 1fr; gap: 10px; padding: 10px 0; border-top: 1px solid #ecebf3; }
+  .msg > i { display: grid; place-items: center; width: 32px; height: 32px; border-radius: 9px; background: #5b2fd6; color: #fff; font-style: normal; font-weight: 700; }
+  .msg span { color: #6b6787; font-size: 11px; } .msg p { margin: 2px 0 6px; }
+  .acts { display: flex; gap: 6px; } .acts em { font-style: normal; font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 999px; border: 1px solid #d6d3e6; }
+  .acts em.p { background: #5b2fd6; color: #fff; border-color: transparent; }
+
+  .kit { background: #f6f6fa; border-radius: 16px; padding: 16px; color: #1b1531; box-shadow: 0 30px 60px -30px #000; }
+  .kh { display: flex; justify-content: space-between; align-items: center; font-size: 15px; }
+  .ok { background: #dcfce7; color: #15803d; font-size: 11px; font-weight: 700; padding: 3px 9px; border-radius: 999px; }
+  .ktabs { display: flex; flex-wrap: wrap; gap: 6px; margin: 10px 0; }
+  .ktabs span { font-size: 11px; padding: 4px 10px; border-radius: 999px; border: 1px solid #d6d3e6; }
+  .ktabs .on { background: #5b2fd6; color: #fff; border-color: transparent; }
+  .krow { display: flex; gap: 8px; padding: 10px; background: #fff; border: 1px solid #ecebf3; border-radius: 12px; margin-top: 8px; }
+  .krow.two { gap: 8px; padding: 0; background: none; border: 0; display: grid; grid-template-columns: 1fr 1fr; }
+  .krow.two > div { display: flex; gap: 8px; padding: 10px; background: #fff; border: 1px solid #ecebf3; border-radius: 12px; }
+  .ph { display: block; width: 40px; aspect-ratio: 9/16; border-radius: 7px; position: relative; }
+  .ph::after { content: '▶'; position: absolute; inset: 0; display: grid; place-items: center; color: rgba(255,255,255,.85); font-size: 10px; font-style: normal; }
+  .ph.v { background: linear-gradient(160deg,#a78bfa,#5b2fd6); }
+  .ph.k { background: linear-gradient(160deg,#3b2a8f,#120b33); }
+  .ph.f0 { background: linear-gradient(160deg,#fdba74,#c2410c); } .ph.f1 { background: linear-gradient(160deg,#7dd3fc,#0e4a6e); } .ph.f2 { background: linear-gradient(160deg,#c4b5fd,#4c1d95); }
+  .sq { display: block; width: 40px; height: 40px; border-radius: 7px; background: linear-gradient(160deg,#e0f2fe,#7dd3fc); }
+  .ba { display: grid; grid-template-columns: 1fr auto 1fr; gap: 14px; align-items: center; justify-items: center; }
+  .lbl { display: block; text-align: center; font-size: 12px; color: var(--muted); margin-bottom: 8px; text-transform: uppercase; letter-spacing: .12em; }
+  .ph.big { width: 150px; border-radius: 18px; }
+  .ph.big::after { font-size: 22px; }
+  .ref { background: linear-gradient(160deg,#4b5563,#111827); filter: grayscale(.4); }
+  .out { background: linear-gradient(160deg,#ff4d4d,#7c4dff); box-shadow: 0 20px 50px -15px rgba(124,77,255,.7); }
+  .arrow { font-size: 28px; color: var(--violet); }
+  .fan { position: relative; height: 300px; }
+  .fan .ph { position: absolute; width: 130px; border-radius: 16px; top: 30px; left: 50%; box-shadow: 0 20px 40px -15px #000; }
+  .fan .ph::after { font-size: 18px; }
+  .fan0 { background: linear-gradient(160deg,#a78bfa,#5b2fd6); transform: translateX(-150%) rotate(-12deg); }
+  .fan1 { background: linear-gradient(160deg,#3b2a8f,#120b33); transform: translateX(-85%) rotate(-4deg); }
+  .fan2 { background: linear-gradient(160deg,#fdba74,#c2410c); transform: translateX(-15%) rotate(4deg); }
+  .fan3 { background: linear-gradient(160deg,#e0f2fe,#38bdf8); transform: translateX(50%) rotate(12deg); }
+  .lists { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .lists div { background: #f6f6fa; color: #1b1531; border-radius: 14px; padding: 14px; font-size: 13px; }
+  .lists b { display: block; font-size: 14px; margin-bottom: 4px; }
+  .lists span { display: block; color: #6b6787; margin-bottom: 10px; }
+  .lists em { font-style: normal; font-size: 11px; font-weight: 700; background: #5b2fd6; color: #fff; padding: 4px 10px; border-radius: 999px; }
+  .kanban { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; background: #f6f6fa; border-radius: 16px; padding: 12px; }
+  .kanban div { background: #ecebf3; border-radius: 10px; padding: 8px; display: grid; gap: 6px; align-content: start; min-height: 220px; }
+  .kanban b { color: #1b1531; font-size: 12px; }
+  .kanban i { display: block; height: 42px; border-radius: 8px; background: #fff; border-left: 3px solid #7c4dff; }
+
+  .chips { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-top: 30px; }
+  .chips span { padding: 9px 16px; border-radius: 999px; border: 1px solid #3a2f66; background: #141022; font-weight: 600; font-size: 15px; }
+
+  .res { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+  .res div { border-left: 2px solid; border-image: linear-gradient(var(--accent), var(--violet)) 1; padding-left: 18px; }
+  .res span { font-size: clamp(36px, 4.6vw, 56px); }
+  .res p { margin: 6px 0 0; color: var(--muted); font-size: 15px; }
+
+  .offer { display: flex; flex-direction: column; gap: 10px; }
+  .offer p { flex: 1; }
+  .offer .btn { align-self: flex-start; margin-top: 10px; }
+  .offer .tag { align-self: flex-start; font-size: 11px; text-transform: uppercase; letter-spacing: .1em; font-weight: 700; color: #b9a3ff; }
+  .offer.hot { background: linear-gradient(150deg, rgba(124,77,255,.35), rgba(255,77,77,.18)), var(--bg-2); border-color: #5b44b8; }
+  .offer.hot .tag { color: #fff; }
+  .offer h3 { font-size: 24px; margin: 0; }
+
+  .faq details { border-bottom: 1px solid var(--line); padding: 18px 0; max-width: 820px; }
+  .faq summary { cursor: pointer; font-weight: 600; font-size: 18px; list-style: none; display: flex; justify-content: space-between; gap: 16px; }
+  .faq summary::after { content: '+'; color: var(--violet); font-size: 22px; line-height: 1; }
+  .faq details[open] summary::after { content: '−'; }
+  .faq details p { color: var(--muted); margin: 10px 0 0; }
+
+  .end { text-align: center; padding-top: 120px; }
+  .end h2 { font-size: clamp(40px, 7vw, 84px); margin: 0 0 26px; }
+
+  @media (max-width: 900px) {
+    .hgrid, .feat { grid-template-columns: 1fr; gap: 28px; }
+    .feat.flip .ftext { order: 0; }
+    .g4, .g3 { grid-template-columns: 1fr 1fr; }
+    .res { grid-template-columns: 1fr 1fr; row-gap: 28px; }
+    .feat { padding-top: 80px; }
+  }
+  @media (max-width: 560px) {
+    .g4, .g3, .fmt, .two, .lists { grid-template-columns: 1fr; }
+    .kanban { grid-template-columns: 1fr 1fr; }
+    .ph { width: 30px; } .sq { width: 30px; height: 30px; }
+    .ph.big { width: 110px; }
+    .fan .ph { width: 100px; }
+    .loop li:not(:last-child)::after { display: none; }
+    .slot { padding: 14px; }
+  }
 </style>

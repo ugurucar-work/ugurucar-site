@@ -10,12 +10,12 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft))
 const featured = posts.find((p) => p.id === 'the-ai-creative-machine') ?? posts[0];
 const more = posts.filter((p) => p.id !== featured.id).slice(0, 2);
 
+// Max 12 characters so the word always fits on one line, even on phones.
 const words = [
-  'scroll-stopping', 'UGC', 'thumb-stopping', 'creator-led', 'AI-powered', 'hook-first',
-  'unskippable', 'TikTok-native', 'test-winning', 'avatar', 'kinetic', 'story-driven',
-  'meme-worthy', 'data-backed', 'high-converting', 'Reels-ready', 'weirdly good',
-  'binge-worthy', 'native-feeling', 'globally-scaled', 'shamelessly honest', 'loud', 'tiny-budget',
-];
+  'UGC', 'avatar', 'kinetic', 'hook-first', 'creator-led', 'AI-powered',
+  'unskippable', 'story-driven', 'meme-worthy', 'data-backed', 'Reels-ready',
+  'weirdly good', 'binge-worthy', 'test-winning', 'native', 'loud', 'tiny-budget',
+].filter((w) => w.length <= 12);
 const stats = [
   { n: '7', s: 'years', l: 'in growth & creative' },
   { n: '10,000+', s: '', l: 'AI creatives produced' },
@@ -45,7 +45,7 @@ const phones = [
       <div class="hero-copy">
         <p class="eyebrow">Uğur Uçar · Creative Strategist · Paid UA</p>
         <h1 class="display">
-          I make
+          I make<br />
           <button class="word" type="button" data-words={JSON.stringify(words)} aria-live="polite" aria-label="Change the word">
             <span class="grad-text" data-word>{words[0]}</span>
           </button>
@@ -225,7 +225,7 @@ const phones = [
   @keyframes float { to { transform: translate(-60px, 50px) scale(1.15); } }
   .hero-grid { display: grid; grid-template-columns: 1.25fr .9fr; gap: 40px; align-items: center; }
   h1 { font-size: clamp(44px, 7vw, 92px); margin: 18px 0 22px; }
-  .word { font: inherit; letter-spacing: inherit; color: inherit; background: none; border: 0; padding: 0; margin: 0; cursor: pointer; display: inline-block; text-align: left; -webkit-tap-highlight-color: transparent; }
+  .word { white-space: nowrap; height: 1.05em; overflow: visible; font: inherit; letter-spacing: inherit; color: inherit; background: none; border: 0; padding: 0; margin: 0; cursor: pointer; display: inline-block; text-align: left; -webkit-tap-highlight-color: transparent; }
   .word span { display: inline-block; padding-bottom: .06em; border-bottom: 3px dashed rgba(255,255,255,.18); transition: border-color .2s; }
   .word:hover span { border-color: rgba(255,255,255,.45); }
   .word:focus-visible { outline: 2px solid var(--accent); outline-offset: 6px; border-radius: 8px; }

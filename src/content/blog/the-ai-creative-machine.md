@@ -154,6 +154,6 @@ The biggest shift isn't speed. It's that my job moved from *making* ads to *deci
 
 ---
 
-*Want to see the full deck? [Open The AI Creative Machine →](/creative-ops)*
+*Want to see how it works, step by step? [Explore the AI Creative Machine →](/creative-ops)*
 
 *Want a machine like this for your team? [collab@ugurucar.work](mailto:collab@ugurucar.work)*
