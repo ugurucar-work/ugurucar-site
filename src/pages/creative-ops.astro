@@ -8,6 +8,7 @@ const statics = SHOWCASE.filter((s) => s.group === 'adkit' && s.type === 'image'
 const variations = SHOWCASE.filter((s) => s.group === 'variation').slice(0, 3);
 const hooks = SHOWCASE.filter((s) => s.group === 'hook');
 const films = SHOWCASE.filter((s) => s.group === 'film').slice(0, 3);
+const avatars = SHOWCASE.filter((s) => s.group === 'avatar');
 const imgVars = [
   { h: 'from $0.01', b: ['200+ destinations', 'Landlines and mobiles', 'Rate shown first', 'Works on WiFi'], c: 'Start With $0.25 Credit', light: true, win: true },
   { list: ['200+ destinations', 'Landlines and mobiles', 'Rate shown before you dial', 'Works on WiFi'], c: 'Start With $0.25 Credit' },
@@ -279,6 +280,24 @@ const results = [
       </div>
     )}
   </section>
+
+  {avatars.length > 0 && (
+    <section class="wrap varis reveal">
+      <div class="vhead">
+        <p class="eyebrow">Avatar clips</p>
+        <h3 class="display">Many faces. One proven script.</h3>
+        <p>AI presenters let one angle be tested across ages, accents and settings in a day. Each clip gets its own hook and captions, with app proof cut in.</p>
+      </div>
+      <div class="hgrid4 six">
+        {avatars.map((h) => (
+          <figure>
+            <video class="auto" src={h.src} poster={h.poster} muted loop playsinline preload="none"></video>
+            <figcaption>{h.title}</figcaption>
+          </figure>
+        ))}
+      </div>
+    </section>
+  )}
 
   <!-- FEATURE: MONDAY RUN -->
   <section class="wrap feat flip reveal">
@@ -710,6 +729,8 @@ const results = [
   .hgrid4 figure::after { content: '🔇'; position: absolute; top: 8px; right: 8px; font-size: 13px; background: rgba(0,0,0,.5); border-radius: 999px; padding: 3px 7px; pointer-events: none; }
   .hgrid4 figure.sound::after { content: '🔊'; }
   .hgrid4 figcaption { font-size: 13px; color: var(--muted); margin-top: 6px; text-align: center; }
+  .hgrid4.six { grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 10px; }
+  @media (max-width: 900px) { .hgrid4.six { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
   @media (max-width: 760px) { .hgrid4 { grid-template-columns: 1fr 1fr; } }
   .ivgrid { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 12px; }
   .iv { position: relative; aspect-ratio: 1; min-width: 0; border-radius: 14px; overflow: hidden; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 7%; padding: 8%; color: #fff; text-align: center;

@@ -14,7 +14,7 @@ export interface ShowcaseItem {
   reference?: string;     // URL of the ad this was adapted from (competitor clone)
   referenceImage?: string; // still of the reference, when there is no embeddable link
   referenceLabel?: string; // e.g. 'Competitor UGC ad'
-  group?: 'clone' | 'adkit' | 'variation' | 'best' | 'hook' | 'film';
+  group?: 'clone' | 'adkit' | 'variation' | 'best' | 'hook' | 'film' | 'avatar';
 }
 
 export const SHOWCASE: ShowcaseItem[] = [
@@ -73,4 +73,10 @@ export const SHOWCASE: ShowcaseItem[] = [
   { app: 'Telicall', type: 'video', src: '/work/telicall/ugc-everything-subscription.mp4', poster: '/work/telicall/ugc-everything-subscription.jpg', title: 'Everything is a subscription', format: 'UGC', ai: true },
   { app: 'Telicall', type: 'video', src: '/work/telicall/ugc-international-client.mp4', poster: '/work/telicall/ugc-international-client.jpg', title: 'Your first international client', format: 'UGC', ai: true },
   { app: 'Telicall', type: 'video', src: '/work/telicall/ai-pirate-walkthrough.mp4', poster: '/work/telicall/ai-pirate-walkthrough.jpg', title: 'Pirate walkthrough: UK number for verifications', format: 'AI video', ai: true },
+  { app: 'Telicall', type: 'video', src: '/work/telicall/avatar-podcast-number.mp4', poster: '/work/telicall/avatar-podcast-number.jpg', title: 'A number in another country', format: 'Avatar', ai: true, group: 'avatar' },
+  { app: 'Telicall', type: 'video', src: '/work/telicall/avatar-skype-alternative.mp4', poster: '/work/telicall/avatar-skype-alternative.jpg', title: 'After Skype: call home for less', format: 'Avatar', ai: true, group: 'avatar' },
+  { app: 'Telicall', type: 'video', src: '/work/telicall/avatar-second-number-park.mp4', poster: '/work/telicall/avatar-second-number-park.jpg', title: 'Did you know? A second number', format: 'Avatar', ai: true, group: 'avatar' },
+  { app: 'Telicall', type: 'video', src: '/work/telicall/avatar-did-you-know.mp4', poster: '/work/telicall/avatar-did-you-know.jpg', title: 'No new phone, no new SIM', format: 'Avatar', ai: true, group: 'avatar' },
+  { app: 'Telicall', type: 'video', src: '/work/telicall/avatar-surprise-friend.mp4', poster: '/work/telicall/avatar-surprise-friend.jpg', title: 'Surprise a friend who moved', format: 'Avatar', ai: true, group: 'avatar' },
+  { app: 'Telicall', type: 'video', src: '/work/telicall/avatar-uk-number-london.mp4', poster: '/work/telicall/avatar-uk-number-london.jpg', title: 'A UK number without a contract', format: 'Avatar', ai: true, group: 'avatar' },
 ];

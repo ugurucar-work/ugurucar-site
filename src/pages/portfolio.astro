@@ -74,8 +74,8 @@ const toolkit = ['Meta Ads', 'TikTok Ads', 'Google Ads', 'TikTok One', 'Adjust',
       <>
         <div class="filters" role="group" aria-label="Filter creative work">
           <button class="on" data-f="all">All <span>{work.length}</span></button>
-          {appsWithWork.map((a) => <button data-f={`app:${a.name}`}>{a.name}</button>)}
-          <span class="sep"></span>
+          {appsWithWork.length > 1 && appsWithWork.map((a) => <button data-f={`app:${a.name}`}>{a.name}</button>)}
+          {appsWithWork.length > 1 && <span class="sep"></span>}
           {formats.map((f) => <button data-f={`fmt:${f}`}>{f}</button>)}
         </div>
         <div class="gallery">
