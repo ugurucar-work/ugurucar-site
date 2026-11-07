@@ -43,7 +43,7 @@ export const PROJECTS = [
   { name: 'Telicall', tagline: 'Second Phone Number', logo: '/images/projects/telicall.png', color: '#5b3fd6' },
   { name: 'Getcontact', tagline: 'Caller ID & Spam Blocker', logo: '/images/projects/getcontact.png', color: '#2f6bff' },
   { name: 'eSIM io', tagline: 'Travel Internet Data', logo: '/images/projects/esimio.png', color: '#6b6b6b' },
-  { name: 'Hourglass Workout - FitEase', tagline: 'Leg & Bubble Butt Exercises', logo: '/images/projects/fitease.jpg', color: '#9acd32' },
+  { name: 'FitEase', tagline: 'Hourglass Workout', logo: '/images/projects/fitease.jpg', color: '#9acd32' },
   { name: 'Hancy AI', tagline: 'Face Swap & Hairstyle Changer', logo: '/images/projects/hancy.png', color: '#2fbf8f' },
   { name: 'Joi', tagline: 'Live Stream & Video Chat', logo: '/images/projects/joi.png', color: '#7a4dff' },
   { name: 'Juds', tagline: 'AI Friend & Chat', logo: '/images/projects/juds.png', color: '#f2c200' },
@@ -51,9 +51,11 @@ export const PROJECTS = [
 
 // Extra apps shown only in the homepage logo marquee.
 export const MARQUEE_EXTRA = [
-  { name: 'DramaDash', logo: '/images/projects/dramadash.png' },
-  { name: 'Gaze', logo: '/images/projects/gaze.png' },
-  { name: 'Waplog', logo: '/images/projects/waplog.png' },
-  { name: 'Nozy', logo: '/images/projects/nozy.png' },
-  { name: 'Novely AI', logo: '/images/projects/novely.png' },
+  { name: 'DramaDash', tagline: 'Drama Shorts TV', logo: '/images/projects/dramadash.png', color: '#ff1f4b' },
+  { name: 'Gaze', tagline: 'Live Video Chat', logo: '/images/projects/gaze.png', color: '#ffb800' },
+  { name: 'Waplog', tagline: 'Dating & Video Call', logo: '/images/projects/waplog.png', color: '#e0338f' },
+  { name: 'Nozy', tagline: 'Go Live & Watch Streams', logo: '/images/projects/nozy.png', color: '#17d7a0' },
+  { name: 'Novely AI', tagline: 'AI Story Creator', logo: '/images/projects/novely.png', color: '#2fd1a5' },
 ];
+
+export const ALL_APPS = [...PROJECTS, ...MARQUEE_EXTRA];

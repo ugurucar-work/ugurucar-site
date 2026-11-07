@@ -1,86 +1,294 @@
 ---
 import Base from '../layouts/Base.astro';
-import { COMPETENCIES, PROJECTS } from '../site';
+import { COMPETENCIES, ALL_APPS, SOCIALS } from '../site';
+import { SHOWCASE } from '../data/showcase';
+import { getCollection } from 'astro:content';
+
+const work = SHOWCASE;
+const appsWithWork = ALL_APPS.filter((a) => work.some((w) => w.app === a.name));
+const formats = [...new Set(work.map((w) => w.format))];
+const linkedin = SOCIALS.find((s) => s.label === 'LinkedIn')?.href;
+const posts = (await getCollection('blog', ({ data }) => !data.draft));
+const proofPosts = ['the-ai-creative-machine', 'how-to-read-a-creative-test', 'why-ugc-matters-more-in-the-age-of-ai']
+  .map((id) => posts.find((p) => p.id === id)).filter(Boolean);
+const facts = [
+  { n: '7', l: 'years in growth & creative' },
+  { n: `${ALL_APPS.length}`, l: 'apps grown with creative' },
+  { n: '10,000+', l: 'AI creatives produced' },
+  { n: '1000+', l: 'creators collaborated with' },
+  { n: '20+', l: 'countries localized for' },
+];
+const toolkit = ['Meta Ads', 'TikTok Ads', 'Google Ads', 'TikTok One', 'Adjust', 'SensorTower', 'Arcads', 'Higgsfield', 'Claude Code', 'n8n', 'Additor'];
 ---
-<Base title="Portfolio" description="Creative portfolio: UGC, influencer marketing, content strategy and AI-driven creative production.">
+<Base title="Portfolio" description="Seven years of paid UA, creative strategy and AI creative production for consumer apps. Apps, creative examples and the systems behind them.">
+
   <section class="hero">
-    <div class="glow"></div>
+    <div class="glow" aria-hidden="true"></div>
     <div class="wrap">
-      <p class="eyebrow">Creative</p>
-      <h1 class="display">Portfolio</h1>
-      <div class="intro">
-        <p>I partner with global content creators and make high-performing Influencer & UGC videos.</p>
-        <p>I find the right people for the right job. I also create AI tools to automate the process.</p>
+      <p class="eyebrow">Portfolio · Uğur Uçar</p>
+      <h1 class="display">Proof of work.</h1>
+      <p class="lead">Seven years of turning creative into growth for consumer apps: paid UA, creative strategy, creator campaigns and the AI systems that scale them. Here are the apps, the ads and the thinking behind them.</p>
+      <div class="ctas">
+        <a class="btn" href="mailto:collab@ugurucar.work">collab@ugurucar.work</a>
+        {linkedin && <a class="btn ghost" href={linkedin} target="_blank" rel="noopener">LinkedIn ↗</a>}
+      </div>
+      <div class="facts">
+        {facts.map((f) => <div><span class="display">{f.n}</span><small>{f.l}</small></div>)}
       </div>
     </div>
   </section>
 
+  <!-- APPS -->
   <section class="wrap block">
-    <h2 class="display sec">Core competencies</h2>
-    <div class="exp">
-      {COMPETENCIES.map((e, i) => (
-        <article><span class="idx">0{i + 1}</span><h3>{e.title}</h3><p class="short">{e.short}</p><p>{e.text}</p></article>
-      ))}
+    <div class="head reveal">
+      <p class="eyebrow">Apps</p>
+      <h2 class="display sec">{ALL_APPS.length} apps I've grown with creative</h2>
+      <p class="sub">Communication, social, AI, entertainment and fitness apps, across 20+ countries.</p>
     </div>
-  </section>
-
-  <section class="wrap block">
-    <h2 class="display sec">Projects</h2>
-    <p class="sub">A selection of apps and digital products supported through content strategy, creator partnerships, and performance-driven marketing.</p>
-    <div class="projects">
-      {PROJECTS.map((p) => (
-        <article class="proj" style={`--c:${p.color}`}>
-          <img src={p.logo} alt={`${p.name} logo`} width="64" height="64" loading="lazy" />
-          <div><h3>{p.name}</h3><p>{p.tagline}</p></div>
+    <div class="apps">
+      {ALL_APPS.map((a, i) => (
+        <article class="app reveal" style={`--c:${a.color};transition-delay:${(i % 4) * 60}ms`}>
+          <img src={a.logo} alt="" width="56" height="56" loading="lazy" />
+          <div><h3>{a.name}</h3><p>{a.tagline}</p></div>
+          {work.some((w) => w.app === a.name) && <a class="see" href={`#work`} data-app-link={a.name}>See ads →</a>}
         </article>
       ))}
     </div>
   </section>
 
-  <section class="wrap block">
-    <a class="feature" href="/creative-ops">
-      <img src="/images/blog/the-ai-creative-machine/cover.webp" alt="The AI Creative Machine" loading="lazy" width="1920" height="1080" />
-      <div>
-        <p class="eyebrow">Case study</p>
-        <h3>The AI Creative Machine</h3>
-        <p>How I turned a creative funnel into a system that runs itself. See how the system works →</p>
+  <!-- CREATIVE WORK -->
+  <section class="wrap block" id="work">
+    <div class="head reveal">
+      <p class="eyebrow">Creative work</p>
+      <h2 class="display sec">Ads I've made and shipped</h2>
+      <p class="sub">UGC, influencer, avatar, kinetic and story ads, plus statics. Tap any video to watch with sound.</p>
+    </div>
+
+    {work.length === 0 ? (
+      <div class="soon reveal">
+        <div class="ghosts" aria-hidden="true">{[0,1,2,3,4,5].map((n) => <i class={`g${n % 3}`}></i>)}</div>
+        <p>Creative examples are being added. In the meantime, see <a href="/creative-ops">how I produce them</a>.</p>
       </div>
-    </a>
+    ) : (
+      <>
+        <div class="filters" role="group" aria-label="Filter creative work">
+          <button class="on" data-f="all">All <span>{work.length}</span></button>
+          {appsWithWork.map((a) => <button data-f={`app:${a.name}`}>{a.name}</button>)}
+          <span class="sep"></span>
+          {formats.map((f) => <button data-f={`fmt:${f}`}>{f}</button>)}
+        </div>
+        <div class="gallery">
+          {work.map((w, i) => (
+            <figure class={`item r-${(w.ratio ?? '9:16').replace(':', 'x')}`} data-app={w.app} data-fmt={w.format}>
+              <button class="open" data-i={i} aria-label={`Open ${w.title}`}>
+                {w.type === 'video'
+                  ? <video src={w.src} poster={w.poster} muted loop playsinline preload="metadata"></video>
+                  : <img src={w.src} alt={w.title} loading="lazy" />}
+                {w.type === 'video' && <span class="playic" aria-hidden="true">▶</span>}
+                {w.ai && <span class="aitag">AI</span>}
+              </button>
+              <figcaption><b>{w.app}</b><span>{w.format} · {w.title}</span></figcaption>
+            </figure>
+          ))}
+        </div>
+        <dialog class="lb" aria-label="Creative viewer">
+          <button class="x" aria-label="Close">✕</button>
+          <div class="lbmedia"></div>
+          <p class="lbcap"></p>
+        </dialog>
+        <script type="application/json" id="work-data" set:html={JSON.stringify(work)} />
+      </>
+    )}
   </section>
 
-  <section class="wrap block cta">
-    <h2 class="display sec">Let's work together</h2>
-    <a class="btn" href="/connect">Get in touch</a>
+  <!-- COMPETENCIES -->
+  <section class="wrap block">
+    <div class="head reveal">
+      <p class="eyebrow">What I bring</p>
+      <h2 class="display sec">Core competencies</h2>
+    </div>
+    <ol class="clist">
+      {COMPETENCIES.map((c, i) => (
+        <li class="crow reveal">
+          <span class="cidx display">0{i + 1}</span>
+          <div><h3>{c.title}</h3><p class="ctags">{c.short}</p></div>
+          <p class="ctext">{c.text}</p>
+        </li>
+      ))}
+    </ol>
+    <div class="toolkit reveal">
+      <span class="eyebrow">Toolkit</span>
+      {toolkit.map((t) => <span class="tool">{t}</span>)}
+    </div>
+  </section>
+
+  <!-- SYSTEM + THINKING -->
+  <section class="wrap block">
+    <div class="head reveal">
+      <p class="eyebrow">How I think</p>
+      <h2 class="display sec">The system and the writing behind the work</h2>
+    </div>
+    <div class="think">
+      <a class="sys reveal" href="/creative-ops">
+        <img src="/images/blog/the-ai-creative-machine/cover.webp" alt="" loading="lazy" />
+        <div><span class="pill">System</span><h3>The AI Creative Machine</h3><p>The weekly loop I built to research, produce, test and scale ads with 20+ AI skills.</p></div>
+      </a>
+      <div class="plist">
+        {proofPosts.map((p) => p && (
+          <a class="pitem reveal" href={`/blog/${p.id}`}>
+            <span class="pill ghost">Article</span>
+            <h3>{p.data.title}</h3>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="wrap end reveal">
+    <h2 class="display">Let's build what's next.</h2>
+    <p>Open to roles in paid UA, creative strategy and AI-driven creative.</p>
+    <a class="btn big" href="mailto:collab@ugurucar.work">collab@ugurucar.work</a>
   </section>
 </Base>
-<style>
-  .hero { position: relative; isolation: isolate; padding: 100px 0 64px; }
-  h1 { font-size: clamp(64px, 16vw, 200px); margin: 8px 0 32px; text-transform: uppercase; }
-  .intro { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 24px; color: var(--muted); font-size: 17px; max-width: 900px; }
-  .intro p { margin: 0; }
-  .block { padding: 56px 20px; }
-  .sec { font-size: clamp(36px, 6vw, 64px); margin: 0 0 32px; text-transform: uppercase; }
-  .sub { color: var(--muted); max-width: 640px; margin: -16px 0 32px; }
-  .exp { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 20px; }
-  .exp article { background: var(--bg-2); border: 1px solid var(--line); border-radius: 16px; padding: 24px; }
-  .exp h3 { margin: 6px 0 4px; font-size: 18px; }
-  .idx { font-family: 'Space Grotesk', sans-serif; color: var(--accent); font-weight: 700; font-size: 14px; }
-  .exp .short { color: #b9a3ff; font-size: 13px; margin: 0 0 10px; }
-  .exp p { margin: 0; color: var(--muted); font-size: 15px; }
-  .projects { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 16px; }
-  .proj {
-    display: flex; gap: 16px; align-items: center; padding: 22px; border-radius: 18px;
-    border: 1px solid var(--line);
-    background: radial-gradient(120% 140% at 100% 0%, color-mix(in srgb, var(--c) 45%, transparent), transparent 60%), var(--bg-2);
+
+<script>
+  const data = JSON.parse(document.getElementById('work-data')?.textContent || '[]');
+  const items = [...document.querySelectorAll<HTMLElement>('.gallery .item')];
+  const btns = [...document.querySelectorAll<HTMLButtonElement>('.filters button')];
+  const apply = (f: string) => {
+    btns.forEach((b) => b.classList.toggle('on', b.dataset.f === f));
+    items.forEach((it) => {
+      const [k, v] = f.split(':');
+      it.hidden = f !== 'all' && (k === 'app' ? it.dataset.app !== v : it.dataset.fmt !== v);
+    });
+  };
+  btns.forEach((b) => b.addEventListener('click', () => apply(b.dataset.f!)));
+  document.querySelectorAll<HTMLAnchorElement>('[data-app-link]').forEach((a) =>
+    a.addEventListener('click', () => apply(`app:${a.dataset.appLink}`)));
+
+  // hover preview on desktop
+  items.forEach((it) => {
+    const v = it.querySelector('video');
+    if (!v) return;
+    it.addEventListener('mouseenter', () => { v.play().catch(() => {}); });
+    it.addEventListener('mouseleave', () => { v.pause(); });
+  });
+
+  // lightbox
+  const lb = document.querySelector<HTMLDialogElement>('.lb');
+  if (lb) {
+    const media = lb.querySelector('.lbmedia')!;
+    const cap = lb.querySelector('.lbcap')!;
+    document.querySelectorAll<HTMLButtonElement>('.open').forEach((b) => b.addEventListener('click', () => {
+      const w = data[Number(b.dataset.i)];
+      media.innerHTML = '';
+      const el = w.type === 'video' ? Object.assign(document.createElement('video'), { src: w.src, poster: w.poster || '', controls: true, autoplay: true, playsInline: true })
+        : Object.assign(document.createElement('img'), { src: w.src, alt: w.title });
+      media.appendChild(el);
+      cap.textContent = `${w.app} · ${w.format} · ${w.title}`;
+      lb.showModal();
+    }));
+    const close = () => { media.innerHTML = ''; lb.close(); };
+    lb.querySelector('.x')!.addEventListener('click', close);
+    lb.addEventListener('click', (e) => { if (e.target === lb) close(); });
+    lb.addEventListener('cancel', () => { media.innerHTML = ''; });
   }
-  .proj img { border-radius: 14px; flex: none; }
-  .proj h3 { margin: 0; font-size: 18px; }
-  .proj p { margin: 2px 0 0; color: var(--muted); font-size: 14px; }
-  .cta { text-align: center; }
-  .feature { display: grid; grid-template-columns: 1.3fr 1fr; gap: 28px; align-items: center; text-decoration: none; padding: 18px; border: 1px solid var(--line); border-radius: 20px; background: var(--bg-2); }
-  .feature:hover { border-color: #6e3ce6; }
-  .feature img { border-radius: 12px; }
-  .feature h3 { font-size: 28px; margin: 6px 0 8px; }
-  .feature p { color: var(--muted); margin: 0; }
-  @media (max-width: 720px) { .feature { grid-template-columns: 1fr; } }
+</script>
+
+<style>
+  .hero { position: relative; isolation: isolate; padding: 96px 0 40px; }
+  .hero .glow::before { background: radial-gradient(circle, rgba(255,77,77,.3), rgba(124,77,255,.2) 40%, transparent 65%); }
+  h1 { font-size: clamp(56px, 11vw, 140px); margin: 10px 0 22px; }
+  .lead { color: #c8c8cf; font-size: 19px; max-width: 640px; }
+  .ctas { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 28px; }
+  .facts { display: grid; grid-template-columns: repeat(5, 1fr); gap: 16px; margin-top: 64px; padding-top: 28px; border-top: 1px solid var(--line); }
+  .facts span { display: block; font-size: clamp(32px, 4vw, 48px); }
+  .facts small { color: var(--muted); font-size: 13px; }
+
+  .block { padding-top: 100px; }
+  .head { margin-bottom: 30px; max-width: 760px; }
+  .sec { font-size: clamp(32px, 4.8vw, 56px); margin: 8px 0 0; }
+  .sub { color: var(--muted); font-size: 17px; margin: 14px 0 0; }
+
+  .apps { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 14px; }
+  .app { position: relative; display: grid; grid-template-columns: 56px 1fr; gap: 14px; align-items: center; padding: 18px; border-radius: 18px; border: 1px solid var(--line);
+    background: radial-gradient(120% 140% at 100% 0%, color-mix(in srgb, var(--c) 35%, transparent), transparent 60%), var(--bg-2); transition: transform .25s, border-color .25s; }
+  .app:hover { transform: translateY(-3px); border-color: color-mix(in srgb, var(--c) 60%, var(--line)); }
+  .app img { border-radius: 14px; }
+  .app h3 { margin: 0; font-size: 17px; }
+  .app p { margin: 2px 0 0; color: var(--muted); font-size: 13.5px; }
+  .see { grid-column: 1 / -1; font-size: 13px; font-weight: 600; color: #b9a3ff; text-decoration: none; }
+
+  .soon { border: 1px dashed #3a3450; border-radius: 22px; padding: 30px; text-align: center; color: var(--muted); }
+  .soon a { color: #b9a3ff; }
+  .ghosts { display: flex; justify-content: center; gap: 12px; margin-bottom: 18px; }
+  .ghosts i { width: 70px; aspect-ratio: 9/16; border-radius: 12px; opacity: .55; }
+  .g0 { background: linear-gradient(160deg,#ff4d4d,#5b1a2a); } .g1 { background: linear-gradient(160deg,#7c4dff,#1d1440); } .g2 { background: linear-gradient(160deg,#ff8a5c,#5b2a14); }
+
+  .filters { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 22px; align-items: center; }
+  .filters button { background: transparent; color: var(--muted); border: 1px solid var(--line); border-radius: 999px; padding: 7px 14px; font: inherit; font-size: 14px; cursor: pointer; }
+  .filters button.on { background: var(--fg); color: var(--bg); border-color: var(--fg); }
+  .filters button span { opacity: .6; margin-left: 4px; }
+  .sep { width: 1px; height: 22px; background: var(--line); margin: 0 4px; }
+  .gallery { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 16px; }
+  .item { margin: 0; }
+  .item[hidden] { display: none; }
+  .open { position: relative; display: block; width: 100%; padding: 0; border: 1px solid var(--line); border-radius: 14px; overflow: hidden; cursor: pointer; background: #000; }
+  .open video, .open img { display: block; width: 100%; aspect-ratio: 9/16; object-fit: cover; }
+  .r-1x1 .open video, .r-1x1 .open img { aspect-ratio: 1/1; }
+  .r-4x5 .open video, .r-4x5 .open img { aspect-ratio: 4/5; }
+  .playic { position: absolute; top: 50%; left: 50%; translate: -50% -50%; width: 46px; height: 46px; border-radius: 50%; display: grid; place-items: center; background: rgba(0,0,0,.45); backdrop-filter: blur(6px); color: #fff; transition: opacity .2s; }
+  .open:hover .playic { opacity: 0; }
+  .aitag { position: absolute; top: 10px; right: 10px; font-size: 11px; font-weight: 700; background: var(--violet); padding: 3px 8px; border-radius: 999px; color: #fff; }
+  figcaption { margin-top: 8px; font-size: 13px; line-height: 1.35; }
+  figcaption b { display: block; }
+  figcaption span { color: var(--muted); }
+  .lb { border: 0; padding: 0; background: transparent; max-width: min(92vw, 460px); width: 100%; color: #fff; }
+  .lb::backdrop { background: rgba(0,0,0,.85); backdrop-filter: blur(6px); }
+  .lbmedia :global(video), .lbmedia :global(img) { width: 100%; max-height: 82vh; object-fit: contain; border-radius: 14px; background: #000; display: block; }
+  .lbcap { text-align: center; color: #d4d4d8; font-size: 14px; }
+  .x { position: absolute; top: -6px; right: -6px; z-index: 2; width: 36px; height: 36px; border-radius: 50%; border: 0; background: #fff; color: #000; font-size: 16px; cursor: pointer; }
+
+  .clist { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--line); }
+  .crow { display: grid; grid-template-columns: 80px 1fr 1.25fr; gap: 24px; align-items: baseline; padding: 24px 12px; border-bottom: 1px solid var(--line); transition: background .3s; }
+  .crow:hover { background: linear-gradient(90deg, rgba(255,77,77,.08), rgba(124,77,255,.08)); }
+  .cidx { font-size: 30px; color: #3f3f46; }
+  .crow:hover .cidx { color: var(--accent); }
+  .crow h3 { margin: 0; font-size: clamp(20px, 2.4vw, 27px); font-family: 'Space Grotesk', sans-serif; letter-spacing: -0.02em; }
+  .ctags { margin: 4px 0 0; color: #b9a3ff; font-size: 13px; }
+  .ctext { margin: 0; color: var(--muted); font-size: 15px; }
+  .toolkit { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-top: 26px; }
+  .toolkit .eyebrow { margin-right: 6px; }
+  .tool { border: 1px solid var(--line); border-radius: 999px; padding: 6px 14px; font-size: 14px; color: #d4d4d8; }
+
+  .think { display: grid; grid-template-columns: 1.3fr 1fr; gap: 20px; }
+  .sys { display: block; border-radius: 20px; overflow: hidden; border: 1px solid #2c2350; background: var(--bg-2); text-decoration: none; transition: border-color .3s; }
+  .sys:hover { border-color: var(--violet); }
+  .sys img { width: 100%; aspect-ratio: 16/9; object-fit: cover; }
+  .sys > div { padding: 20px 22px 24px; }
+  .sys h3 { margin: 10px 0 6px; font-size: 24px; }
+  .sys p { margin: 0; color: var(--muted); }
+  .plist { display: grid; gap: 14px; align-content: start; }
+  .pitem { display: block; padding: 20px; border-radius: 16px; border: 1px solid var(--line); background: var(--bg-2); text-decoration: none; transition: border-color .3s; }
+  .pitem:hover { border-color: var(--accent); }
+  .pitem h3 { margin: 10px 0 0; font-size: 17px; line-height: 1.35; }
+  .pill { font-size: 11px; text-transform: uppercase; letter-spacing: .1em; background: var(--violet); padding: 4px 10px; border-radius: 999px; font-weight: 700; }
+  .pill.ghost { background: transparent; border: 1px solid var(--line); color: var(--muted); }
+
+  .end { text-align: center; padding-top: 120px; }
+  .end h2 { font-size: clamp(40px, 7vw, 84px); margin: 0 0 14px; }
+  .end p { color: var(--muted); margin: 0 0 28px; font-size: 17px; }
+  .btn.big { font-size: 17px; padding: 15px 26px; }
+
+  @media (max-width: 900px) {
+    .facts { grid-template-columns: repeat(3, 1fr); row-gap: 22px; }
+    .think { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 600px) {
+    .facts { grid-template-columns: 1fr 1fr; }
+    .crow { grid-template-columns: 44px 1fr; padding: 20px 4px; }
+    .cidx { font-size: 22px; }
+    .ctext { grid-column: 2; }
+    .gallery { grid-template-columns: 1fr 1fr; gap: 12px; }
+  }
 </style>

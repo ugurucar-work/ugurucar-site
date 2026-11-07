@@ -1,14 +1,13 @@
 ---
 import Base from '../layouts/Base.astro';
-import VideoGrid from '../components/VideoGrid.astro';
-import { SHOWREEL } from '../data/showreel';
-const reel = SHOWREEL.filter((p) => p.clips.length > 0);
+import { SHOWCASE } from '../data/showcase';
+const aiWork = SHOWCASE.filter((s) => s.ai).slice(0, 8);
 
 const pains = [
-  { t: 'Scattered research', d: 'Competitor ads, trends and organic hits live in ten different tabs.' },
-  { t: 'Manual production', d: 'Every variation is a ticket, a brief and a wait.' },
+  { t: 'Scattered research', d: 'Competitor ads, trends and organic hits lived in ten different tabs.' },
+  { t: 'Manual production', d: 'Every variation was a ticket, a brief and a wait.' },
   { t: 'Uneven test reading', d: 'A different window, a different lens and a different conclusion every week.' },
-  { t: 'Stalled winners', d: 'Good ads get found, then never scaled or iterated in time.' },
+  { t: 'Stalled winners', d: 'Good ads were found, then never scaled or iterated in time.' },
 ];
 const glance = [
   { t: 'Research', i: ['Daily competitor ad tracking', 'Weekly market report analysis', 'Trend and organic post scans'] },
@@ -39,19 +38,8 @@ const results = [
   { n: '3x+', l: 'more winners found, scaled in days not weeks' },
   { n: '10,000+', l: 'AI creatives produced so far' },
 ];
-const offers = [
-  { t: 'Creative audit', d: 'A deep read of your ad account and competitors: what is tiring, what won but never scaled, and which angles you have not tested yet.', b: 'Start here' },
-  { t: 'Build your machine', d: 'I set up the research, production and testing loop for your brand: skills, tools, fact sheet, design system and the weekly run.', b: 'Most popular', hot: true },
-  { t: 'Run it with you', d: 'Ongoing creative strategy and production. Every Monday your winners become next week\'s tests, and you approve the plan.', b: 'Ongoing' },
-];
-const faqs = [
-  { q: 'Do I need to replace my team or my creators?', a: 'No. The machine takes over research, production busywork and test reading. Your team and your creators focus on strategy and the content only humans can make.' },
-  { q: 'Which platforms does it work with?', a: 'Meta, TikTok and Google for paid UA, plus TikTok One and influencer channels for creator content. Ads are sized for 9:16, 1:1 and 4:5.' },
-  { q: 'Will AI make claims we cannot back up?', a: 'Every claim is checked against one fact sheet before anything ships, and every paid generation needs approval first.' },
-  { q: 'How fast can we start?', a: 'The audit takes about a week. A first ad kit usually ships in the first two weeks of a build.' },
-];
 ---
-<Base title="AI Creative Machine" description="A creative system that researches, produces, tests and scales your ads every week. AI does the work, you keep the keys." image="/images/blog/the-ai-creative-machine/cover.jpg">
+<Base title="AI Creative Machine" description="The AI creative system I built: it researches, produces, tests and scales ads every week, while I steer strategy and spend." image="/images/blog/the-ai-creative-machine/cover.jpg">
 
   <!-- HERO -->
   <section class="hero">
@@ -59,11 +47,11 @@ const faqs = [
     <div class="wrap hgrid">
       <div>
         <p class="eyebrow">AI Creative Machine</p>
-        <h1 class="display">Your ads, researched, made, tested and scaled. <span class="grad-text">Every week.</span></h1>
-        <p class="lead">A creative system built on AI skills and real performance data. One concept goes in, a launch-ready ad set comes out, and last week's winners become this week's tests. AI does the work. You keep the keys.</p>
+        <h1 class="display">I built a machine that makes and tests ads. <span class="grad-text">Every week.</span></h1>
+        <p class="lead">A creative system I designed and run, built on AI skills and real performance data. One concept goes in, a launch-ready ad set comes out, and last week's winners become this week's tests. AI does the work. I steer.</p>
         <div class="ctas">
-          <a class="btn" href="mailto:collab@ugurucar.work?subject=AI%20Creative%20Machine">Book a call</a>
-          <a class="btn ghost" href="#how">See how it works</a>
+          <a class="btn" href="#how">See how it works</a>
+          <a class="btn ghost" href="mailto:collab@ugurucar.work">collab@ugurucar.work</a>
         </div>
       </div>
       <div class="slot hero-slot" data-slot="hero-example" aria-hidden="true">
@@ -82,7 +70,7 @@ const faqs = [
   <section class="wrap block">
     <div class="head reveal">
       <p class="eyebrow">The problem</p>
-      <h2 class="display sec">Creative is the lever. The work around it is the bottleneck.</h2>
+      <h2 class="display sec">Why I built it: creative is the lever, the work around it was the bottleneck.</h2>
     </div>
     <div class="g4">
       {pains.map((p, i) => <article class="card reveal" style={`transition-delay:${i * 80}ms`}><span class="x">✕</span><h3>{p.t}</h3><p>{p.d}</p></article>)}
@@ -111,7 +99,7 @@ const faqs = [
       <div class="head reveal center">
         <p class="eyebrow">How it works</p>
         <h2 class="display sec">One loop. Run every Monday.</h2>
-        <p class="sub">Every week the loop starts again from what last week's tests taught us. I approve plans and spend. AI does the searching, writing, editing and reading.</p>
+        <p class="sub">Every Monday the loop starts again from what last week's tests taught me. I approve plans and spend. AI does the searching, writing, editing and reading.</p>
       </div>
       <ol class="loop reveal">
         {loop.map((s, i) => <li><span>{i + 1}</span>{s}</li>)}
@@ -124,7 +112,7 @@ const faqs = [
     <div class="ftext">
       <p class="eyebrow">01 · Research</p>
       <h2 class="display">Briefs start from what already works</h2>
-      <p>Research no longer starts from a blank page. Ads, trends and organic hits are collected automatically, so every brief is built on evidence.</p>
+      <p>My research no longer starts from a blank page. Ads, trends and organic hits are collected automatically, so every brief is built on evidence.</p>
       <ul class="ticks">
         <li><b>Explore</b> TikTok trends, YouTube, Google Ads and live Meta ad search in one place.</li>
         <li><b>Competitor intel</b> Competitor videos pulled automatically, widest-reach ads checked every morning.</li>
@@ -147,7 +135,7 @@ const faqs = [
     <div class="ftext">
       <p class="eyebrow">02 · Production</p>
       <h2 class="display">From a link to a finished ad</h2>
-      <p>Paste any ad you like. It comes back rebuilt for your brand, with your design system and end card, and tracked end to end.</p>
+      <p>I paste any ad I like. It comes back rebuilt for the brand, with its design system and end card, tracked end to end.</p>
       <div class="pipe"><span>Queued</span><span>In production</span><span>Delivered</span><span class="on">Uploaded</span></div>
       <ul class="ticks">
         <li><b>Edit requests</b> Write what should change. Every version stays: Original, Edit 1, Edit 2.</li>
@@ -158,7 +146,7 @@ const faqs = [
       <div class="ba">
         <div><span class="lbl">Reference</span><i class="ph big ref"></i></div>
         <div class="arrow">→</div>
-        <div><span class="lbl">Your brand</span><i class="ph big out"></i></div>
+        <div><span class="lbl">On brand</span><i class="ph big out"></i></div>
       </div>
     </div>
   </section>
@@ -168,7 +156,7 @@ const faqs = [
     <div class="ftext">
       <p class="eyebrow">03 · Ad Kit</p>
       <h2 class="display">One prompt in. A complete ad set out.</h2>
-      <p>Type one concept. The kit comes back as a launch-ready test set behind a single approval. Every piece gets a different hook mechanic, every claim is checked, and a final quality check runs before it is marked done.</p>
+      <p>I type one concept. The kit comes back as a launch-ready test set behind a single approval. Every piece gets a different hook mechanic, every claim is checked, and a final quality check runs before it is marked done.</p>
       <div class="fmt">
         <div><b>Avatar clips</b><span>AI presenters, each script with its own hook, captions and app proof.</span></div>
         <div><b>Kinetic ads</b><span>Animated typography with real app screens, rendered at no credit cost.</span></div>
@@ -203,7 +191,7 @@ const faqs = [
     <div class="ftext">
       <p class="eyebrow">05 · Feedback loop</p>
       <h2 class="display">Every note becomes a rule</h2>
-      <p>When the machine is unsure, a question lands in the dashboard like a social feed. You answer or leave a note, the AI fixes the output, and the note is written into the skill so every next run follows it.</p>
+      <p>When the machine is unsure, a question lands in the dashboard like a social feed. I answer or leave a note, the AI fixes the output, and the note is written into the skill so every next run follows it.</p>
       <div class="two">
         <div><b class="good">Fixed for good</b><span>Wrong fonts, prices outside the rules, kits missing pieces, films without captions.</span></div>
         <div><b class="eye">Still needs an eye</b><span>AI faces drifting, garbled screen text, bold claims. Taste stays human.</span></div>
@@ -262,7 +250,7 @@ const faqs = [
       <div class="head reveal center">
         <p class="eyebrow">The engine underneath</p>
         <h2 class="display sec">20+ skills. 12 connected tools.</h2>
-        <p class="sub">A skill is a playbook the AI follows. Each one was built over months and trained on real test results plus outside references, so the AI works the way a senior creative strategist works.</p>
+        <p class="sub">A skill is a playbook the AI follows. I built each one over months and trained it on my own test results plus outside references, so the AI works the way I work.</p>
       </div>
       <div class="chips reveal">{tools.map((t) => <span>{t}</span>)}</div>
     </div>
@@ -279,10 +267,15 @@ const faqs = [
     </div>
   </section>
 
-  {reel.length > 0 && (
+  {aiWork.length > 0 && (
     <section class="wrap block" id="outputs">
       <div class="head reveal"><p class="eyebrow">Made by the machine</p><h2 class="display sec">Output examples</h2></div>
-      {reel.map((p) => <VideoGrid clips={p.clips} />)}
+      <div class="outs">
+        {aiWork.map((w) => w.type === 'video'
+          ? <figure><video src={w.src} poster={w.poster} muted loop playsinline preload="none" controls></video><figcaption>{w.app} · {w.format}</figcaption></figure>
+          : <figure><img src={w.src} alt={w.title} loading="lazy" /><figcaption>{w.app} · {w.format}</figcaption></figure>)}
+      </div>
+      <a class="more" href="/portfolio#work">See all creative work →</a>
     </section>
   )}
 
@@ -290,40 +283,16 @@ const faqs = [
   <section class="wrap block">
     <div class="head reveal">
       <p class="eyebrow">Guardrails</p>
-      <h2 class="display sec">AI does the work. You keep the keys.</h2>
+      <h2 class="display sec">AI does the work. I keep the keys.</h2>
     </div>
     <div class="g3">
       {guards.map((g, i) => <article class="card reveal" style={`transition-delay:${i * 60}ms`}><span class="lock">●</span><h3>{g.t}</h3><p>{g.d}</p></article>)}
     </div>
   </section>
 
-  <!-- OFFERS -->
-  <section class="wrap block" id="work-together">
-    <div class="head reveal center">
-      <p class="eyebrow">Work together</p>
-      <h2 class="display sec">Three ways to start</h2>
-    </div>
-    <div class="g3 offers">
-      {offers.map((o) => (
-        <article class={`card offer reveal ${o.hot ? 'hot' : ''}`}>
-          <span class="tag">{o.b}</span>
-          <h3>{o.t}</h3>
-          <p>{o.d}</p>
-          <a class={`btn ${o.hot ? '' : 'ghost'}`} href={`mailto:collab@ugurucar.work?subject=${encodeURIComponent(o.t)}`}>Get in touch</a>
-        </article>
-      ))}
-    </div>
-  </section>
-
-  <!-- FAQ -->
-  <section class="wrap block faq">
-    <div class="head reveal"><p class="eyebrow">FAQ</p><h2 class="display sec">Questions</h2></div>
-    {faqs.map((f) => <details class="reveal"><summary>{f.q}</summary><p>{f.a}</p></details>)}
-  </section>
-
   <section class="wrap end reveal">
-    <h2 class="display">The machine runs.<br /><span class="grad-text">You steer.</span></h2>
-    <div class="ctas center"><a class="btn" href="mailto:collab@ugurucar.work?subject=AI%20Creative%20Machine">Book a call</a><a class="btn ghost" href="/blog/the-ai-creative-machine">Read the full story</a></div>
+    <h2 class="display">The machine runs.<br /><span class="grad-text">I steer.</span></h2>
+    <div class="ctas center"><a class="btn" href="mailto:collab@ugurucar.work">collab@ugurucar.work</a><a class="btn ghost" href="/blog/the-ai-creative-machine">Read the full story</a></div>
   </section>
 </Base>
 
@@ -450,6 +419,11 @@ const faqs = [
   .res span { font-size: clamp(36px, 4.6vw, 56px); }
   .res p { margin: 6px 0 0; color: var(--muted); font-size: 15px; }
 
+  .outs { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 14px; }
+  .outs figure { margin: 0; }
+  .outs video, .outs img { width: 100%; aspect-ratio: 9/16; object-fit: cover; border-radius: 14px; background: #000; border: 1px solid var(--line); }
+  .outs figcaption { font-size: 13px; color: var(--muted); margin-top: 6px; }
+  .more { display: inline-block; margin-top: 20px; color: #b9a3ff; font-weight: 600; text-decoration: none; }
   .offer { display: flex; flex-direction: column; gap: 10px; }
   .offer p { flex: 1; }
   .offer .btn { align-self: flex-start; margin-top: 10px; }
