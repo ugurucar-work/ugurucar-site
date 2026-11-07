@@ -404,7 +404,7 @@ const results = [
       <div class="head reveal">
         <p class="eyebrow">Made by the machine</p>
         <h2 class="display sec">AI creators that feel real</h2>
-        <p class="sub">Fully AI-generated creator ads made with Higgsfield: script, presenter, edit, captions and end card, all from the pipeline. Tap a video to hear it.</p>
+        <p class="sub">Fully AI-generated creator ads: script, presenter, edit, captions and end card, all from the pipeline. Most people watching them assume they are real UGC. Tap a video to hear it.</p>
       </div>
       <div class="vgrid best">
         {aiWork.map((w) => (
@@ -654,7 +654,8 @@ const results = [
   .vhead h3 { font-size: clamp(26px, 3.2vw, 38px); margin: 8px 0 10px; }
   .vhead p { color: var(--muted); margin: 0; }
   .vgrid { display: grid; grid-template-columns: repeat(3, minmax(0, 260px)); gap: 16px; }
-  .vgrid.best { grid-template-columns: repeat(auto-fill, minmax(220px, 300px)); }
+  .vgrid.best { grid-template-columns: repeat(4, 1fr); }
+  @media (max-width: 900px) { .vgrid.best { grid-template-columns: 1fr 1fr; } }
   .hgrid4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
   .hgrid4 figure { margin: 0; position: relative; }
   .hgrid4 figure::after { content: '🔇'; position: absolute; top: 8px; right: 8px; font-size: 13px; background: rgba(0,0,0,.5); border-radius: 999px; padding: 3px 7px; pointer-events: none; }
