@@ -5,6 +5,7 @@ const aiWork = SHOWCASE.filter((s) => s.group === 'best');
 const clone = SHOWCASE.find((s) => s.group === 'clone' && s.reference);
 const kit = SHOWCASE.filter((s) => s.group === 'adkit').slice(0, 4);
 const variations = SHOWCASE.filter((s) => s.group === 'variation').slice(0, 3);
+const hooks = SHOWCASE.filter((s) => s.group === 'hook');
 const tiktokId = clone?.reference?.match(/video\/(\d+)/)?.[1];
 
 const pains = [
@@ -257,6 +258,24 @@ const results = [
           <figure>
             <video class="auto" src={v.src} poster={v.poster} muted loop playsinline preload="none"></video>
             <figcaption>Variation {String.fromCharCode(65 + i)}</figcaption>
+          </figure>
+        ))}
+      </div>
+    </section>
+  )}
+
+  {hooks.length > 0 && (
+    <section class="wrap varis reveal">
+      <div class="vhead">
+        <p class="eyebrow">Best performing hooks</p>
+        <h3 class="display">Three seconds to stop the scroll.</h3>
+        <p>Short, oddly satisfying AI openers cut onto proven bodies. Same ad, new first three seconds, and a fatigued winner gets a second life.</p>
+      </div>
+      <div class="hgrid4">
+        {hooks.map((h) => (
+          <figure>
+            <video class="auto" src={h.src} poster={h.poster} muted loop playsinline preload="none"></video>
+            <figcaption>{h.title}</figcaption>
           </figure>
         ))}
       </div>
@@ -552,6 +571,12 @@ const results = [
   .vhead p { color: var(--muted); margin: 0; }
   .vgrid { display: grid; grid-template-columns: repeat(3, minmax(0, 260px)); gap: 16px; }
   .vgrid.best { grid-template-columns: repeat(auto-fill, minmax(220px, 300px)); }
+  .hgrid4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
+  .hgrid4 figure { margin: 0; position: relative; }
+  .hgrid4 figure::after { content: '🔇'; position: absolute; top: 8px; right: 8px; font-size: 13px; background: rgba(0,0,0,.5); border-radius: 999px; padding: 3px 7px; pointer-events: none; }
+  .hgrid4 figure.sound::after { content: '🔊'; }
+  .hgrid4 figcaption { font-size: 13px; color: var(--muted); margin-top: 6px; text-align: center; }
+  @media (max-width: 760px) { .hgrid4 { grid-template-columns: 1fr 1fr; } }
   .vgrid figcaption { font-size: 13px; color: var(--muted); margin-top: 6px; text-align: center; }
   @media (max-width: 560px) { .vgrid { grid-template-columns: repeat(3, 1fr); gap: 8px; } .vgrid.best { grid-template-columns: 1fr 1fr; } }
   .fan { position: relative; height: 300px; }

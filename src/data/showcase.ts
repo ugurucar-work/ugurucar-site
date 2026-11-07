@@ -12,7 +12,7 @@ export interface ShowcaseItem {
   ratio?: '9:16' | '1:1' | '4:5' | '16:9';
   ai?: boolean;           // made with the AI pipeline
   reference?: string;     // URL of the ad this was adapted from (competitor clone)
-  group?: 'clone' | 'adkit' | 'variation' | 'best';
+  group?: 'clone' | 'adkit' | 'variation' | 'best' | 'hook';
 }
 
 export const SHOWCASE: ShowcaseItem[] = [
@@ -36,4 +36,8 @@ export const SHOWCASE: ShowcaseItem[] = [
   { app: 'Telicall', type: 'video', src: '/work/telicall/variation-presenter-a.mp4', poster: '/work/telicall/variation-presenter-a.jpg', title: 'Winner variation, presenter A', format: 'AI video', ai: true, group: 'variation' },
   { app: 'Telicall', type: 'video', src: '/work/telicall/variation-presenter-b.mp4', poster: '/work/telicall/variation-presenter-b.jpg', title: 'Winner variation, presenter B', format: 'AI video', ai: true, group: 'variation' },
   { app: 'Telicall', type: 'video', src: '/work/telicall/variation-presenter-c.mp4', poster: '/work/telicall/variation-presenter-c.jpg', title: 'Winner variation, presenter C', format: 'AI video', ai: true, group: 'variation' },
+  { app: 'Telicall', type: 'video', src: '/work/telicall/hook-sim-under-skin.mp4', poster: '/work/telicall/hook-sim-under-skin.jpg', title: 'SIM card under the skin', format: 'AI video', ai: true, group: 'hook' },
+  { app: 'Telicall', type: 'video', src: '/work/telicall/hook-id-in-jelly.mp4', poster: '/work/telicall/hook-id-in-jelly.jpg', title: 'ID card cut out of jelly', format: 'AI video', ai: true, group: 'hook' },
+  { app: 'Telicall', type: 'video', src: '/work/telicall/hook-jelly-phone.mp4', poster: '/work/telicall/hook-jelly-phone.jpg', title: 'Jelly phone eats a SIM', format: 'AI video', ai: true, group: 'hook' },
+  { app: 'Telicall', type: 'video', src: '/work/telicall/hook-wooden-sim.mp4', poster: '/work/telicall/hook-wooden-sim.jpg', title: 'Sanding a wooden SIM', format: 'AI video', ai: true, group: 'hook' },
 ];
