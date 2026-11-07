@@ -3,7 +3,8 @@ import Base from '../layouts/Base.astro';
 import { SHOWCASE } from '../data/showcase';
 const aiWork = SHOWCASE.filter((s) => s.group === 'best');
 const clone = SHOWCASE.find((s) => s.group === 'clone' && s.reference);
-const kit = SHOWCASE.filter((s) => s.group === 'adkit').slice(0, 4);
+const kit = SHOWCASE.filter((s) => s.group === 'adkit' && s.type === 'video').slice(0, 4);
+const statics = SHOWCASE.filter((s) => s.group === 'adkit' && s.type === 'image').slice(0, 4);
 const variations = SHOWCASE.filter((s) => s.group === 'variation').slice(0, 3);
 const hooks = SHOWCASE.filter((s) => s.group === 'hook');
 const tiktokId = clone?.reference?.match(/video\/(\d+)/)?.[1];
@@ -80,7 +81,7 @@ const results = [
           <div class="ktabs"><span class="on">All 18</span><span>Avatars 6</span><span>Kinetic 3</span><span>Films 3</span><span>Images 6</span></div>
           <div class="krow">{['lily','vincent','ashley','albert','hook-sim','hook-jelly'].map((n) => <i class="ph v img" style={`background-image:url(/images/previews/${n}.webp)`}></i>)}</div>
           <div class="krow two"><div>{['adkit-kinetic-two-whatsapps','adkit-kinetic-three-steps','hook-wooden-sim'].map((n) => <i class="ph k img" style={`background-image:url(/work/telicall/${n}.jpg)`}></i>)}</div><div>{['scandal-story','ai-creator-go-viral','ai-creator-global-number'].map((n) => <i class="ph f img" style={`background-image:url(/work/telicall/${n}.jpg)`}></i>)}</div></div>
-          <div class="krow">{[0,1,2,3,4,5].map(() => <i class="sq"></i>)}</div>
+          <div class="krow">{['static-tiny-rates','static-uk-number','static-call-detected','static-travel-work','static-tiny-rates','static-uk-number'].map((n) => <i class="sq img" style={`background-image:url(/work/telicall/${n}.webp)`}></i>)}</div>
         </div>
       </div>
     </div>
@@ -220,7 +221,10 @@ const results = [
             </figure>
           ))}
         </div>
-        <p class="knote">From one concept: {kit.length} of the kit's pieces. Tap to hear.</p>
+        {statics.length > 0 && (
+          <div class="sgrid">{statics.map((s) => <figure><img src={s.src} alt={s.title} loading="lazy" /><figcaption><b>Static</b>{s.title}</figcaption></figure>)}</div>
+        )}
+        <p class="knote">Pieces from Telicall ad kits: avatar, kinetic and static. Tap a video to hear.</p>
       </div>
     ) : (
       <div class="slot" data-slot="adkit-example" aria-hidden="true">
@@ -565,6 +569,12 @@ const results = [
   .kgrid figure.sound::after, .vgrid figure.sound::after { content: '🔊'; }
   .kgrid figcaption { font-size: 12px; color: var(--muted); margin-top: 6px; }
   .kgrid figcaption b { color: #b9a3ff; margin-right: 6px; }
+  .sgrid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-top: 14px; }
+  .sgrid figure { margin: 0; }
+  .sgrid img { width: 100%; aspect-ratio: 9/16; object-fit: cover; border-radius: 10px; border: 1px solid #2f2a40; display: block; }
+  .sgrid figcaption { font-size: 11px; color: var(--muted); margin-top: 4px; }
+  .sgrid figcaption b { color: #b9a3ff; margin-right: 4px; }
+  .sq.img { background-size: cover; background-position: top center; }
   .knote { margin: 12px 0 0; font-size: 12px; color: var(--muted); text-align: center; }
   .varis { padding-top: 70px; }
   .vhead { max-width: 640px; margin-bottom: 22px; }

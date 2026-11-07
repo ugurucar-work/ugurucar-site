@@ -40,4 +40,8 @@ export const SHOWCASE: ShowcaseItem[] = [
   { app: 'Telicall', type: 'video', src: '/work/telicall/hook-id-in-jelly.mp4', poster: '/work/telicall/hook-id-in-jelly.jpg', title: 'ID card cut out of jelly', format: 'AI video', ai: true, group: 'hook' },
   { app: 'Telicall', type: 'video', src: '/work/telicall/hook-jelly-phone.mp4', poster: '/work/telicall/hook-jelly-phone.jpg', title: 'Jelly phone eats a SIM', format: 'AI video', ai: true, group: 'hook' },
   { app: 'Telicall', type: 'video', src: '/work/telicall/hook-wooden-sim.mp4', poster: '/work/telicall/hook-wooden-sim.jpg', title: 'Sanding a wooden SIM', format: 'AI video', ai: true, group: 'hook' },
+  { app: 'Telicall', type: 'image', src: '/work/telicall/static-tiny-rates.webp', title: 'Real calls. Tiny rates.', format: 'Static', ai: true, group: 'adkit' },
+  { app: 'Telicall', type: 'image', src: '/work/telicall/static-uk-number.webp', title: 'Your own UK number', format: 'Static', ai: true, group: 'adkit' },
+  { app: 'Telicall', type: 'image', src: '/work/telicall/static-call-detected.webp', title: 'International call detected', format: 'Static', ai: true, group: 'adkit' },
+  { app: 'Telicall', type: 'image', src: '/work/telicall/static-travel-work.webp', title: 'You travel for work', format: 'Static', ai: true, group: 'adkit' },
 ];
