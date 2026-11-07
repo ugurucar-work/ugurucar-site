@@ -2,7 +2,9 @@
 import Base from '../layouts/Base.astro';
 import { SHOWCASE } from '../data/showcase';
 const aiWork = SHOWCASE.filter((s) => s.ai).slice(0, 8);
-const clone = SHOWCASE.find((s) => s.reference && s.type === 'video');
+const clone = SHOWCASE.find((s) => s.group === 'clone' && s.reference);
+const kit = SHOWCASE.filter((s) => s.group === 'adkit').slice(0, 4);
+const variations = SHOWCASE.filter((s) => s.group === 'variation').slice(0, 3);
 const tiktokId = clone?.reference?.match(/video\/(\d+)/)?.[1];
 
 const pains = [
@@ -207,9 +209,23 @@ const results = [
         <div><b>Static images</b><span>Several layouts, each checked for on-image text errors.</span></div>
       </div>
     </div>
-    <div class="slot" data-slot="adkit-example" aria-hidden="true">
-      <div class="fan">{[0,1,2,3].map((n) => <i class={`ph fan${n}`}></i>)}</div>
-    </div>
+    {kit.length > 0 ? (
+      <div class="slot kitreal">
+        <div class="kgrid">
+          {kit.map((k) => (
+            <figure>
+              <video class="auto" src={k.src} poster={k.poster} muted loop playsinline preload="none"></video>
+              <figcaption><b>{k.format}</b>{k.title}</figcaption>
+            </figure>
+          ))}
+        </div>
+        <p class="knote">From one concept: {kit.length} of the kit's pieces. Tap to hear.</p>
+      </div>
+    ) : (
+      <div class="slot" data-slot="adkit-example" aria-hidden="true">
+        <div class="fan">{[0,1,2,3].map((n) => <i class={`ph fan${n}`}></i>)}</div>
+      </div>
+    )}
   </section>
 
   <!-- FEATURE: MONDAY RUN -->
@@ -228,6 +244,24 @@ const results = [
       </div>
     </div>
   </section>
+
+  {variations.length > 0 && (
+    <section class="wrap varis reveal">
+      <div class="vhead">
+        <p class="eyebrow">Winner variations</p>
+        <h3 class="display">Same winning edit. New hook, new presenter, new world.</h3>
+        <p>When a video wins, the run rebuilds it with a new visual hook, presenter and scene while keeping the proven script and app walkthrough. One winner becomes a family of tests.</p>
+      </div>
+      <div class="vgrid">
+        {variations.map((v, i) => (
+          <figure>
+            <video class="auto" src={v.src} poster={v.poster} muted loop playsinline preload="none"></video>
+            <figcaption>Variation {String.fromCharCode(65 + i)}</figcaption>
+          </figure>
+        ))}
+      </div>
+    </section>
+  )}
 
   <!-- FEATURE: FEEDBACK -->
   <section class="wrap feat reveal">
@@ -346,6 +380,23 @@ const results = [
     <div class="ctas center"><a class="btn" href="mailto:collab@ugurucar.work">collab@ugurucar.work</a><a class="btn ghost" href="/blog/the-ai-creative-machine">Read the full story</a></div>
   </section>
 </Base>
+
+<script>
+  const vids = document.querySelectorAll<HTMLVideoElement>('video.auto');
+  const io = new IntersectionObserver((es) => es.forEach((e) => {
+    const v = e.target as HTMLVideoElement;
+    if (e.isIntersecting) { v.preload = 'auto'; v.play().catch(() => {}); } else v.pause();
+  }), { threshold: .35 });
+  vids.forEach((v) => {
+    io.observe(v);
+    v.addEventListener('click', () => {
+      const on = v.muted;
+      vids.forEach((o) => { o.muted = true; });
+      v.muted = !on; if (!v.muted) { v.currentTime = 0; v.play().catch(() => {}); }
+      vids.forEach((o) => o.parentElement?.classList.toggle('sound', !o.muted));
+    });
+  });
+</script>
 
 <style>
   .hero { position: relative; isolation: isolate; overflow: hidden; padding: 90px 0 70px; }
@@ -479,6 +530,21 @@ const results = [
   .nf p { margin: 2px 0 6px; font-size: 12.5px; color: #4b4763; }
   .nf small { color: #8a86a3; font-size: 11px; }
   .nf .close { position: absolute; top: 10px; right: 12px; color: #8a86a3; font-size: 11px; }
+  .kgrid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .kgrid figure, .vgrid figure { margin: 0; position: relative; }
+  video.auto { width: 100%; aspect-ratio: 9/16; object-fit: cover; border-radius: 14px; background: #000; display: block; cursor: pointer; border: 1px solid #2f2a40; }
+  .kgrid figure::after, .vgrid figure::after { content: '🔇'; position: absolute; top: 8px; right: 8px; font-size: 13px; background: rgba(0,0,0,.5); border-radius: 999px; padding: 3px 7px; pointer-events: none; }
+  .kgrid figure.sound::after, .vgrid figure.sound::after { content: '🔊'; }
+  .kgrid figcaption { font-size: 12px; color: var(--muted); margin-top: 6px; }
+  .kgrid figcaption b { color: #b9a3ff; margin-right: 6px; }
+  .knote { margin: 12px 0 0; font-size: 12px; color: var(--muted); text-align: center; }
+  .varis { padding-top: 70px; }
+  .vhead { max-width: 640px; margin-bottom: 22px; }
+  .vhead h3 { font-size: clamp(26px, 3.2vw, 38px); margin: 8px 0 10px; }
+  .vhead p { color: var(--muted); margin: 0; }
+  .vgrid { display: grid; grid-template-columns: repeat(3, minmax(0, 260px)); gap: 16px; }
+  .vgrid figcaption { font-size: 13px; color: var(--muted); margin-top: 6px; text-align: center; }
+  @media (max-width: 560px) { .vgrid { grid-template-columns: repeat(3, 1fr); gap: 8px; } }
   .fan { position: relative; height: 300px; }
   .fan .ph { position: absolute; width: 130px; border-radius: 16px; top: 30px; left: 50%; box-shadow: 0 20px 40px -15px #000; }
   .fan .ph::after { font-size: 18px; }

@@ -12,6 +12,7 @@ export interface ShowcaseItem {
   ratio?: '9:16' | '1:1' | '4:5' | '16:9';
   ai?: boolean;           // made with the AI pipeline
   reference?: string;     // URL of the ad this was adapted from (competitor clone)
+  group?: 'clone' | 'adkit' | 'variation';
 }
 
 export const SHOWCASE: ShowcaseItem[] = [
@@ -24,5 +25,13 @@ export const SHOWCASE: ShowcaseItem[] = [
     format: 'Story film',
     ai: true,
     reference: 'https://www.tiktok.com/@unutulmazreklam/video/7378117805297634565',
+    group: 'clone',
   },
+  { app: 'Telicall', type: 'video', src: '/work/telicall/adkit-avatar-nightstand.mp4', poster: '/work/telicall/adkit-avatar-nightstand.jpg', title: 'Two WhatsApps, nightstand hook', format: 'Avatar', ai: true, group: 'adkit' },
+  { app: 'Telicall', type: 'video', src: '/work/telicall/adkit-avatar-scribble.mp4', poster: '/work/telicall/adkit-avatar-scribble.jpg', title: 'Private number, scribble hook', format: 'Avatar', ai: true, group: 'adkit' },
+  { app: 'Telicall', type: 'video', src: '/work/telicall/adkit-kinetic-two-whatsapps.mp4', poster: '/work/telicall/adkit-kinetic-two-whatsapps.jpg', title: '2 WhatsApps on 1 phone', format: 'Kinetic', ai: true, group: 'adkit' },
+  { app: 'Telicall', type: 'video', src: '/work/telicall/adkit-kinetic-three-steps.mp4', poster: '/work/telicall/adkit-kinetic-three-steps.jpg', title: '2 WhatsApps in 3 steps', format: 'Kinetic', ai: true, group: 'adkit' },
+  { app: 'Telicall', type: 'video', src: '/work/telicall/variation-presenter-a.mp4', poster: '/work/telicall/variation-presenter-a.jpg', title: 'Winner variation, presenter A', format: 'AI video', ai: true, group: 'variation' },
+  { app: 'Telicall', type: 'video', src: '/work/telicall/variation-presenter-b.mp4', poster: '/work/telicall/variation-presenter-b.jpg', title: 'Winner variation, presenter B', format: 'AI video', ai: true, group: 'variation' },
+  { app: 'Telicall', type: 'video', src: '/work/telicall/variation-presenter-c.mp4', poster: '/work/telicall/variation-presenter-c.jpg', title: 'Winner variation, presenter C', format: 'AI video', ai: true, group: 'variation' },
 ];
