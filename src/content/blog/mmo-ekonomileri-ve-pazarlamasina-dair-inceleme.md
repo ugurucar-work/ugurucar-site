@@ -3,7 +3,7 @@ title: "MMO Ekonomileri Üzerine Bir İnceleme: MMO'larda Enflasyon Nasıl Oluş
 description: "Enflasyon gerçek hayatta olduğu gibi MMO’ların da önlenemez bir gerçeğidir. Enflasyon önlenemese de hiperenflasyona dönüşmesi engellenebilir. Bunu konuşmadan önce oyuncular arasındaki ticareti ve oluşturdukları ekonomiyi inceleyelim."
 pubDate: "2021-01-21"
 updatedDate: "2021-02-02"
-heroImage: "/images/blog/mmo-ekonomileri-ve-pazarlamasina-dair-inceleme/00.jpg"
+heroImage: "/images/blog/mmo-ekonomileri-ve-pazarlamasina-dair-inceleme/00.webp"
 lang: "tr"
 originalUrl: "https://www.ugurucar.work/post/mmo-ekonomileri-ve-pazarlamasına-dair-i-nceleme"
 ---

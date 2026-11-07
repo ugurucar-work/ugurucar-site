@@ -3,7 +3,7 @@ title: "Oyun Pazarlamasında Yararlanmanız Gereken En İyi 5 Başucu Kitabı"
 description: "Ne kadar çalışkan olursanız olun, oyununuzu pazarlayamazsanız başarısız olursunuz. \nİşte bu yüzden oyununuzdan nasıl para kazanacağınızı ustalarından öğrenmeniz ve oyun pazarlamasına bir adım atabilmeniz için bu listeyi oluşturdum."
 pubDate: "2021-02-02"
 updatedDate: "2021-02-08"
-heroImage: "/images/blog/oyununuzu-nasil-pazarlayacaginizi-ogrenmek-icin-en-iyi-5-kitap/00.jpg"
+heroImage: "/images/blog/oyununuzu-nasil-pazarlayacaginizi-ogrenmek-icin-en-iyi-5-kitap/00.webp"
 lang: "tr"
 originalUrl: "https://www.ugurucar.work/post/oyununuzu-nasıl-pazarlayacağınızı-öğrenmek-i-çin-en-iyi-5-kitap"
 ---
@@ -32,7 +32,7 @@ Kitabın sonunda şu sorulara cevap bulacaksınız.
 - Oyunlar neden ve nasıl hem ürün hem de hizmet olarak ele alınır?
 - Gamificiation nedir, sadece dijitalde mi vardır, nasıl uygulanır?
 
-![](/images/blog/oyununuzu-nasil-pazarlayacaginizi-ogrenmek-icin-en-iyi-5-kitap/01.jpg)
+![](/images/blog/oyununuzu-nasil-pazarlayacaginizi-ogrenmek-icin-en-iyi-5-kitap/01.webp)
 
 ## A Practical Guide to Indie Game Marketing
 ### Joel Dreskin

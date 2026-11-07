@@ -3,7 +3,7 @@ title: "Meme’ler Pazarlamada Nasıl Kullanılır? Boomer’lar için Kapsamlı
 description: "Meme’leri anlamak, yeni jenerasyonla daha sağlam iletişim kurabilmek için yüzde yüz gereklidir."
 pubDate: "2021-02-20"
 updatedDate: "2021-03-29"
-heroImage: "/images/blog/meme-ler-pazarlamada-nasil-kullanilir-boomer-lar-icin-kapsamli-rehber/00.jpg"
+heroImage: "/images/blog/meme-ler-pazarlamada-nasil-kullanilir-boomer-lar-icin-kapsamli-rehber/00.webp"
 lang: "tr"
 originalUrl: "https://www.ugurucar.work/post/meme-ler-pazarlamada-nasıl-kullanılır-boomer-lar-için-kapsamlı-rehber"
 ---
@@ -42,7 +42,7 @@ Patrick Davison ise internet meme’lerini şöyle tanımlıyor:
 
 Meme'in kesin bir tanımı yoktur çünkü çok farklı şekillerde kullanılabilir. Çoğu zaman bir şey ifade etmez ve bazen komik bile değildir. Her şeye adapte edilebilir, absürttür ve çok fazla ironi içerir. Meme'ler bazen bir ekran görüntüsü olabilir, bazen bir kelime hatta sadece bir harf.
 
-![](/images/blog/meme-ler-pazarlamada-nasil-kullanilir-boomer-lar-icin-kapsamli-rehber/01.jpg)
+![](/images/blog/meme-ler-pazarlamada-nasil-kullanilir-boomer-lar-icin-kapsamli-rehber/01.webp)
 
 ## Meme’lerin Kısa Tarihi
 
@@ -58,7 +58,7 @@ Reddit, 9gag, 4chan, Tumblr, Twitter, Instagram ve Facebook her türlü sosyal m
 
 Bu mecralarda meme'lerin popülerleşmesine ön ayak olan bazı meme'ler aşağıdakilerdir. Bu meme'ler genelde bir duygu halini temsil ediyordu. Yerlerini başkalarına bıraktılar ve artık çoğunlukla kullanımda değiller.
 
-![](/images/blog/meme-ler-pazarlamada-nasil-kullanilir-boomer-lar-icin-kapsamli-rehber/02.jpg)
+![](/images/blog/meme-ler-pazarlamada-nasil-kullanilir-boomer-lar-icin-kapsamli-rehber/02.webp)
 
 ## İnsanlar Neden Seviyor?
 
@@ -76,7 +76,7 @@ Bu mecralarda meme'lerin popülerleşmesine ön ayak olan bazı meme'ler aşağ�
 
 **Kolay üretilebiliyor,** çünkü meme'leri herkes yapabilir. Photoshop kullanmayı bilmiyor musun Paint kullan. Paint'te mi yok, internette bunun için araçlar mevcut. O da mı yok, sadece yazıyla bile yapabilirsin.
 
-![let that sink in](/images/blog/meme-ler-pazarlamada-nasil-kullanilir-boomer-lar-icin-kapsamli-rehber/03.png)
+![let that sink in](/images/blog/meme-ler-pazarlamada-nasil-kullanilir-boomer-lar-icin-kapsamli-rehber/03.webp)
 
 (sink in = kafasına girmek) (sink = lavabo)
 
@@ -84,7 +84,7 @@ Bu mecralarda meme'lerin popülerleşmesine ön ayak olan bazı meme'ler aşağ�
 
 **Yalnızlık hissini azaltıyor,** çünkü insanlarla paylaşımı çok kolay ve ortak bir paydada buluşulduğunu hissettiriyor, meme'ler bazen bir duygudurumu ifade ettiğinden binlerce insanın da aynı anda bu duyguyu hissettiğini görmek yalnızlık hissini azaltıyor. Aynı zamanda bazı meme'ler "relatable" olma özelliğine sahiptir.
 
-![](/images/blog/meme-ler-pazarlamada-nasil-kullanilir-boomer-lar-icin-kapsamli-rehber/04.jpg)
+![](/images/blog/meme-ler-pazarlamada-nasil-kullanilir-boomer-lar-icin-kapsamli-rehber/04.webp)
 
 **Bilgili/akıllı hissettiriyor,** çünkü bazı meme'ler öyle göndermeler içeriyor ki anlamak için belli bir bilgi ya da kültür geçmişi gerekebiliyor.
 
@@ -102,17 +102,17 @@ Günümüzde "Memetic Marketing" denilen kavrama sık sık rastlamaktayız. İnt
 
 Türkiye'de meme'lere olan ilgi trendi aşağıdaki şekilde ve giderek arttığı görülüyor.
 
-![](/images/blog/meme-ler-pazarlamada-nasil-kullanilir-boomer-lar-icin-kapsamli-rehber/05.png)
+![](/images/blog/meme-ler-pazarlamada-nasil-kullanilir-boomer-lar-icin-kapsamli-rehber/05.webp)
 
 Dünya'da ise ilginin son yıllarda düştüğü görülüyor, bunun muhtemel nedeni insanların bu tür içerikleri sosyal medya hesaplarında zaten takip ettiklerinden eskisi kadar aratmıyor olması olabilir.
 
-![](/images/blog/meme-ler-pazarlamada-nasil-kullanilir-boomer-lar-icin-kapsamli-rehber/06.png)
+![](/images/blog/meme-ler-pazarlamada-nasil-kullanilir-boomer-lar-icin-kapsamli-rehber/06.webp)
 
 Meme'leri pazarlama stratejinize dahil edecekseniz almanız gereken en önemli karar bunu kendi kanallarınız ile mi yoksa popüler sayfalar üzerinden mi yapmanız gerektiği. En akıllıcası bu konuda uzman partnerler edinmek ve hedef kitlenize uygun takipçilere sahip influencer ya da sayfalarla çalışmak olacaktır.
 
 Aşağıda başka bir kanalı kullanarak yapabileceğiniz bir meme örneği var. Bu bir reklam olmayabilir fakat kesinlikle Osram'ın uzaktan kumandalı ampulunu tanıtmak için etkili bir yöntem.
 
-![](/images/blog/meme-ler-pazarlamada-nasil-kullanilir-boomer-lar-icin-kapsamli-rehber/07.jpg)
+![](/images/blog/meme-ler-pazarlamada-nasil-kullanilir-boomer-lar-icin-kapsamli-rehber/07.webp)
 
 Eğer markanızı temsil edecek meme'ler üretmek istiyorsanız çözdüğünüz sorunlara odaklanmanızı tavsiye ederim. Müşterilerinizin sahip olduğu sorunları abartılı, ironik ya da alaycı bir şekilde temsil eden görseller bularak viral olabilecek ürün tanıtımları yapabilirsiniz. Elbette bu meme'lerde direkt olarak ürününüzü ya da marka unsurlarınızı kullanmanızı tavsiye etmem.
 
@@ -135,17 +135,17 @@ Meme’ler kendini sürekli yenileyen ve yayılan bir yapıya sahiplerdir. İşl
 
 Memer'lar genelde işletmelerin kendilerine pay çıkarmak istediklerinin farkındadır, geçmişte meme yapmaya çalıştıkları için (başarısız olduklarından) alaya alınan işletmeler olmuştu. Bu yüzden “Silence Brand” gibi meme’ler ortaya çıktı. Meme’lerin metalaştırılması hoş karşılanmaz ve internet topluluklarının kılıcı keskindir.
 
-![](/images/blog/meme-ler-pazarlamada-nasil-kullanilir-boomer-lar-icin-kapsamli-rehber/08.jpg)
+![](/images/blog/meme-ler-pazarlamada-nasil-kullanilir-boomer-lar-icin-kapsamli-rehber/08.webp)
 
 Öte yandan elbette meme'lerin sıkı takipçisi olmayan insanlar (insanların büyük oranı) bu paylaşımları espri gibi düşünür ve meta gibi görmezler. Bu da ya komik bulmalarına ya da tepki göstermelerine neden olur.
 
 Aşağıdaki örnekte Facebook kullanan annesinin 10 sene geriden geldiğiyle ilgili bir meme yapmaya çalışan Twitter kullanıcı aslında kendisinin de 5 sene geriden gelen bir meme yaptığının farkında değildir. Bu kullanıcı siz olmayın!
 
-![](/images/blog/meme-ler-pazarlamada-nasil-kullanilir-boomer-lar-icin-kapsamli-rehber/09.jpg)
+![](/images/blog/meme-ler-pazarlamada-nasil-kullanilir-boomer-lar-icin-kapsamli-rehber/09.webp)
 
 Elbette tepki alırsanız ne zaman vazgeçmeniz gerektiğini bilmeniz lazım. Hemen bir özür tweet'i atma kararı alabilir ya da McDonalds gibi kitlenizin anlayacağı dilde akıllıca dönüş yapabilirsiniz.
 
-![](/images/blog/meme-ler-pazarlamada-nasil-kullanilir-boomer-lar-icin-kapsamli-rehber/10.jpg)
+![](/images/blog/meme-ler-pazarlamada-nasil-kullanilir-boomer-lar-icin-kapsamli-rehber/10.webp)
 
 **3- Alternatifleri vardır**
 
@@ -159,7 +159,7 @@ Meme’ler bazen geçmişteki meme’lerin toplamından çok aşamalı bir hale 
 
 Geçmişte Avrupa’da ofansif olduğu gerekçesiyle yasaklanan meme’ler oldu. Bazı meme’ler politik ya da tarihi sembolizmler içerebilir ve bunu açıkça belli etmeyebilir. Tabi her sembolizm kötü değildir, bazı meme'ler iyilik adına sembolizm içerebilir. Örneğin "Wholesome memes" gibi kategoriler vardır. "Pozitif Meme" olarak çevirebileceğimiz bu meme türleri insanları iyi hissettirmeye odaklanır ve sevdiklerinize gönderebileceğiniz içeriklerdir.
 
-![](/images/blog/meme-ler-pazarlamada-nasil-kullanilir-boomer-lar-icin-kapsamli-rehber/11.jpg)
+![](/images/blog/meme-ler-pazarlamada-nasil-kullanilir-boomer-lar-icin-kapsamli-rehber/11.webp)
 
 **6- Bir anlam içermeyebilirler**
 
@@ -185,15 +185,15 @@ Ogilvy UK'in Yönetim Kurulu Başkan Yardımcısı, tüketici davranışlarında
 
 Netflix meme'leri en etkili kullanan işletmelerden biri. Netflix Twitter'ı adeta bir "Meme Account" gibi kullanıyor.
 
-![](/images/blog/meme-ler-pazarlamada-nasil-kullanilir-boomer-lar-icin-kapsamli-rehber/12.png)
+![](/images/blog/meme-ler-pazarlamada-nasil-kullanilir-boomer-lar-icin-kapsamli-rehber/12.webp)
 
 Bu stratejiyi sadece Netflix'de kullanmıyor. Sağlık Bakanı Fahrettin Koca sosyal mesafeyi korumakla ilgili iletişim kurarken -teknik olarak kendi yarattığı- bir meme'den faydalandı. Sonuçları karşılaştırmak için etkileşim sayılarına bakabilirsiniz.
 
-![](/images/blog/meme-ler-pazarlamada-nasil-kullanilir-boomer-lar-icin-kapsamli-rehber/13.png)
+![](/images/blog/meme-ler-pazarlamada-nasil-kullanilir-boomer-lar-icin-kapsamli-rehber/13.webp)
 
 Son zamanlarda gündeme gelen en büyük olay ise kesinlikle KFC'nin hamlesiydi. KFC McDonalds ve Burger King'i sopayla kovalayan doge ile yüz binlerce etkileşim topladı. İçerik şaka olabilir fakat sayılar kesinlikle şaka değil.
 
-![](/images/blog/meme-ler-pazarlamada-nasil-kullanilir-boomer-lar-icin-kapsamli-rehber/14.png)
+![](/images/blog/meme-ler-pazarlamada-nasil-kullanilir-boomer-lar-icin-kapsamli-rehber/14.webp)
 
 Godzilla vs Kong herkesin sinemalarda izlemek isteyeceği bir film ve bu sene aşıların dağıtılmasının başlamasıyla birlikte muazzam bir pazarlama kampanyası başlatıldı. İnsanlar o kadar "hype" ki (*Yazının başındaki terimler kısmına bakın*) aşı olamasalar bile bu film için sinemaya gideceklerini söylüyorlar. Elbette bu hype'dan diğer markalar da faydalanıyor.
 
@@ -201,13 +201,13 @@ Bazı pazarlar rakiplerinizle etkileşime geçmekten korkmamanızı gerektiriyor
 
 Meme'ler genel olarak gençlere hitap ettiğinden yaşça büyük kişilerden tepki alabiliyor. KFC'nin yayınladığı bu görseli Pazarlamasyon'un paylaşması üzerine gelen bir tepki şöyle:
 
-![](/images/blog/meme-ler-pazarlamada-nasil-kullanilir-boomer-lar-icin-kapsamli-rehber/15.png)
+![](/images/blog/meme-ler-pazarlamada-nasil-kullanilir-boomer-lar-icin-kapsamli-rehber/15.webp)
 
 Bu kültürden uzak biri elbette burdaki alayı ve ironiyi anlamakta güçlük çekecektir. Bu yüzden içerik stratejinizi belirlerken meme'leri kullanıp kullanmayacağınıza karar vermenizin temeli kitlenizi ne kadar iyi tanıdığınızda yatıyor.
 
 Bir sorumluluk reddi olarak da şu meme'i paylaşmak istiyorum.
 
-![](/images/blog/meme-ler-pazarlamada-nasil-kullanilir-boomer-lar-icin-kapsamli-rehber/16.png)
+![](/images/blog/meme-ler-pazarlamada-nasil-kullanilir-boomer-lar-icin-kapsamli-rehber/16.webp)
 
 Buraya kadar okudun mu? Wow, teşekkürler.
 

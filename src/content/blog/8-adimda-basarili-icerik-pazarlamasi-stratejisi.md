@@ -3,7 +3,7 @@ title: "Sizi Öne Çıkaracak İçerik Stratejisi Oluşturmanın 8 Adımı"
 description: "İçerik pazarlama, belirli bir kitleye sunulan güncel konularla ilgili doğru ve tutarlı içeriklerin yaratılmasını içeren stratejik bir pazarlama yaklaşımıdır, her an müşteriye ürünlerimizi tanıtmaktan ve satış gerçekleştirmeye çalışmaktan öte müşterinin sorunlarını çözmek amacıyla bilinçlendirmektir. "
 pubDate: "2021-01-21"
 updatedDate: "2021-03-09"
-heroImage: "/images/blog/8-adimda-basarili-icerik-pazarlamasi-stratejisi/00.png"
+heroImage: "/images/blog/8-adimda-basarili-icerik-pazarlamasi-stratejisi/00.webp"
 lang: "tr"
 originalUrl: "https://www.ugurucar.work/post/8-adımda-başarılı-i-çerik-pazarlaması-stratejisi-nasıl-oluşturulur"
 ---
@@ -16,7 +16,7 @@ Ne tür pazarlama yapıyor olursanız olun içerik pazarlamaya işletmenize benz
 
 [Content Marketing Institute](https://contentmarketinginstitute.com) ve [Marketing Profs](https://www.google.com/search?client=opera&q=marketing+prof&sourceid=opera&ie=UTF-8&oe=UTF-8)'un 2016'da yaptığı araştırmalara göre pazarlamacıların %70'inin kağıda dökülmüş bir içerik pazarlama stratejisi yok! Peki içerik pazarlama stratejisi nasıl geliştirilir? Bu blogu yaratırken benim de faydalandığım bu 8 adım işletmenizi büyütmenize yardımcı olabilir.
 
-![](/images/blog/8-adimda-basarili-icerik-pazarlamasi-stratejisi/01.png)
+![](/images/blog/8-adimda-basarili-icerik-pazarlamasi-stratejisi/01.webp)
 
 ##
 

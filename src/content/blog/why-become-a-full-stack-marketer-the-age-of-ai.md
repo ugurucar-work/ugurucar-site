@@ -3,12 +3,12 @@ title: "Why become a full-stack Marketer: The Age of AI "
 description: "Marketing Has ChangedMarketing used to goes like this: designers designed, copywriters wrote, advertisers bought media so on, so forth. However, today the most impactful marketers break these norms. They’re not just specialists anymore, you see roles like Marketing Artist or Integrated Marketing Specialist, 360 Marketing Expert, Marketing Coordinator, etc. What do these mean? Well, simple. In this age your guy in marketing department needs to be generalist who can juggle among many other tasks. "
 pubDate: "2026-07-17"
 updatedDate: "2026-07-17"
-heroImage: "/images/blog/why-become-a-full-stack-marketer-the-age-of-ai/00.png"
+heroImage: "/images/blog/why-become-a-full-stack-marketer-the-age-of-ai/00.webp"
 lang: "en"
 originalUrl: "https://www.ugurucar.work/post/why-become-a-full-stack-marketer-the-age-of-ai"
 ---
 
-![](/images/blog/why-become-a-full-stack-marketer-the-age-of-ai/01.png)
+![](/images/blog/why-become-a-full-stack-marketer-the-age-of-ai/01.webp)
 
 ## Marketing Has Changed
 

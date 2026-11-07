@@ -3,7 +3,7 @@ title: "The Evolution of UGC: From Home Videos to Marketplace-Powered Workflows"
 description: "User-Generated Content has quietly become the most performant creative format in digital advertising. What started as amateur webcam clips is now a structured production economy with briefs, casting calls, licensing agreements and dedicated marketplaces. If you run paid media, content, or brand, understanding where UGC came from and how the workflow actually operates today is no longer optional.1. Where UGC Actually Came FromUGC is older than TikTok, older than Instagram, older than the iPhone. "
 pubDate: "2026-04-17"
 updatedDate: "2026-04-17"
-heroImage: "/images/blog/the-evolution-of-ugc-from-home-videos-to-marketplace-powered-workflows/00.png"
+heroImage: "/images/blog/the-evolution-of-ugc-from-home-videos-to-marketplace-powered-workflows/00.webp"
 lang: "en"
 originalUrl: "https://www.ugurucar.work/post/the-evolution-of-ugc-from-home-videos-to-marketplace-powered-workflows"
 ---
@@ -22,7 +22,7 @@ Three macro shifts pushed UGC from accidental to industrialised:
 - **2016-2019:** Instagram Stories and Snapchat normalised vertical, unpolished video. Creative expectations loosened.
 - **2020, present:** TikTok redefined the attention economy. Native, personality-driven content started outperforming high-budget campaigns on every major platform
 
-![](/images/blog/the-evolution-of-ugc-from-home-videos-to-marketplace-powered-workflows/01.jpg)
+![](/images/blog/the-evolution-of-ugc-from-home-videos-to-marketplace-powered-workflows/01.webp)
 
 ## 2. From Organic Content to a Production Category
 
@@ -64,7 +64,7 @@ TikTok One (formerly TikTok Creator Marketplace + Creative Challenge + TTCC, now
 
 The trade-off: TikTok One is strongest for TikTok-native work. If you need raw files for Meta, YouTube Shorts, or your website, you'll often still need a secondary marketplace.
 
-![](/images/blog/the-evolution-of-ugc-from-home-videos-to-marketplace-powered-workflows/02.png)
+![](/images/blog/the-evolution-of-ugc-from-home-videos-to-marketplace-powered-workflows/02.webp)
 
 ## 5. The Broader UGC Marketplace Landscape
 
@@ -110,4 +110,4 @@ Short answer is no. UGC will find a way to be real and people still search for t
 
 UGC used to be a tactic. It's now infrastructure. Build it accordingly.
 
-![](/images/blog/the-evolution-of-ugc-from-home-videos-to-marketplace-powered-workflows/03.jpg)
+![](/images/blog/the-evolution-of-ugc-from-home-videos-to-marketplace-powered-workflows/03.webp)

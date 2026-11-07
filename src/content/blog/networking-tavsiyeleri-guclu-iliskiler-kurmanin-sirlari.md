@@ -3,7 +3,7 @@ title: "Networking Tavsiyeleri - 16 Pazarlama Profesyonelinin Ağzından Güçl�
 description: "Sektör etkinliklerinde yüz yüze network oluşturma, profesyonel hayatta önemli bir husustur. Bu yüzden hem fiziksel konferansların hem de COVID dönemindeki dijital toplantıların çıktılarından bazı ipuçları paylaşacağım. Bunun için 16 profesyonel pazarlamacından alıntılar yaptım ve açıklamaya çalıştım. "
 pubDate: "2021-10-09"
 updatedDate: "2021-10-09"
-heroImage: "/images/blog/networking-tavsiyeleri-guclu-iliskiler-kurmanin-sirlari/00.jpg"
+heroImage: "/images/blog/networking-tavsiyeleri-guclu-iliskiler-kurmanin-sirlari/00.webp"
 lang: "tr"
 originalUrl: "https://www.ugurucar.work/post/networking-tavsiyeleri-16-pazarlama-profesyonelinin-ağzından-güçlü-i-lişkiler-kurmanın-sırları"
 ---

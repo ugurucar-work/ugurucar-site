@@ -5,7 +5,7 @@ const d = post.data;
 const date = d.pubDate.toLocaleDateString(d.lang === 'tr' ? 'tr-TR' : 'en-US', { year: 'numeric', month: 'short', day: 'numeric' });
 ---
 <a class="card" href={`/blog/${post.id}`}>
-  {d.heroImage && <div class="thumb"><img src={d.heroImage} alt="" loading="lazy" /></div>}
+  {d.heroImage && <div class="thumb"><img src={d.heroImage.replace(/\/((?:00|cover)\.webp)$/, '/thumb-$1')} alt="" loading="lazy" /></div>}
   <div class="meta"><span class="lang">{d.lang.toUpperCase()}</span><span>{date}</span></div>
   <h3>{d.title}</h3>
 </a>

@@ -3,7 +3,7 @@ title: "Influencer Pazarlamada Önemli Tanımlar ve Kampanya Planlama"
 description: "Influencer pazarlama son 5 yılın önemli gündeminden biri. Giderek büyümekte olan bu kanal markaların da ilgisini üzerinde tutmaya devam ediy"
 pubDate: "2022-02-15"
 updatedDate: "2022-02-15"
-heroImage: "/images/blog/influencer-pazarlama/00.png"
+heroImage: "/images/blog/influencer-pazarlama/00.webp"
 lang: "tr"
 originalUrl: "https://www.ugurucar.work/post/influencer-pazarlama"
 ---
@@ -14,7 +14,7 @@ Influencer pazarlama son 6-7 yıldır pazarlamacıların önemli gündemlerinden
 
 Aşağıda Google Trends'den çektiğim Influencer ve Influencer Marketing keyword'lerine olan ilgi verisi mevcut. Son yıllarda belki de pandemide kısılan bütçeler sebebiyle ilginin bir miktar azaldığı görülüyor.
 
-![](/images/blog/influencer-pazarlama/01.png)
+![](/images/blog/influencer-pazarlama/01.webp)
 
 ## Influencer Pazarlama nedir?
 ###
@@ -61,7 +61,7 @@ Son yıllarda influencer’lara ve influencer pazarlamaya olan ilgi global ölç
 - Sosyal medya kullanıcılarının büyük kısmı en az bir influencer takip ediyor.
 - Tüketicilerin %49’u karar verirken influencer’lara güveniyor.
 
-[![data by bettermarketing.pub](/images/blog/influencer-pazarlama/02.png)](https://bettermarketing.pub/why-nano-influencers-are-a-great-addition-to-your-marketing-strategy-6383011a83dd)
+[![data by bettermarketing.pub](/images/blog/influencer-pazarlama/02.webp)](https://bettermarketing.pub/why-nano-influencers-are-a-great-addition-to-your-marketing-strategy-6383011a83dd)
 
 ## Influencer’lar nasıl bulunur?
 
@@ -123,7 +123,7 @@ Belirlediğiniz KPI’lar çevresinde kampanyanın sonuçlarını inceleyin. Bun
 
 Bütçeden bahsederken de konuştuğumuz gibi birçok influencer’ın kendi belirledikleri ücretler olacaktır. Üstelik sonuçlar da garanti olmadığından riskli bir yatırım aracı olarak görülebilir. Öte yandan kiminle nasıl çalışacağınızı belirleyebilir, paket çalışmalar oluşturarak ve alternatif teklifler alarak bütçenize en uygun seçeneği belirleyebilirsiniz.
 
-![](/images/blog/influencer-pazarlama/03.jpg)
+![](/images/blog/influencer-pazarlama/03.webp)
 
 Örneğin Türkiye’nin en büyük makro influencer’i Danla Biliç bir Instagram postu için 100.000 lira gibi bir ücret istemektedir ve sadece kendi uygun gördüğü markalarla çalışmaktadır. Mikro influencer’ların ücreti makro influencer'lara kıyasla çok daha düşüktür. Instagram influencer fiyatları sayfanın takipçi kalitesine göre 500 lira gibi düşük ücretleri de kapsayabildiği gibi, egonun devreye girebileceği bir iş alanı olduğundan influencer'ın kendine daha fazla değer biçmesi de mümkündür. Nano influencer’larlaysa çok mütevazi miktarlarla çalışabilirsiniz.
 

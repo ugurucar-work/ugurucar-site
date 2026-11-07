@@ -3,7 +3,7 @@ title: "Tek Sayfa Pazarlama Planıyla Hayranlarına Ulaş, İşini Büyüt"
 description: "İlk pazarlama planınızı kolayca hazırlayabilmeniz için taslak oluşturdum ve aşağıda nasıl kullanmanız gerektiğini anlattım. Buraya tıklayarak indirebilir ve çıktısını alarak kullanabilirsiniz. "
 pubDate: "2021-04-09"
 updatedDate: "2021-04-21"
-heroImage: "/images/blog/tek-sayfa-pazarlama-plani/00.png"
+heroImage: "/images/blog/tek-sayfa-pazarlama-plani/00.webp"
 lang: "tr"
 originalUrl: "https://www.ugurucar.work/post/tek-sayfa-pazarlama-planı"
 ---
@@ -68,7 +68,7 @@ Tek sayfa pazarlama planı 3 aşama altında 9 maddeden oluşur.
 
 Ürün ya da hizmetinizle herkese ulaşmaya çalışmak asla mantıklı değildir. Herkesi hedeflemeye çalışmak maliyetlidir ve size yarardan çok zararı olabilir. Eğer hedef pazarınızın kim olduğunu tarif ederken "herkes" diyorsanız bu "hiç kimse" demeye denktir. Daha çok para kazanma uğruna hedef pazarınızı genişletmek kritik bir hatadır. Bu dijital pazarlamada da geçerli bir kuraldır.
 
-![](/images/blog/tek-sayfa-pazarlama-plani/01.png)
+![](/images/blog/tek-sayfa-pazarlama-plani/01.webp)
 
 Büyük şirketler geleneksel medyada reklam vererek "herkes" e ulaşmaya çalışabilir, bu uzun dönemli bir markalama çabasıdır ve küçük işletmeler için uygun bir strateji değildir. Küçük bir işletme sahibi olarak hedef kitlenizi daraltmanız gerekir, bazı durumlarda buna "niş" denir.
 
@@ -99,7 +99,7 @@ Hedef pazarınızı seçerken dikkat etmeniz gereken diğer hususlar şunlardır
 
 Mesajın bir amacı, kitlenizin dikkatini çekmektir ancak dikkat çekmek tek başına bir şey ifade etmez. Eğer öyle olsaydı dikkat çeken her şey başarılı olurdu. Dikkat çekmenin asıl amacı karşınızdakini bir aksiyon almaya ya da cevap vermeye itmektir.
 
-![](/images/blog/tek-sayfa-pazarlama-plani/02.png)
+![](/images/blog/tek-sayfa-pazarlama-plani/02.webp)
 
 Mesajları kitlenize iletmenin farklı yöntemleri vardır; sosyal medya, reklamlar ve kişisel satış gibi. Gelin reklamlara bakalım.
 
@@ -117,7 +117,7 @@ Kaçırdıysanız [**Instagram**](http://instagram.com/marketerslens) adresimden
 
 Değer önerisi işletmenizin varoluşunun kanıtıdır. Eğer isminizi, logonuzu, internet websitenizi sildiğinizde geriye hiçbir şey kalmıyorsa farklılaşmamışsınız demektir. Değer önerisi sizin müşterinize sunduğunuz benzersiz tercih edilme nedeninizdir. Rakiplerinize bakarak fiyatlandırmanızı yapabilir, pazarlama aktivitelerinize yön verebilirsiniz fakat bu sizi sektördeki herhangi bir işletme yapar.
 
-![Değer önerisi nedir? ](/images/blog/tek-sayfa-pazarlama-plani/03.png)
+![Değer önerisi nedir? ](/images/blog/tek-sayfa-pazarlama-plani/03.webp)
 
 Bilmeniz gereken en önemli şey pazarlamada deneme-yanılmaya yer vardır. Farklılaşmak istiyorsanız yeni şeyler denemeli ve daha önce yapılmamış olanı yapmalısınız. En tecrübeli pazarlamacı bile ilk deneyişte başarılı olamayacağınızı söyleyecektir.
 
@@ -146,7 +146,7 @@ Pazarlamada yatırımın getirisini ölçmek önemlidir. Buna göre nelerin işe
 
 Ücretsiz medyalar da mevcuttur. Pazarlamada bunlara kazanılmış medya deriz. Bu tür medyalar düşük maliyetli ya da maliyetsiz olup, belli ilişkiler kurulmasıyla kazanılır. En iyi örnek sosyal medyada kazandığımız takipçilerimiz olacaktır.
 
-![](/images/blog/tek-sayfa-pazarlama-plani/04.jpg)
+![](/images/blog/tek-sayfa-pazarlama-plani/04.webp)
 
 Sosyal medya her işletmenin ihtiyacı olup olmadığını düşünmeden kullandığı çok popüler bir araç. Şunu unutmamak gerekir ki **sosyal medya bir "medya"dır, strateji değildir**. Pazarlama stratejiniz etrafında bir sosyal medya stratejisi geliştirebilirsiniz fakat sosyal medya piramidinizin çatısında değildir. Eğer faaliyetlerinizi sosyal medyaya yoğunlaştırırsanız müşteri yolculuğundaki diğer aşamaları gözden kaçırabilirsiniz.
 
@@ -307,7 +307,7 @@ Hangi sektörde olursanız olun, ürün ve hizmetler farklı seçeneklerle gelir
 
 Bunun yerine bir normal bir de premium kullanın. Hatta bunu daha ileri götürmek isterseniz decoy effect (tuzay etkisi) gibi psikolojik taktiklerden yararlanabilirsiniz. Meşhur patlamış mısır örneğini verelim.
 
-![Decoy Effect Popcorn Example - Tuzak Etkisi Patlamış Mısır Örneği](/images/blog/tek-sayfa-pazarlama-plani/05.png)
+![Decoy Effect Popcorn Example - Tuzak Etkisi Patlamış Mısır Örneği](/images/blog/tek-sayfa-pazarlama-plani/05.webp)
 
 Decoy Effect
 

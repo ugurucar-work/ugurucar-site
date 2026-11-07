@@ -3,7 +3,7 @@ title: "Nasıl Korsan Olunur? Korsan Olmak Için 2022’de İhtiyaç Duyacağın
 description: "Bu başlık pazarlamayla ne alaka diye düşünüp sayfayı kapamadan önce bir saniye bekleyin çünkü size söz veriyorum bu yazı pazarlamayla alakal"
 pubDate: "2022-03-14"
 updatedDate: "2022-03-14"
-heroImage: "/images/blog/nasil-korsan-olunur/00.jpg"
+heroImage: "/images/blog/nasil-korsan-olunur/00.webp"
 lang: "tr"
 originalUrl: "https://www.ugurucar.work/post/nasıl-korsan-olunur"
 ---
@@ -37,7 +37,7 @@ Sistemli olduklarını söyledik. Korsan gemilerinin çeşitli fonksiyonları va
 Korsanlar günümüzde de varlar ve açık denizlerde hala terör estiriyorlar, bu korsanlar çeşitli ürünler üretebiliyor ve bunun karşılığında açık denizde müşterilerine sunuyor. Tabi korsanlık ve işletmenin arasında temel fark müşterilerin ürüne gösterdiği talepteki özgürlüğü. Korsanların ürünlerini kimse istemiyor, bu yüzden satın almaları için zorlanıyorlar. Peki bunu nasıl yapıyorlar?
 
 ## Korsanlar ve İmparatorluk
-![](/images/blog/nasil-korsan-olunur/01.jpg)
+![](/images/blog/nasil-korsan-olunur/01.webp)
 
 Korsanlar word-of-mouth’la yayılan güçlü bir branding’e sahip. Logosu size de oldukça tanıdık geldi değil mi? Bu ünlü logonun adı Jolly Roger. Açık denizde bu bayrağı göremezsiniz çünkü korsanlar genelde bu bayrakla dolaşmaz. Daha dostane görünen bir ülke bayrağı takarlar. Silahlarını açık denizde dalga arasında görmenizi zorlaştıran kamufle örtülerle kapatırlar. Bu bayrak ancak imparatorluğun bir gemisi tehdit edileceğinde ortaya çıkar ve anlamı çok güçlüdür.
 
@@ -63,7 +63,7 @@ Geriye teslim olma seçeneği kalıyor. Teslim olur ve korsanların talebini yer
 
 *Bu seçenekleri şemalaştırıp tekrar inceleyelim. Jolly Rogers bayrağını gördüğünüzde ne yapmalısınız?*
 
-![](/images/blog/nasil-korsan-olunur/02.png)
+![](/images/blog/nasil-korsan-olunur/02.webp)
 
 > Jolly Rogers hiçbir aksiyon gerçekleşmeden size seçeneklerinizi açıklayan bir logodur ve mantıklı olanı yapmanız için size teşvik eder.
 
@@ -102,7 +102,7 @@ Gemi tamiri için arz ve talep dengesi korsanların dezavantajına çalışır �
 
 *Gelir - (Personel harcamaları + Tamir + Ekipman ve Erzak) = Kar*
 
-![](/images/blog/nasil-korsan-olunur/03.png)
+![](/images/blog/nasil-korsan-olunur/03.webp)
 
 Bu formülle korsan olarak bir başarılı seferde imparatorlukta yıllarca çalışarak kazanacağın paradan daha fazla kazanırsın.
 

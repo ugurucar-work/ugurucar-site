@@ -3,7 +3,7 @@ title: "Google Ads Kelime Planlayıcıya Nasıl Erişilir? (Reklam vermeden)"
 description: "Google kelime planlayıcı aracını reklam vermeden de kullanabilirsiniz ve bunu yapmak tamamen ücretsiz. Ancak Google arayüzünü, reklam vermenizi gerektirdiğini düşündürecek şekilde tasarladığından bu gözden kaçabilir. Bu yazımda görsellerle Google Ads Kelime planlayıcının reklam vermeden nasıl açılacağını açıkladım."
 pubDate: "2021-04-12"
 updatedDate: "2021-04-12"
-heroImage: "/images/blog/google-ads-kelime-planlayiciya-nasil-erisilir-reklam-vermeden/00.jpg"
+heroImage: "/images/blog/google-ads-kelime-planlayiciya-nasil-erisilir-reklam-vermeden/00.webp"
 lang: "tr"
 originalUrl: "https://www.ugurucar.work/post/google-ads-kelime-planlayıcıya-nasıl-erişilir-reklam-vermeden"
 ---
@@ -22,15 +22,15 @@ Google Ads’de hesap oluşturmak için öncelikle Google’la giriş yapıyorsu
 
 - Sayfanın aşağısına inin ve “Uzman Moduna Geçin” butonuna tıklayın.
 
-![](/images/blog/google-ads-kelime-planlayiciya-nasil-erisilir-reklam-vermeden/01.png)
+![](/images/blog/google-ads-kelime-planlayiciya-nasil-erisilir-reklam-vermeden/01.webp)
 
 - Daha sonra “Kampanya olmadan bir hesap oluşturun”u seçin.
 
-![](/images/blog/google-ads-kelime-planlayiciya-nasil-erisilir-reklam-vermeden/02.png)
+![](/images/blog/google-ads-kelime-planlayiciya-nasil-erisilir-reklam-vermeden/02.webp)
 
 - Gerekli bilgilerin girişini yapıp gönder dedikten sonra anahtar kelime planlayıcıya erişebilirsiniz. Sayfanın sağ üstünden “Araçlar ve Ayarlar” menüsünü açın.
 
-![](/images/blog/google-ads-kelime-planlayiciya-nasil-erisilir-reklam-vermeden/03.png)
+![](/images/blog/google-ads-kelime-planlayiciya-nasil-erisilir-reklam-vermeden/03.webp)
 
 “Anahtar Kelime Planlayıcı”yı seçin ve hemen fikirler oluşturmaya başlayın.
 

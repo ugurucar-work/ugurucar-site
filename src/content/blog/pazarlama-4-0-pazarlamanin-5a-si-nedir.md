@@ -3,7 +3,7 @@ title: "Gelenekselden Dijitale Geçiş: Pazarlamanın 5A'sı"
 description: "Philip Kotler, Pazarlama 4.0’da gelenekselden dijitale geçen dünyamızda tüketiciyi (ya da netandaşları) nasıl marka savunucumuz yapabileceği"
 pubDate: "2021-02-14"
 updatedDate: "2021-03-29"
-heroImage: "/images/blog/pazarlama-4-0-pazarlamanin-5a-si-nedir/00.jpg"
+heroImage: "/images/blog/pazarlama-4-0-pazarlamanin-5a-si-nedir/00.webp"
 lang: "tr"
 originalUrl: "https://www.ugurucar.work/post/pazarlama-4-0-pazarlamanın-5a-sı-nedir"
 ---
@@ -16,7 +16,7 @@ Pazarlamanın 5A’sı İngilizce baş harfleri A olan 5 kelimeden oluşmakta. B
 
 Birçok pazarlama konsepti gibi kategorileştirip aşamalara bölündüğünden çok basit görünen öte yandan içine dalındığında koskocaman bir dünya açan bir konsept.
 
-![Pazarlama 4.0 Müşteri Yol Haritası](/images/blog/pazarlama-4-0-pazarlamanin-5a-si-nedir/01.png)
+![Pazarlama 4.0 Müşteri Yol Haritası](/images/blog/pazarlama-4-0-pazarlamanin-5a-si-nedir/01.webp)
 
 Pazarlamanın 5A’sı Philip Kotler’ın ortaya koyduğu bir müşteri yolu haritası. 19. Yüzyıldan beri reklamcılıkta kullanılan, E. St. Elmo Lewis tarafından ortaya koyulmuş AIDA (Attention, Interest, Desire, Action) modeline benzeyen bu yapı dijital dünyanın getirdiği değişikliklere odaklı.
 
@@ -38,7 +38,7 @@ Müşteriler bazen bazı basamakları atlayabilir. Özellikle hızlı tüketim s
 
 ## BAR ve PAR ne ifade ediyor?
 
-![BAR ve PAR nedir? Pazarlama 4.0](/images/blog/pazarlama-4-0-pazarlamanin-5a-si-nedir/02.png)
+![BAR ve PAR nedir? Pazarlama 4.0](/images/blog/pazarlama-4-0-pazarlamanin-5a-si-nedir/02.webp)
 
 Eğer satın alan herkes markamızı savunuyor olsaydı PAR ve BAR eşit olurdu fakat bu ancak mükemmel bir dünyada bu mümkün. 5A takip ettiğimiz stratejinin önemli bir parçasıysa PAR ve BAR oranları birbirine ne kadar yakınsa o kadar başarılı pazarlama kampanyaları yürüttüğümüzü söylemek yanlış olmayacaktır. Örneğin PAR skoru düşük fakat PAR ile BAR birbirine çok yakın değerdeyse bu ölçüm muhtemelen niş bir kitleye hitap eden marka için müthiş bir göstergedir. Öte yandan daha geniş kitlelere hitap eden markalar için aynı şeyi söyleyemeyiz.
 
@@ -121,7 +121,7 @@ Elbette bu savunucuların ya da avukatların toksik bir marka imajı oluşturmas
 
 Fanlar yaratmak için ürününüzü satmanız da şart değildir. *Savunma* aşamasına eylem aşamasını atlayarak gelen müşteriler de olabilir. Örneğin Tesla’nın savunucularının hepsi Tesla kullanıcısı değildir.
 
-![](/images/blog/pazarlama-4-0-pazarlamanin-5a-si-nedir/03.png)
+![](/images/blog/pazarlama-4-0-pazarlamanin-5a-si-nedir/03.webp)
 
 ## Farkındalıktan Savunuculuğa taşımak: O Bölgesi
 

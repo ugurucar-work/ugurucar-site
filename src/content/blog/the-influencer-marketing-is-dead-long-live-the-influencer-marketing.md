@@ -3,7 +3,7 @@ title: "The Influencer Marketing is Dead. Long Live The Influencer Marketing."
 description: "The concept of \"influencer\" has been undergoing significant transformation. Initially, influencers were individuals with expertise in specific niches, leveraging their knowledge to impact their followers decisions. However over time, the emphasis shifted and somehow influencers started to arise suspicion in consumers mind and even hate in some not so rare cases. It became random accounts with large follower counts always trying to sell you things. This change came with a cost: genuine engagement"
 pubDate: "2025-03-09"
 updatedDate: "2025-07-17"
-heroImage: "/images/blog/the-influencer-marketing-is-dead-long-live-the-influencer-marketing/00.png"
+heroImage: "/images/blog/the-influencer-marketing-is-dead-long-live-the-influencer-marketing/00.webp"
 lang: "en"
 originalUrl: "https://www.ugurucar.work/post/the-influencer-marketing-is-dead-long-live-the-influencer-marketing"
 ---
@@ -33,7 +33,7 @@ You heard about Influencer Marketing but don't have any experience in it and may
 
    I'll be referring to these components, so I won't deep dive here. Just keep these in mind, these 3 are very important.
 
-   ![](/images/blog/the-influencer-marketing-is-dead-long-live-the-influencer-marketing/50.avif)
+   ![](/images/blog/the-influencer-marketing-is-dead-long-live-the-influencer-marketing/50.webp)
 
 ### The Rise of Social Media and Changing Consumer Behavior
 
@@ -48,7 +48,7 @@ Influencers can be categorized based on their follower count and reach:
 - **Micro-Influencers**: Individuals with 10,000 to 100,000 followers. They often focus on specific niches and have highly engaged audiences, making them valuable for targeted marketing.
 - **Nano-Influencers**: Those with 1,000 to 10,000 followers. They typically have close-knit communities and can drive high engagement through personal interactions.
 
-![](/images/blog/the-influencer-marketing-is-dead-long-live-the-influencer-marketing/02.png)
+![](/images/blog/the-influencer-marketing-is-dead-long-live-the-influencer-marketing/02.webp)
 
 Brands are increasingly recognizing the value of micro and nano-influencers, as their smaller but more engaged followings can lead to higher conversion rates and more authentic promotion. More on that later.
 
@@ -82,7 +82,7 @@ Recognizing the value of authenticity, many brands are shifting their focus towa
 
 Let’s face it: TikTok is like that friend who promises you the world but disappears when you need them most. One day, you’re scrolling, and there’s this person with a viral video, dancing, lip-syncing, or maybe doing something utterly random thing. The next day? Poof! They’re gone, vanished into the void, reduced into atom.
 
-![](/images/blog/the-influencer-marketing-is-dead-long-live-the-influencer-marketing/03.png)
+![](/images/blog/the-influencer-marketing-is-dead-long-live-the-influencer-marketing/03.webp)
 
 ### The Algorithm Doesn’t Build Communities, It Builds Hype
 
@@ -119,7 +119,7 @@ Daniel Wellington, known for its minimalist watches, revolutionized its marketin
 
 Fashion Nova leveraged over 5,000 micro-influencers in the fashion realm to showcase its affordable yet trendy outfits. These collaborations resonated with their dedicated followers, leading to explosive growth for the brand. They are also one of the leading actors in UGC field, which is subject for another blog post.
 
-![](/images/blog/the-influencer-marketing-is-dead-long-live-the-influencer-marketing/04.jpeg)
+![](/images/blog/the-influencer-marketing-is-dead-long-live-the-influencer-marketing/04.webp)
 
 **3. Glossier's Authentic Engagement**
 

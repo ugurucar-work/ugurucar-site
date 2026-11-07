@@ -3,7 +3,7 @@ title: "Oyun Endüstrisini Değiştiren 6 Temel Pazarlama Trendi"
 description: "Oyun endüstrisini değiştiren 6 temel pazarlama trendi"
 pubDate: "2021-02-20"
 updatedDate: "2021-03-09"
-heroImage: "/images/blog/oyun-endustrisini-degistiren-6-temel-pazarlama-trendi/00.jpg"
+heroImage: "/images/blog/oyun-endustrisini-degistiren-6-temel-pazarlama-trendi/00.webp"
 lang: "tr"
 originalUrl: "https://www.ugurucar.work/post/oyun-endüstrisini-değiştiren-6-temel-pazarlama-trendi"
 ---

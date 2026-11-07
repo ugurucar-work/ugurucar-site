@@ -3,7 +3,7 @@ title: "Anahtar Kelimelerle 3 Adımda İşinizi Büyütmek"
 description: "Anahtar kelimeler içerik stratejiniz için çok kritiktir, özellikle websiteniz üzerinden gelir elde etmek yada SEO'nuzu güçlendirerek satışla"
 pubDate: "2021-03-09"
 updatedDate: "2021-03-29"
-heroImage: "/images/blog/anahtar-kelime-planlama-sureci-ve-ucretsiz-planlayicilar/00.png"
+heroImage: "/images/blog/anahtar-kelime-planlama-sureci-ve-ucretsiz-planlayicilar/00.webp"
 lang: "tr"
 originalUrl: "https://www.ugurucar.work/post/anahtar-kelime-planlama-süreci-ve-ücretsiz-planlayıcılar"
 ---
@@ -40,7 +40,7 @@ Bunun için benim yararlı bulduğum soovle.com gibi çeşitli ücretsiz araçla
 
 Örneğin aşağıdaki aramayı Google’da yaptığımda doğrudan bana en çok aranan “long-tail keywords” aramaları sunuyor.
 
-![](/images/blog/anahtar-kelime-planlama-sureci-ve-ucretsiz-planlayicilar/01.png)
+![](/images/blog/anahtar-kelime-planlama-sureci-ve-ucretsiz-planlayicilar/01.webp)
 
 Eğer yazımın girişine bakarsanız, bu anahtar kelimelerden bazılarına rastlayacaksınız ve elbette bu bir tesadüf değil. Peki long-tail anahtar kelimeler ile diğerlerinin bir farkı var mı?
 
@@ -60,11 +60,11 @@ Anahtar kelimeleri keşfetmeye başlamadan önce bir beyin fırtınası yapmanı
 
 Bu anahtar kelimelerinizi belirledikten sonra anahtar kelime planlayıcılardan faydalanarak neyin en çok aratıldığını görebilirsiniz. “Çöp kovası” ya da “Çöp kutusu” gibi genel bir anahtar kelimesinin size çok faydası olmayabilir. Jenerik kelimelerde rekabetin yüksek olduğundan bahsetmiştik.
 
-![](/images/blog/anahtar-kelime-planlama-sureci-ve-ucretsiz-planlayicilar/02.png)
+![](/images/blog/anahtar-kelime-planlama-sureci-ve-ucretsiz-planlayicilar/02.webp)
 
 Yukarda Google Trends aracını kullanarak “Çöp kutusu” için arama hacimlerini inceledim. Bu grafik "Çöp kovası" aramasının zamana göre popülerliğini gösteriyor. Bazı anahtar kelimeler dönemsel olarak yükselip düşebilir. Bu anlamda Google Trends bize önemli bir iç görü sunar.
 
-![](/images/blog/anahtar-kelime-planlama-sureci-ve-ucretsiz-planlayicilar/03.png)
+![](/images/blog/anahtar-kelime-planlama-sureci-ve-ucretsiz-planlayicilar/03.webp)
 
 Yukarıda “Çöp kutusu” aramasıyla ilgili Google'ın önerdiği bazı sonuçlar mevcut. Bu bilgiye bağlı olarak bu anahtar kelimelerle ilgili daha ileri araştırma yapabilir ve içerik stratejinize entegre edebilirsiniz.
 
@@ -104,7 +104,7 @@ Anahtar kelimeye göre kullanıcının niyeti, buna bağlı olarak tüketicinin 
 
 Bunun için değişik fiyatlarda birçok araç var, sizin için en uygun olanını bulmak için karşılaştırma yapmanız gerekebilir. Söylemekte fayda var, bu araçları satan şirketler içerik pazarlamasındaki dünyanın en önde gelen şirketleri. O yüzden araştırırken karşılaşacağınız içeriklerin önemli bir kısmı taraflı olacak. Öyle taraflı ki tümünün kendini diğerleriyle karşılaştırdığı içerikler bile mevcut. Daha şeffaf bir fikir oluşturabilmek için ücretsiz deneme süreçlerinden yararlanıp en iyisini kendiniz bulmanızı ya da kullanmış olanlardan öneriler almanızı şiddetle tavsiye ederim.
 
-![](/images/blog/anahtar-kelime-planlama-sureci-ve-ucretsiz-planlayicilar/04.png)
+![](/images/blog/anahtar-kelime-planlama-sureci-ve-ucretsiz-planlayicilar/04.webp)
 
 Bazı premium anahtar kelime planlayıcılar
 
@@ -138,15 +138,15 @@ Google Ads’de hesap oluşturmak için öncelikle Google’la giriş yapıyorsu
 
 - Sayfanın aşağısına inin ve “Uzman Moduna Geçin” butonuna tıklayın.
 
-![](/images/blog/anahtar-kelime-planlama-sureci-ve-ucretsiz-planlayicilar/05.png)
+![](/images/blog/anahtar-kelime-planlama-sureci-ve-ucretsiz-planlayicilar/05.webp)
 
 - Daha sonra “Kampanya olmadan bir hesap oluşturun”u seçin.
 
-![](/images/blog/anahtar-kelime-planlama-sureci-ve-ucretsiz-planlayicilar/06.png)
+![](/images/blog/anahtar-kelime-planlama-sureci-ve-ucretsiz-planlayicilar/06.webp)
 
 - Gerekli bilgilerin girişini yapıp gönder dedikten sonra anahtar kelime planlayıcıya erişebilirsiniz. Sayfanın sağ üstünden “Araçlar ve Ayarlar” menüsünü açın.
 
-![](/images/blog/anahtar-kelime-planlama-sureci-ve-ucretsiz-planlayicilar/07.png)
+![](/images/blog/anahtar-kelime-planlama-sureci-ve-ucretsiz-planlayicilar/07.webp)
 
 “Anahtar Kelime Planlayıcı”yı seçin ve hemen fikirler oluşturmaya başlayın.
 

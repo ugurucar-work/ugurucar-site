@@ -3,12 +3,12 @@ title: "Trial Reels: The Secret Growth Hack You’re Probably Ignoring"
 description: "What is trial reels? In this post I go through how to use Trial Reels to growth hack your Instagram Account, gain followers and possibly customers."
 pubDate: "2025-07-17"
 updatedDate: "2025-07-17"
-heroImage: "/images/blog/trial-reels-the-secret-growth-hack-you-re-probably-ignoring/00.png"
+heroImage: "/images/blog/trial-reels-the-secret-growth-hack-you-re-probably-ignoring/00.webp"
 lang: "en"
 originalUrl: "https://www.ugurucar.work/post/trial-reels-the-secret-growth-hack-you-re-probably-ignoring"
 ---
 
-![](/images/blog/trial-reels-the-secret-growth-hack-you-re-probably-ignoring/01.png)
+![](/images/blog/trial-reels-the-secret-growth-hack-you-re-probably-ignoring/01.webp)
 
 If you're sitting on a few successful Instagram reels, don’t let them collect digital dust. One of the most underrated tricks I’ve discovered for growing fast on Instagram is something Meta calls “Trial Reels”, it works like magic.
 
@@ -22,7 +22,7 @@ Well, at least that's what Instagram promises but when I check the insights of o
 
 ## How to Use It as a Growth Hack
 
-![Instagram will recommend and give you the option to share it to everyone if your Trial Reel takes off. You can choose not to and it'll still bring followers.](/images/blog/trial-reels-the-secret-growth-hack-you-re-probably-ignoring/02.png)
+![Instagram will recommend and give you the option to share it to everyone if your Trial Reel takes off. You can choose not to and it'll still bring followers.](/images/blog/trial-reels-the-secret-growth-hack-you-re-probably-ignoring/02.webp)
 
 Instagram will recommend and give you the option to share it to everyone if your Trial Reel takes off. You can choose not to and it'll still bring followers.
 

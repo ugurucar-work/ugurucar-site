@@ -83,7 +83,7 @@ const toolkit = ['Meta Ads', 'TikTok Ads', 'Google Ads', 'TikTok One', 'Adjust',
             <figure class={`item r-${(w.ratio ?? '9:16').replace(':', 'x')}`} data-app={w.app} data-fmt={w.format}>
               <button class="open" data-i={i} aria-label={`Open ${w.title}`}>
                 {w.type === 'video'
-                  ? <video src={w.src} poster={w.poster} muted loop playsinline preload="metadata"></video>
+                  ? <img src={w.poster} alt={w.title} loading="lazy" data-video={w.src} />
                   : <img src={w.src} alt={w.title} loading="lazy" />}
                 {w.type === 'video' && <span class="playic" aria-hidden="true">▶</span>}
                 {w.ai && <span class="aitag">AI</span>}
@@ -168,11 +168,18 @@ const toolkit = ['Meta Ads', 'TikTok Ads', 'Google Ads', 'TikTok One', 'Adjust',
     a.addEventListener('click', () => apply(`app:${a.dataset.appLink}`)));
 
   // hover preview on desktop
+  // Videos load only on hover (desktop) or tap (lightbox), never up front.
+  const canHover = matchMedia('(hover: hover)').matches;
   items.forEach((it) => {
-    const v = it.querySelector('video');
-    if (!v) return;
-    it.addEventListener('mouseenter', () => { v.play().catch(() => {}); });
-    it.addEventListener('mouseleave', () => { v.pause(); });
+    const img = it.querySelector<HTMLImageElement>('img[data-video]');
+    if (!img || !canHover) return;
+    let v: HTMLVideoElement | null = null;
+    it.addEventListener('mouseenter', () => {
+      v = Object.assign(document.createElement('video'), { src: img.dataset.video!, muted: true, loop: true, playsInline: true, autoplay: true });
+      v.className = 'hoverv';
+      img.after(v);
+    });
+    it.addEventListener('mouseleave', () => { v?.remove(); v = null; });
   });
 
   // lightbox
@@ -238,6 +245,7 @@ const toolkit = ['Meta Ads', 'TikTok Ads', 'Google Ads', 'TikTok One', 'Adjust',
   .open video, .open img { display: block; width: 100%; aspect-ratio: 9/16; object-fit: cover; }
   .r-1x1 .open video, .r-1x1 .open img { aspect-ratio: 1/1; }
   .r-4x5 .open video, .r-4x5 .open img { aspect-ratio: 4/5; }
+  .open :global(.hoverv) { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
   .playic { position: absolute; top: 50%; left: 50%; translate: -50% -50%; width: 46px; height: 46px; border-radius: 50%; display: grid; place-items: center; background: rgba(0,0,0,.45); backdrop-filter: blur(6px); color: #fff; transition: opacity .2s; }
   .open:hover .playic { opacity: 0; }
   .aitag { position: absolute; top: 10px; right: 10px; font-size: 11px; font-weight: 700; background: var(--violet); padding: 3px 8px; border-radius: 999px; color: #fff; }
