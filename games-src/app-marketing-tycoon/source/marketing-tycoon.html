@@ -539,10 +539,16 @@ html.reduce *{animation:none!important;transition:none!important}
 .adp .shine{position:absolute;inset:0;background:radial-gradient(120% 90% at 10% 0%,rgba(255,255,255,.25),transparent 60%)}
 .cr .tiers{display:flex;gap:5px;flex-wrap:wrap}
 .libbar{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
-.adtabs{display:flex;gap:6px;border-bottom:1px solid var(--line);overflow-x:auto;scrollbar-width:none}
-.adtabs button{display:flex;align-items:center;gap:10px;padding:10px 16px 12px;border:0;border-bottom:3px solid transparent;background:none;color:var(--ink);cursor:pointer;font:inherit;text-align:left;white-space:nowrap;margin-bottom:-1px}
+.adtabs{display:flex;gap:10px;overflow-x:auto;scrollbar-width:none;padding:2px}
+.adtabs button{display:flex;align-items:center;gap:10px;padding:10px 18px 10px 10px;border:1px solid var(--line);border-radius:14px;background:var(--panel);color:var(--ink);cursor:pointer;font:inherit;text-align:left;white-space:nowrap;transition:transform .12s,box-shadow .12s,border-color .12s}
 .adtabs button > span:last-child{display:flex;flex-direction:column;gap:1px}.adtabs button b{font-family:var(--f-display);font-size:16px}
-.adtabs button[aria-selected="true"]{border-bottom-color:var(--accent)}.adtabs button:not([aria-selected="true"]){opacity:.62}.adtabs button:hover{opacity:1}
+.adtabs button:hover{border-color:var(--accent);transform:translateY(-1px)}
+.adtabs button[aria-selected="true"]{color:#fff;border-color:transparent;box-shadow:0 8px 22px rgba(5,6,13,.22)}
+.adtabs button[aria-selected="true"] .muted{color:rgba(255,255,255,.85)}
+.adtabs button[aria-selected="true"] .chlogo{background:#fff}
+.adtabs button[data-v="meta"][aria-selected="true"]{background:linear-gradient(120deg,#0064E0,#0A84FF 55%,#7B4DFF)}
+.adtabs button[data-v="tiktok"][aria-selected="true"]{background:linear-gradient(120deg,#13D4CE,#111 48%,#FE2C55)}
+.adtabs button[data-v="google"][aria-selected="true"]{background:linear-gradient(120deg,#4285F4,#34A853 60%,#FBBC05)}
 .camprow{display:flex;gap:14px;overflow-x:auto;scroll-snap-type:x proximity;padding:2px 2px 12px;align-items:flex-start}
 .camprow > .panel{flex:0 0 min(380px,86vw);scroll-snap-align:start}
 .campname{font-family:var(--f-mono,monospace);font-size:13px}
@@ -1355,7 +1361,7 @@ function season(w) {
 
 // ---------- state ----------
 let state = null;
-let draft = { country: 'US', name: '', cat: 'fitness', price: 'orta', tone: 'samimi', color: 0, model: 'subs', icon: 'letter', letter: '', fg: 0 };
+let draft = { country: 'TR', name: '', cat: 'fitness', price: 'orta', tone: 'samimi', color: 0, model: 'subs', icon: 'letter', letter: '', fg: 0 };
 let resetArmed = false;
 const SAVE_KEY = 'marketing-tycoon-app-v1';
 // player preferences live outside the save, so they survive a new game
@@ -1560,7 +1566,7 @@ const RESEARCH_CLICKS = 16;
 // market bundles, indexed to English-speaking Tier 1 (US CPM ~$16-23, Germany ~$8-10, India ~$1.4-2.7, Indonesia ~$2.8; US iOS ~58%, India ~5%).
 // price = localized subscription price vs US (purchasing power); ecpm = ad revenue per user vs US
 const MARKETS = {
-  t1en: { tier: 1, name: 'English-speaking', countries: 'United States, United Kingdom, Canada, Australia, New Zealand, Ireland', cpm: 1, price: 1, ios: .58, ecpm: 1, size: 1, loc: false },
+  t1en: { tier: 1, name: 'US & English-speaking', countries: 'United States, United Kingdom, Canada, Australia, New Zealand, Ireland', cpm: 1, price: 1, ios: .58, ecpm: 1, size: 1, loc: false },
   t1eu: { tier: 1, name: 'Western Europe', countries: 'Germany, France, Netherlands, Belgium, Austria, Switzerland, Nordics', cpm: .6, price: .85, ios: .38, ecpm: .55, size: .9, loc: true },
   t1as: { tier: 1, name: 'Asia-Pacific', countries: 'Japan, South Korea, Singapore, Hong Kong, Taiwan', cpm: .7, price: .9, ios: .5, ecpm: .7, size: .7, loc: true },
   t2eu: { tier: 2, name: 'Southern & Eastern Europe', countries: 'Spain, Italy, Portugal, Poland, Czechia, Romania, Greece, Hungary', cpm: .3, price: .5, ios: .25, ecpm: .25, size: .8, loc: true },
@@ -1596,10 +1602,13 @@ const MMP_BASE = 120, MMP_PER = .07;
 const mmpCost = () => state && state.mmp ? MMP_BASE + Math.round(MMP_PER * ((state.lastReport && state.lastReport.mmpPaid) || 0)) : 0;
 const fixedCost = () => Math.round((FIXED + 60 * (state && state.team ? state.team.length : 0)) * costIdx()) + mmpCost() + (state && state.brand ? officeRent() : 0);
 const homeMkt = () => { const h = state.home; return { ...MARKETS[h.region], name: h.name, countries: h.name, size: h.size, loc: false, home: true }; };
+// the US region is always open for campaigns, so you can compare it with home before you can research anything
+const freeMkt = id => id === 't1en' && state.home.region !== 't1en';
+const openMkt = id => id === 'home' || state.researched.includes(id) || freeMkt(id);
 const mktOf = id => id === 'home' ? homeMkt() : MARKETS[id];
 const fitOf = id => (state.mktFit || {})[id === 'home' ? state.home.region : id] || 1;
 function regSplit(ids, spend, orders, r) {
-  const s = state; ids = (ids && ids.length ? ids : ['home']).filter(id => id === 'home' || s.researched.includes(id)); if (!ids.length) ids = ['home'];
+  const s = state; ids = (ids && ids.length ? ids : ['home']).filter(openMkt); if (!ids.length) ids = ['home'];
   const rows = ids.map(id => { const m = mktOf(id), loc = !m.loc || s.localized.includes(id) ? 1 : .6, conv = fitOf(id) * loc * Math.pow(m.price, .5); return { id, sz: m.size, sales: m.size * conv, rev: m.size * conv * m.price }; });
   const S = rows.reduce((a, x) => a + x.sz, 0), O = rows.reduce((a, x) => a + x.sales, 0), V = rows.reduce((a, x) => a + x.rev, 0);
   r.reg = r.reg || {};
@@ -1610,7 +1619,7 @@ const mktName = id => id === 'home' ? state.home.name : MARKETS[id].name;
 const usedMkts = () => { const set = new Set(['home']); for (const cp of state.camps) if (cp.on) (cp.mkts || ['home']).forEach(x => set.add(x)); if (state.ads.google.on) (state.ads.google.mkts || ['home']).forEach(x => set.add(x)); return [...set]; };
 function mktMix(ids) {
   const s = state;
-  ids = (ids && ids.length ? ids : ['home']).filter(id => id === 'home' || s.researched.includes(id));
+  ids = (ids && ids.length ? ids : ['home']).filter(openMkt);
   if (!ids.length) ids = ['home'];
   let W = 0; const o = { cpm: 0, price: 0, ios: 0, ecpm: 0, conv: 0, inst: 0, size: 0 };
   for (const id of ids) {
@@ -3454,8 +3463,8 @@ function worldMap() {
     let key = null; for (const [k, list] of Object.entries(MAP_SHAPES)) if (list.some(e => inE(x, y, e))) { key = k; break; }
     if (key) (groups[key] = groups[key] || []).push(`<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="1.25"/>`);
   }
-  const state_ = k => k === '_land' ? 'land' : k === home ? 'home' : s.researched.includes(k) ? (used.has(k) ? 'live' : 'done') : 'lock';
-  const tip = k => { const m = MARKETS[k]; const st = state_(k); return `${m.name} · ${st === 'home' ? 'your home market' : st === 'live' ? 'in your campaigns' : st === 'done' ? 'researched' : 'not researched'}`; };
+  const state_ = k => k === '_land' ? 'land' : k === home ? 'home' : s.researched.includes(k) || freeMkt(k) ? (used.has(k) ? 'live' : 'done') : 'lock';
+  const tip = k => { const m = MARKETS[k]; const st = state_(k); return `${m.name} · ${st === 'home' ? 'your home market' : st === 'live' ? 'in your campaigns' : st === 'done' ? (s.researched.includes(k) ? 'researched' : 'open to everyone') : 'not researched'}`; };
   return `<div class="panel stack mapcard"><div class="row"><h3>Your world</h3><div class="maplegend"><span><i class="m-home"></i>Home</span><span><i class="m-live"></i>In campaigns</span><span><i class="m-done"></i>Researched</span><span><i class="m-lock"></i>Not yet</span></div></div>
     <svg viewBox="0 0 364 152" class="worldmap" role="img" aria-label="World map of your markets">${Object.entries(groups).map(([k, dots]) => `<g class="mreg m-${state_(k)} ${used.has(k) ? 'pulse' : ''}" ${k === '_land' ? '' : `data-tip="${esc(tip(k))}"`}>${dots.join('')}</g>`).join('')}</svg></div>`;
 }
@@ -3466,7 +3475,7 @@ function vMarkets() {
   const fitCell = id => `<div><span>Fit</span><b>${ms ? fitTxt(id === 'home' ? fitOf('home') : s.mktFit[id]) : needMs}</b></div>`;
   const stat = (m, extra = '') => `<div class="stats"><div><span>Ad cost</span><b>${dec(m.cpm)}x</b></div><div><span>${ads ? 'Ad revenue' : 'Price'}</span><b>${dec(ads ? m.ecpm : m.price)}x</b></div><div><span>iOS</span><b>${pct(m.ios, 0)}</b></div><div><span>Audience</span><b>${dec(m.size, 2)}</b></div>${extra}</div>`;
   const title = (name, pill) => `<div class="row"><b style="font-family:var(--f-display);font-size:16px">${name}</b>${pill}</div>`;
-  return `<div class="head"><div><h2>Markets ${infoI(`You launched in ${h.name}. A Marketing Specialist can research one new region a week (${money(MKT_RESEARCH)}). Researched regions can be added to any campaign on Meta, TikTok or Google. Non-English regions need localization.`)}</h2></div></div>
+  return `<div class="head"><div><h2>Markets ${infoI(`You launched in ${h.name}. US & English-speaking is always open in your campaigns. A Marketing Specialist can research one new region a week (${money(MKT_RESEARCH)}). Researched regions can be added to any campaign on Meta, TikTok or Google. Non-English regions need localization.`)}</h2></div></div>
   ${worldMap()}
   <div class="panel stack"><h3>Where your live campaigns run ${infoI('Indexes vs the US, based on public 2025–26 ad benchmarks: US Meta CPM about $16–23, Germany about $8–10, India about $1.4–2.7, Indonesia about $2.8. iOS is about 58% of US phones and about 5% in India.')}</h3><div class="minis">
     <div class="mini"><span class="lbl">Ad cost</span><b>${dec(mx.cpm)}x</b><span class="muted small">vs US</span></div>
@@ -3476,12 +3485,13 @@ function vMarkets() {
   <div class="head"><h3>Home</h3></div>
   <div class="grid3"><div class="mkt on">${title(esc(h.name), '<span class="pill good">Home</span>')}<span class="flags">Part of ${MARKETS[s.home.region].name} · Tier ${h.tier}</span>${stat(h, fitCell('home'))}</div></div>
   ${[1, 2, 3].map(t => `<div class="head"><h3>Tier ${t}</h3></div><div class="grid3">${Object.entries(MARKETS).filter(([, m]) => m.tier === t).map(([id, m]) => {
-    const done = s.researched.includes(id), needLoc = m.loc && !s.localized.includes(id), used = s.camps.filter(cp => (cp.mkts || []).includes(id)).length + ((s.ads.google.mkts || []).includes(id) ? 1 : 0);
+    const free = freeMkt(id) && !s.researched.includes(id), done = s.researched.includes(id) || free, needLoc = m.loc && !s.localized.includes(id), used = s.camps.filter(cp => (cp.mkts || []).includes(id)).length + ((s.ads.google.mkts || []).includes(id) ? 1 : 0);
     if (!done) return `<div class="mkt lock">${title(m.name, ms ? '<span class="pill">Not researched</span>' : needMs)}<span class="flags">${m.countries}</span>
       ${ms ? `<div><button class="btn xs" data-act="mktResearch" data-id="${id}" ${resDone ? 'disabled' : ''}>${resDone ? 'One region per week' : `Research (${money(MKT_RESEARCH)})`}</button></div>` : ''}</div>`;
     const lang = `<div><span>Language</span><b>${m.loc ? (needLoc ? '<span class="warn">Not localized</span>' : '<span class="good">Localized</span>') : 'English OK'}</b></div>`;
-    return `<div class="mkt ${used ? 'on' : ''}">${title(m.name, used ? `<span class="pill good">In ${used} campaign${used > 1 ? 's' : ''}</span>` : `<span class="pill acc">Researched</span>`)}<span class="flags">${m.countries}</span>
-      ${stat(m, fitCell(id) + lang)}
+    return `<div class="mkt ${used ? 'on' : ''}">${title(m.name, used ? `<span class="pill good">In ${used} campaign${used > 1 ? 's' : ''}</span>` : (free ? '<span class="pill">Always open</span>' : `<span class="pill acc">Researched</span>`))}<span class="flags">${m.countries}</span>
+      ${stat(m, (free ? `<div><span>Fit</span><b>${ms ? 'Research it' : needMs}</b></div>` : fitCell(id)) + lang)}
+      ${free && ms ? `<div><button class="btn xs" data-act="mktResearch" data-id="${id}" ${resDone ? 'disabled' : ''}>${resDone ? 'One region per week' : `Research fit (${money(MKT_RESEARCH)})`}</button></div>` : ''}
       <div class="row" style="justify-content:flex-start;gap:8px">${needLoc ? `<button class="btn xs" data-act="mktLoc" data-id="${id}">Localize (${money(LOC_COST)})</button>` : ''}${infoI('Add this region to campaigns from the Ads Manager.')}</div></div>`; }).join('')}</div>`).join('')}
   ${ms ? `<div class="panel stack"><h3>${esc(ms.name.split(' ')[0])}'s take</h3><ul class="sugg">${mktSuggestions('mkt').map(x => `<li>${esc(x)}</li>`).join('') || '<li>Your current markets look right for now.</li>'}</ul></div>` : ''}`;
 }
@@ -3534,7 +3544,7 @@ function statGrid(L, isG) {
     .map(([k, v]) => `<div><span>${k}</span><b>${v}</b></div>`).join('');
 }
 function mktChips(sel, id) {
-  const s = state, opts = ['home', ...s.researched];
+  const s = state, opts = ['home', ...(freeMkt('t1en') && !s.researched.includes('t1en') ? ['t1en'] : []), ...s.researched];
   return `<div class="field"><span class="lbl">Markets${Object.keys(MARKETS).some(k => !s.researched.includes(k)) ? warnI('Research more regions in Markets') : ''}</span><div class="seg">${opts.map(k => { const m = mktOf(k), needLoc = m.loc && !s.localized.includes(k); return `<button data-act="campMkt" data-id="${id}" data-v="${k}" aria-pressed="${sel.includes(k)}" ${needLoc ? 'title="Not localized: converts at 60%"' : ''}>${esc(mktName(k))}${needLoc ? ' (not localized)' : ''}</button>`; }).join('')}</div></div>`;
 }
 const capOf = cp => cp.kind === 'test' ? clamp(Math.floor(cp.budget / 60), 2, 5) : maxAds();
@@ -4209,7 +4219,7 @@ const ACT = {
   menuContinue: () => { atMenu = false; menuArm = false; closeModal(); render(); window.scrollTo(0, 0); if (state.over) showFinal(); },
   menuNew: () => {
     if (state && state.brand && !menuArm) { menuArm = true; render(); return; }
-    menuArm = false; draft = { country: 'US', name: '', cat: 'fitness', price: 'orta', tone: 'samimi', color: 0, model: 'subs', icon: 'letter', letter: '', fg: 0 };
+    menuArm = false; draft = { country: 'TR', name: '', cat: 'fitness', price: 'orta', tone: 'samimi', color: 0, model: 'subs', icon: 'letter', letter: '', fg: 0 };
     menuStep = 'app'; render(); window.scrollTo(0, 0); document.getElementById('bname')?.focus();
   },
   menuBack: () => { menuStep = 'title'; render(); window.scrollTo(0, 0); },
@@ -4560,7 +4570,7 @@ const ACT = {
     P.live = i; P.ab = false; toast(`Variant ${VAR_NAMES[i]} is now live for everyone.`); save(); render();
   },
   pwResetAB: () => { state.pw.tot = null; state.pw.hist = []; save(); render(); },
-  newGame: () => { closeModal(); state = null; atMenu = true; menuStep = 'app'; menuArm = false; draft = { country: 'US', name: '', cat: 'fitness', price: 'orta', tone: 'samimi', color: 0, model: 'subs', icon: 'letter', letter: '', fg: 0 }; try { localStorage.removeItem(SAVE_KEY); } catch (e) { } render(); window.scrollTo(0, 0); },
+  newGame: () => { closeModal(); state = null; atMenu = true; menuStep = 'app'; menuArm = false; draft = { country: 'TR', name: '', cat: 'fitness', price: 'orta', tone: 'samimi', color: 0, model: 'subs', icon: 'letter', letter: '', fg: 0 }; try { localStorage.removeItem(SAVE_KEY); } catch (e) { } render(); window.scrollTo(0, 0); },
 };
 (() => {
   const tip = document.createElement('div'); tip.id = 'htip'; document.body.appendChild(tip); let cur = null;

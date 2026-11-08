@@ -82,6 +82,7 @@ One `<script>` with vanilla JS, no framework or build step:
 - Loans: amortised, terms 12/26/52 weeks, 2% fee, early payoff never below principal.
 - **Out of cash** no longer ends the game at once: `showBroke()` offers personal savings (+$10K, once per game, only if it covers the hole), an emergency 26-week loan from Gerald (if `loanMax()` allows) and, by chance, a rescue round (+cash for 20%; odds rise with ROAS, users, trust and an early week, drop after a previous rescue). "Close the company" shows the final screen.
 - Team: diminishing returns per extra person in the same role (`ROLE_W`).
+- Home country defaults to Türkiye. The US & English-speaking region (`t1en`) is always open in campaigns (`freeMkt`/`openMkt`), so players can compare it with home before they can research; research still reveals its fit.
 - Ads Manager: one tab per platform (Meta, TikTok, Google), campaigns scroll sideways. No BAU/test campaign types any more (old test campaigns migrate to normal). Default names `BAU_<country>_Week<n>`, editable. Campaign cap: 5 on your own, +10 for the first Performance Marketer, +3 for each extra one. Studio reputation gates better candidates and stars.
 
 Latest bot results (16 games each):
