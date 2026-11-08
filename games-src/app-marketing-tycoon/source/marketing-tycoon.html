@@ -439,6 +439,10 @@ header.top{backdrop-filter:blur(10px);background:color-mix(in srgb,var(--panel) 
 .setup .hero h1 span{color:var(--accent)}
 .setup .hero p{margin-top:12px;color:var(--muted);font-size:16px;max-width:58ch}
 .menu{min-height:100vh;min-height:100dvh;max-width:1240px;margin:0 auto;padding:clamp(20px,4vh,44px) max(16px,env(safe-area-inset-left,0px)) 40px;display:flex;flex-direction:column;gap:clamp(16px,3vh,32px)}
+.brokeopts{display:flex;flex-direction:column;gap:8px}
+.brokeopt{display:flex;gap:12px;align-items:center;text-align:left;padding:12px 14px;border-radius:12px;border:1px solid var(--line);background:var(--panel);color:var(--ink);cursor:pointer;font:inherit}
+.brokeopt > span:last-child{display:flex;flex-direction:column;gap:2px}.brokeopt .bi{font-size:26px;line-height:1}
+.brokeopt:hover:not(:disabled){border-color:var(--accent);box-shadow:0 6px 18px rgba(5,6,13,.1)}.brokeopt:disabled{opacity:.5;cursor:not-allowed}
 .menuhead{text-align:center}
 .gtitle{font-family:var(--f-display);font-weight:800;font-size:clamp(40px,6.4vw,84px);line-height:.86;letter-spacing:-.045em;margin:10px 0 0;display:flex;flex-direction:column;align-items:center}
 .gtitle span{font-size:1.32em;background:linear-gradient(100deg,var(--accent),#E2557A 55%,#F5A524);-webkit-background-clip:text;background-clip:text;color:transparent;padding-bottom:.06em}
@@ -745,7 +749,7 @@ details.roleguide[open] summary{margin-bottom:12px}
 <script>
 // ---------- data ----------
 const GAME_NAME = 'App Marketing Tycoon';
-const START_CASH = 20000;
+const START_CASH = 30000;
 const WEEKS = 52, START = new Date(2026, 6, 6), FIXED = 300, MAX_TEAM = 10, MANUAL_CLICKS = 8, BATCH = 2, PIXEL_FULL = 160, RESEARCH = 300, INS_MIN = 3;
 const SWATCH = ['#2E44D4', '#D2366B', '#0F8A6B', '#E07A16', '#7A3FD1', '#1D2236'];
 const CATS = {
@@ -2278,6 +2282,9 @@ function vOffice() {
 }
 // buttons that take a moment in the real world: short loading text so players can't click through everything instantly
 const SLOW = {
+  brokeSavings: [['Logging into your personal bank…', 'Explaining it to your partner…'], 1100],
+  brokeLoan: [['Calling Gerald at home…', 'Gerald is putting on a tie…', 'Approved!'], 1400],
+  brokeInvest: [['Signing the term sheet…', 'Waiting for the wire…'], 1200],
   hire: [['Sending the offer…', 'They said yes!'], 900],
   loanTake: [['Filling in 14 forms…', 'Gerald is reading your pitch deck. Slowly…', 'Asking the manager. The manager is Gerald…', 'Approved!'], 1600],
   loanExtra: [['Wiring the money…'], 700],
@@ -3827,7 +3834,45 @@ function finalArt(t) {
   const conf = t >= 3 ? Array.from({ length: 16 }, (_, i) => `<g class="cf" style="animation-delay:-${(i * .27) % 2}s"><rect x="${30 + (i * 61) % 440}" y="${8 + (i * 23) % 50}" width="6" height="3" rx="1" fill="${['#F5C548', '#E2557A', '#3B4BD8', '#1E9C74'][i % 4]}" transform="rotate(${(i * 53) % 180} ${30 + (i * 61) % 440} ${8 + (i * 23) % 50})"/></g>`).join('') : '';
   return `<svg viewBox="0 0 500 160" role="img" aria-label="How your company ended up">${rainbow}${bg}<rect x="0" y="150" width="500" height="10" fill="var(--line)"/>${main}${conf}</svg>`;
 }
+// ---------- last chance: cash went negative ----------
+const SAVINGS = 10000;
+function brokeOffer(s) {
+  if (s.broke && s.broke.w === s.week) return s.broke;
+  // investors look at the business, not the bank balance: efficient ads, real users, early in the year
+  let p = .1;
+  if (avgRoas(4) >= 1) p += .25; if (bestRoas(4) >= 1.5) p += .15;
+  if ((s.subStat && s.subStat.active) > 150) p += .1; if (s.trust >= 35) p += .1; if (s.week <= 14) p += .1;
+  if (s.bailouts) p *= .35;
+  p = Math.min(.8, p);
+  const inv = Math.random() < p ? Math.round(Math.max(20000, plannedOut() * 6, -s.cash + 10000) / 5000) * 5000 : 0;
+  s.broke = { w: s.week, inv, p, invDone: false }; save();
+  return s.broke;
+}
+function brokeNeed() { return Math.max(5000, Math.ceil((-state.cash + plannedOut() * 2) / 5000) * 5000); }
+function showBroke() {
+  const s = state, b = brokeOffer(s), need = brokeNeed(), lmax = loanMax(), l = mkLoan(need, 26), hole = -s.cash;
+  const card = (act, icon, title, sub, ok, why) => `<button class="brokeopt" data-act="${act}" ${ok ? '' : 'disabled'}><span class="bi">${icon}</span><span><b>${title}</b><span class="muted small">${ok ? sub : why}</span></span></button>`;
+  const opts = [
+    card('brokeSavings', '🐷', `Personal savings · +${money(SAVINGS)}`, 'Your own money. No interest, no equity, only once per game. Your partner doesn\'t know yet.', !s.savingsUsed && hole <= SAVINGS, s.savingsUsed ? 'Already spent. The piggy bank is empty.' : `Not enough: you're ${money(hole)} in the hole.`),
+    card('brokeLoan', '🏦', `Emergency loan · +${money(need)}`, `Gerald, 26 weeks, ${money(Math.round(l.pay))} a week. Covers the hole plus two weeks of spend.`, lmax >= need, `Gerald says your limit is ${money(lmax)}. He looked genuinely sorry. Briefly.`),
+    b.inv && !b.invDone ? card('brokeInvest', '💼', `Rescue round · +${money(b.inv)} for 20%`, 'Deniz from Lighthouse Angels saw your numbers and wants in. Last-minute money, at a price.', true, '') : '',
+  ].join('');
+  document.getElementById('modal').innerHTML = `<div class="overlay" role="dialog" aria-modal="true" aria-label="Out of cash"><div class="modal" style="max-width:560px"><div class="stack">
+    <div class="finalart">${finalArt(0)}</div>
+    <div><span class="lbl">Week ${s.week - 1} · ${money(s.cash)} in the bank</span><h2 style="margin-top:4px;font-size:30px">You ran out of cash</h2>
+      <p class="muted" style="margin-top:6px">Payroll is due on Monday. ${b.inv && !b.invDone ? 'Good news: someone still believes in you.' : 'No investor called this time.'} Find the money or close the doors.</p></div>
+    <div class="brokeopts">${opts}</div>
+    <div class="row" style="justify-content:space-between"><span class="muted small">Tip: cut ad budgets that don't pay back before you continue.</span><button class="btn ghost" data-act="brokeQuit">Close the company</button></div>
+  </div></div></div>`;
+}
+function brokeResume(msg) {
+  const s = state; save();
+  if (s.cash < 0) { toast(msg + ` Still ${money(-s.cash)} short.`); showBroke(); return; }
+  s.over = s.week > WEEKS ? 'done' : null; s.broke = null; save(); closeModal(); render(); toast(msg);
+  if (s.over) showFinal(); else { say('founder', pick(['Okay. Deep breath. This time we spend on what works.', 'Second chance. Let\'s not make it a third.', 'The doors stay open. Now cut whatever isn\'t paying back.'])); if (!s.over) rollEvents(); }
+}
 function showFinal() {
+  if (state.over === 'bankrupt' && !state.gaveUp) { showBroke(); return; }
   const s = state, v = valuation(), h = s.history;
   const tot = h.reduce((a, x) => a + x.revenue, 0), bk = s.over === 'bankrupt';
   const grade = bk ? 'Out of cash' : v.mine < 500000 ? 'Garage Startup' : v.mine < 2000000 ? 'Rising App' : v.mine < 6000000 ? 'Category Player' : 'Unicorn Material';
@@ -4130,6 +4175,10 @@ const ACT = {
     if (d.k === 'ads' && !state.flags.adsIntro && best('perf')) { state.flags.adsIntro = 1; save(); say(best('perf'), pick(LINES.perf)); }
   },
   draft: d => { draft[d.k] = d.k === 'color' || d.k === 'fg' ? +d.v : d.v; render(); },
+  brokeSavings: () => { const s = state; if (s.savingsUsed) return; s.savingsUsed = true; s.cash += SAVINGS; brokeResume(`${money(SAVINGS)} moved from your personal account.`); },
+  brokeLoan: () => { const s = state, P = brokeNeed(); if (loanMax() < P) return; const l = mkLoan(P, 26); loans().push(l); s.achS = s.achS || {}; s.achS.loans = (s.achS.loans || 0) + 1; s.cash += P; spendNow(Math.round(P * LOAN_FEE), 'loanfee'); brokeResume(`Gerald approved ${money(P)}. ${money(Math.round(l.pay))} a week for 26 weeks.`); },
+  brokeInvest: () => { const s = state, b = s.broke; if (!b || !b.inv || b.invDone) return; b.invDone = true; s.bailouts = (s.bailouts || 0) + 1; s.cash += b.inv; s.ownership *= .8; brokeResume(`${money(b.inv)} from Lighthouse Angels. You now own ${Math.round(s.ownership * 100)}%.`); },
+  brokeQuit: () => { state.gaveUp = true; save(); showFinal(); },
   menuContinue: () => { atMenu = false; menuArm = false; closeModal(); render(); window.scrollTo(0, 0); if (state.over) showFinal(); },
   menuNew: () => {
     if (state && state.brand && !menuArm) { menuArm = true; render(); return; }

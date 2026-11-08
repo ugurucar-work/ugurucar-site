@@ -71,11 +71,12 @@ One `<script>` with vanilla JS, no framework or build step:
 
 ## 5. Economy and balance (latest state)
 
-- Start cash $20,000; fixed cost $300/week + $60 per person; ad budget up to $1,000 per campaign (default $150).
+- Start cash $30,000; fixed cost $300/week + $60 per person; ad budget up to $1,000 per campaign (default $150).
 - `PAY_CONV = .6`: share of paid clicks that pay on day one. Retention by plan `PLAN_RET = [.8 weekly, .87 monthly, .6 yearly]`.
 - **Organic / direct sales** (`r.src.direct` in `simulate()`) are a **fraction of paid momentum**: `paidEma * DIR_K (.3)` scaled by awareness and trust, plus a small brand floor that also fades without ads. Stopping ads makes revenue collapse within about 10 weeks. This fixed an exploit where a player could stop all ads and stay profitable on free "word of mouth" (old direct was 4–6× paid sales; now 0.2–0.4×).
 - Awareness decays 2.5%/week with ads running, 5%/week without.
 - Loans: amortised, terms 12/26/52 weeks, 2% fee, early payoff never below principal.
+- **Out of cash** no longer ends the game at once: `showBroke()` offers personal savings (+$10K, once per game, only if it covers the hole), an emergency 26-week loan from Gerald (if `loanMax()` allows) and, by chance, a rescue round (+cash for 20%; odds rise with ROAS, users, trust and an early week, drop after a previous rescue). "Close the company" shows the final screen.
 - Team: diminishing returns per extra person in the same role (`ROLE_W`). Studio reputation gates better candidates and stars.
 
 Latest bot results (16 games each):
