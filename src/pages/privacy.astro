@@ -1,0 +1,44 @@
+---
+import Base from '../layouts/Base.astro';
+const updated = 'November 2026';
+---
+<Base title="Privacy" description="How ugurucar.work handles your data: no cookies, no tracking, no ads.">
+  <article class="wrap doc">
+    <p class="eyebrow">Privacy</p>
+    <h1 class="display">Privacy & cookies</h1>
+    <p class="upd">Last updated: {updated}</p>
+
+    <p class="lead">Short version: this site doesn't use cookies, doesn't track you across the web and doesn't show ads.</p>
+
+    <h2>Who runs this site</h2>
+    <p>ugurucar.work is the personal site of Uğur Uçar. For anything related to your data, write to <a href="mailto:collab@ugurucar.work">collab@ugurucar.work</a>.</p>
+
+    <h2>Cookies</h2>
+    <p>This site doesn't set any cookies of its own, so there's no cookie banner.</p>
+    <p>One page (AI Work) includes an optional TikTok video. It only loads if you click it. Once loaded, TikTok may set its own cookies under <a href="https://www.tiktok.com/legal/privacy-policy" target="_blank" rel="noopener">TikTok's privacy policy</a>.</p>
+
+    <h2>Analytics</h2>
+    <p>If analytics are enabled, they use Cloudflare Web Analytics, which is cookieless and doesn't build personal profiles or fingerprint visitors. It counts things like page views, country and referring site in aggregate.</p>
+
+    <h2>Hosting and server logs</h2>
+    <p>The site is served by Cloudflare. Like any web server, Cloudflare processes technical data such as your IP address to deliver the page and protect the site from attacks. See <a href="https://www.cloudflare.com/privacypolicy/" target="_blank" rel="noopener">Cloudflare's privacy policy</a>.</p>
+
+    <h2>Fonts and media</h2>
+    <p>Fonts, images and videos are hosted on this site itself. No requests are made to Google Fonts or other font services.</p>
+
+    <h2>Email</h2>
+    <p>If you email me, I use your address and message only to reply. I don't add you to any list or share your details.</p>
+
+    <h2>Your rights</h2>
+    <p>Under GDPR and Turkey's KVKK (Law No. 6698), you can ask what data I hold about you, ask me to correct or delete it, or object to its use. Write to <a href="mailto:collab@ugurucar.work">collab@ugurucar.work</a>.</p>
+  </article>
+</Base>
+<style>
+  .doc { max-width: 760px; padding-top: 80px; }
+  h1 { font-size: clamp(40px, 7vw, 72px); margin: 8px 0 8px; }
+  .upd { color: var(--muted); font-size: 14px; margin: 0 0 28px; }
+  .lead { font-size: 19px; color: var(--fg); }
+  h2 { font-size: 22px; margin: 36px 0 8px; }
+  p { color: #c8c8cf; }
+  a { color: #b9a3ff; }
+</style>

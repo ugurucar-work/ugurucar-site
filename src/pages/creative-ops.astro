@@ -211,7 +211,11 @@ const results = [
               <span class="lbl">Reference</span>
               <div class="frame">
                 {ttId(c.reference)
-                  ? <iframe data-src={`https://www.tiktok.com/player/v1/${ttId(c.reference)}?music_info=0&description=0&rel=0`} src={i === 0 ? `https://www.tiktok.com/player/v1/${ttId(c.reference)}?music_info=0&description=0&rel=0` : undefined} title="Reference ad" loading="lazy" allow="encrypted-media; fullscreen" allowfullscreen></iframe>
+                  ? <button type="button" class="ttfacade" data-tt={`https://www.tiktok.com/player/v1/${ttId(c.reference)}?music_info=0&description=0&rel=0&autoplay=1`}>
+                      <span class="ttplay">▶</span>
+                      <b>Play reference on TikTok</b>
+                      <small>Loads TikTok's player, which may set cookies.</small>
+                    </button>
                   : <img src={c.referenceImage} alt={c.referenceLabel ?? 'Reference ad'} loading="lazy" />}
               </div>
               {c.reference
@@ -504,6 +508,12 @@ const results = [
 </Base>
 
 <script>
+  // TikTok embed loads only after a click, so no third-party cookies are set on page load.
+  document.querySelectorAll<HTMLButtonElement>('.ttfacade').forEach((b) => b.addEventListener('click', () => {
+    const f = Object.assign(document.createElement('iframe'), { src: b.dataset.tt!, title: 'Reference ad on TikTok', allow: 'encrypted-media; fullscreen; autoplay' });
+    f.allowFullscreen = true;
+    b.replaceWith(f);
+  }));
   document.querySelectorAll<HTMLElement>('[data-kit]').forEach((kit) => {
     const tabs = [...kit.querySelectorAll<HTMLButtonElement>('[data-kf]')];
     const groups = [...kit.querySelectorAll<HTMLElement>('[data-kc]')];
@@ -529,7 +539,6 @@ const results = [
     document.querySelectorAll<HTMLElement>('[data-clone-panel]').forEach((p) => {
       const on = p.dataset.clonePanel === n; p.hidden = !on;
       p.querySelectorAll('video').forEach((v) => (v as HTMLVideoElement).pause());
-      const f = p.querySelector<HTMLIFrameElement>('iframe[data-src]'); if (on && f && !f.src) f.src = f.dataset.src!;
     });
   }));
   const vids = document.querySelectorAll<HTMLVideoElement>('video.auto');
@@ -676,6 +685,12 @@ const results = [
   .cl { display: grid; gap: 8px; }
   .frame { aspect-ratio: 9/16; border-radius: 16px; overflow: hidden; background: #000; border: 1px solid #2f2a40; }
   .frame.out { border-color: var(--violet); box-shadow: 0 20px 50px -15px rgba(124,77,255,.6); }
+  .ttfacade { width: 100%; height: 100%; border: 0; cursor: pointer; display: grid; place-content: center; justify-items: center; gap: 8px; padding: 16px; text-align: center; color: #fff; font: inherit;
+    background: radial-gradient(circle at 30% 20%, rgba(37,244,238,.25), transparent 55%), radial-gradient(circle at 70% 80%, rgba(254,44,85,.3), transparent 55%), #0b0b0e; }
+  .ttplay { display: grid; place-items: center; width: 52px; height: 52px; border-radius: 50%; background: rgba(255,255,255,.15); font-size: 18px; }
+  .ttfacade b { font-size: 14px; }
+  .ttfacade small { font-size: 11px; color: var(--muted); max-width: 180px; }
+  .ttfacade:hover .ttplay { background: rgba(255,255,255,.28); }
   .frame iframe, .frame video { width: 100%; height: 100%; border: 0; display: block; object-fit: cover; }
   .clone .arrow { align-self: center; }
   .src { font-size: 12px; color: var(--muted); text-align: center; text-decoration: none; }
