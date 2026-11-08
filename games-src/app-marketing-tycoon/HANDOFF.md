@@ -48,7 +48,7 @@ The owner explicitly does **not** want login. Everything is stored in the player
 |---|---|
 | `marketing-tycoon-app-v1` | The current game save (whole `state`, ~100–300 KB) |
 | `marketing-tycoon-ach-v1` | Achievements, kept across games: `{ id: { t: unlockMs, w: week, b: brandName, g: seed } }` |
-| `marketing-tycoon-prefs` | Settings (sound, chatter, theme, reduced motion) |
+| `marketing-tycoon-prefs` | Settings (sound, music, chatter, theme, reduced motion) |
 
 **Moving achievements to another device** uses a client-side **transfer code** (Achievements screen → "Copy transfer code" / "Paste a code"). Format: `AMT1-<base64url(JSON [[id, unixSeconds, week, brand], …])>-<4-char checksum>`. Importing merges: unknown ids are dropped and the earliest unlock time wins. No server involved.
 
@@ -69,6 +69,7 @@ One `<script>` with vanilla JS, no framework or build step:
   3. `TAB_GUIDE`: one popup with at most 3 points, shown the first time a screen is opened *after it unlocks*. It is suppressed for screens the checklist is currently walking through.
 
   Keep every text in these three in sync with the real rules: they reference `MANUAL_WEEK`, `MANUAL_CLICKS`, `RESEARCH_CLICKS` and `LOC_COST` directly so numbers can't drift.
+- **Music:** `MUSIC` makes a lo-fi loop with Web Audio (no files). Starts on the first click or key press (browser autoplay rules), pauses when the tab is hidden. Toggle on the title screen (top right) and in Settings (`prefs.music`).
 - **Keyboard:** Space = continue (tutorial/guide popup → "See the full report" → "On to week N" → End week). Digits 1–3 talk to the selected employee on the Office screen.
 - **Market profile:** each game has a seed (`state.seed`, shown in Settings as the "game code"). `mkProfile(seed)` makes hidden per-segment CPM/CVR/retention, one hero segment, one trap segment, a sweet spot and 3 seasonal shifts. The same seed always gives the same market.
 - **Achievements:** `ACH` array (30 entries, 7 categories, 5 secret), `checkAch(r)`, `achWeek(r)`, `showAch()`, `achToast()`, transfer code helpers `achCode()`/`achDecode()`.
