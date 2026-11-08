@@ -539,6 +539,13 @@ html.reduce *{animation:none!important;transition:none!important}
 .adp .shine{position:absolute;inset:0;background:radial-gradient(120% 90% at 10% 0%,rgba(255,255,255,.25),transparent 60%)}
 .cr .tiers{display:flex;gap:5px;flex-wrap:wrap}
 .libbar{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+.adtabs{display:flex;gap:6px;border-bottom:1px solid var(--line);overflow-x:auto;scrollbar-width:none}
+.adtabs button{display:flex;align-items:center;gap:10px;padding:10px 16px 12px;border:0;border-bottom:3px solid transparent;background:none;color:var(--ink);cursor:pointer;font:inherit;text-align:left;white-space:nowrap;margin-bottom:-1px}
+.adtabs button > span:last-child{display:flex;flex-direction:column;gap:1px}.adtabs button b{font-family:var(--f-display);font-size:16px}
+.adtabs button[aria-selected="true"]{border-bottom-color:var(--accent)}.adtabs button:not([aria-selected="true"]){opacity:.62}.adtabs button:hover{opacity:1}
+.camprow{display:flex;gap:14px;overflow-x:auto;scroll-snap-type:x proximity;padding:2px 2px 12px;align-items:flex-start}
+.camprow > .panel{flex:0 0 min(380px,86vw);scroll-snap-align:start}
+.campname{font-family:var(--f-mono,monospace);font-size:13px}
 .platsec{display:flex;flex-direction:column;gap:12px}
 .platsec .ph{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
 .campgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:14px}
@@ -848,7 +855,7 @@ const tierOfQ = q => q >= 1.6 ? 'winner' : q >= 1.0 ? 'iyi' : q >= .62 ? 'vasat'
 const MANUAL_ODDS = { winner: .008, iyi: .05, vasat: .27, flop: .672 };
 const ROLES = {
   creative: { name: 'Marketing Artist', desc: 'Produces creatives automatically, in batches', base: 1000 },
-  perf: { name: 'Performance Marketer', desc: 'Runs your campaigns: lower CPM, higher CTR, places creatives, test campaigns, campaign advice', base: 1150 },
+  perf: { name: 'Performance Marketer', desc: 'Runs your campaigns: lower CPM, higher CTR, places creatives, campaign advice, +10 campaigns', base: 1150 },
   social: { name: 'Social Media Manager', desc: '4 organic posts a week, reach ×1.5, builds trust', base: 850 },
   mkt: { name: 'Marketing Specialist', desc: 'Strategy: market research and fit, competitor trends, Google ad copy, brand awareness', base: 950 },
   analyst: { name: 'Data Analyst', desc: 'Reveals real ROAS, A/B tests lift conversion 3–6%', base: 1200 },
@@ -994,7 +1001,8 @@ function ensureExtras(s) {
   if (!s.brand.model) s.brand.model = 'subs';
   if (!s.adm) s.adm = { banner: true, inter: true, rewarded: true, freq: 'low' };
   if (!s.users) s.users = { n: 0, q: 1 };
-  if (!s.camps) s.camps = ['meta', 'tiktok'].map(ch => { const a = s.ads[ch] || {}; return { id: uid(), ch, name: `${CH[ch].name} campaign 1`, obj: a.obj || (s.brand.model === 'ads' ? 'install' : 'purchase'), budget: a.budget || 150, crs: a.crs || [], auto: a.auto !== false, weeks: 0, lastBudget: 0, last: null, on: !!a.on }; });
+  if (s.camps) s.camps.forEach(c => { if (c.kind === 'test') c.kind = 'main'; });
+  if (!s.camps) s.camps = ['meta', 'tiktok'].map(ch => { const a = s.ads[ch] || {}; return { id: uid(), ch, name: campName({ ...s, camps: [] }, ch), obj: a.obj || (s.brand.model === 'ads' ? 'install' : 'purchase'), budget: a.budget || 150, crs: a.crs || [], auto: a.auto !== false, weeks: 0, lastBudget: 0, last: null, on: !!a.on }; });
   delete s.ads.meta; delete s.ads.tiktok;
   if (!s.focus) s.focus = 'mix';
   if (!s.locked) s.locked = s.week <= 1 && !s.history.length ? { tiktok: true, google: true } : {};
@@ -1725,7 +1733,7 @@ setInterval(() => {
 const OFFICE_TIPS = {
   founder: ['Don\'t end the week on autopilot. Check what changed first.', 'Cash is oxygen. Profit can wait; running out of cash can\'t.', 'Every hire adds salary and, sooner or later, rent. Hire for a bottleneck, not for vibes.', 'The platforms\' numbers flatter you. Real revenue is the only scoreboard.'],
   creative: ['Most creatives flop. Volume is the strategy: make lots, keep the few winners.', 'A winner on Meta is a coin flip on TikTok. Brief me for one platform if you can.', 'When a winner wears out, ask for variations of it. They beat brand-new ideas surprisingly often.', 'Give creatives clear names. Future you will want to know what worked.'],
-  perf: ['Don\'t move a budget by more than 50% at once, or the learning phase restarts.', 'Creative tests find winners cheaply. Winners move into your BAU campaign.', 'Campaigns on the same platform share one audience. More campaigns, smaller returns.', 'A cold pixel costs more. Every purchase from ads teaches it who buys.'],
+  perf: ['Don\'t move a budget by more than 50% at once, or the learning phase restarts.', 'Give new creatives a fair shot, then put the budget behind the winners.', 'Campaigns on the same platform share one audience. More campaigns, smaller returns.', 'A cold pixel costs more. Every purchase from ads teaches it who buys.'],
   social: ['My posts won\'t pay my salary. They build trust, and trust lifts every channel.', 'Consistency beats going viral. Four posts a week, every week.', 'Answer the angry comments first. That\'s where trust is won.'],
   mkt: ['Research a region before you spend there. Fit beats size.', 'Non-English regions convert poorly until you localize.', 'Tier 3 markets are cheap clicks but small wallets. Great for ad-revenue apps.', 'Watch the trending hook in Audience Insights. Hooks go in and out of fashion.'],
   analyst: ['Every platform claims the same sale. Real ROAS is lower than the dashboards say.', 'Don\'t call an A/B test early. Small samples lie with a straight face.', 'Word of mouth is probably your biggest channel. The Organic vs paid report proves it.', 'Weekly plans look great on day one and churn by week three.'],
@@ -2097,12 +2105,12 @@ function vLoan() {
 const tiktokSec = () => [...document.querySelectorAll('.platsec')].find(e => /TikTok/.test(e.querySelector('h3, b')?.textContent || ''));
 const QUEST = [
   { tab: 'studio', sel: '#clicker', title: 'Make your first ad', body: 'Nobody\'s invented a machine for this yet, so you make it by hand.', cta: 'Click this button 8 times to make an ad', done: s => s.stats.manual >= 1 },
-  { tab: 'ads', sel: () => document.querySelector('.adcard .picker') || document.querySelector('.adcard [data-act="pickOpen"]'), title: 'Put it in your Meta campaign', body: 'An ad does nothing until it runs in a campaign.', cta: () => document.querySelector('.adcard .picker') ? 'Tick your new ad, then press "Add selected"' : 'Press "+ Add creatives"', done: s => s.camps.some(c => c.ch === 'meta' && c.crs.some(id => { const x = crById(id); return x && !x.starter; })) },
-  { tab: 'ads', sel: '.adcard input[type=range]', title: 'Set the budget to $500', body: 'Below that the algorithm barely learns and your fixed costs eat you first.', cta: 'Drag this slider to $500 or more', done: s => s.camps.some(c => c.ch === 'meta' && c.budget >= 500) },
-  { tab: 'ads', sel: '.adcard .switch[data-act="toggleCamp"]', title: 'Switch it on', body: 'Campaigns start switched off.', cta: 'Turn this switch on', done: s => s.camps.some(c => c.ch === 'meta' && c.on && c.budget >= 500) },
+  { tab: 'ads', plat: 'meta', sel: () => document.querySelector('.adcard .picker') || document.querySelector('.adcard [data-act="pickOpen"]'), title: 'Put it in your Meta campaign', body: 'An ad does nothing until it runs in a campaign.', cta: () => document.querySelector('.adcard .picker') ? 'Tick your new ad, then press "Add selected"' : 'Press "+ Add creatives"', done: s => s.camps.some(c => c.ch === 'meta' && c.crs.some(id => { const x = crById(id); return x && !x.starter; })) },
+  { tab: 'ads', plat: 'meta', sel: '.adcard input[type=range]', title: 'Set the budget to $500', body: 'Below that the algorithm barely learns and your fixed costs eat you first.', cta: 'Drag this slider to $500 or more', done: s => s.camps.some(c => c.ch === 'meta' && c.budget >= 500) },
+  { tab: 'ads', plat: 'meta', sel: '.adcard .switch[data-act="toggleCamp"]', title: 'Switch it on', body: 'Campaigns start switched off.', cta: 'Turn this switch on', done: s => s.camps.some(c => c.ch === 'meta' && c.on && c.budget >= 500) },
   { tab: null, sel: '[data-act="endWeek"]', title: 'End the week', body: 'Your ads run for 7 days and you get a report. Most ads flop. That\'s normal.', cta: 'Press End week', done: s => s.history.length >= 1 },
   { tab: 'team', sel: () => state.candidates.some(c => c.role === 'creative') ? document.querySelectorAll('.teamgrid .panel')[2] : document.querySelectorAll('.teamgrid .panel')[1], title: 'Hire a Marketing Artist', body: 'Handmade ads are slow and rarely win. A Marketing Artist makes 4 to 10 a week.', cta: () => state.candidates.some(c => c.role === 'creative') ? 'Pick a Marketing Artist here and press Hire' : state.hunt ? `Candidates arrive next week. End the week, then come back here` : 'Pick "Marketing Artist" and press "Post the job"', done: s => has('creative').length > 0 },
-  { tab: 'ads', sel: tiktokSec, title: 'Open TikTok too', body: 'Same drill as Meta.', cta: 'Add creatives, set $300 or more and switch it on', wait: s => s.locked && s.locked.tiktok, waitText: 'TikTok unlocks after your first week.', done: s => s.camps.some(c => c.ch === 'tiktok' && c.on && c.budget >= 300) },
+  { tab: 'ads', plat: 'tiktok', sel: () => document.querySelector('.adsec .adcard') || document.querySelector('.adsec [data-act="newCamp"]'), title: 'Open TikTok too', body: 'Same drill as Meta.', cta: 'Add creatives, set $300 or more and switch it on', wait: s => s.locked && s.locked.tiktok, waitText: 'TikTok unlocks after your first week.', done: s => s.camps.some(c => c.ch === 'tiktok' && c.on && c.budget >= 300) },
   { tab: null, sel: '[data-act="endWeek"]', title: 'Hold steady for 3 weeks', body: 'The first weeks lose money while the pixel learns who buys. Don\'t slash budgets. If cash gets tight, the bank is under Loans.', cta: 'Press End week, and again, and again', done: s => s.history.length >= 4 },
 ];
 const questStep = () => { const q = state.quest || {}; if (q.skip || q.over) return -1; return QUEST.findIndex((st, i) => !st.done(state) && !(q.passed || []).includes(i)); };
@@ -2123,6 +2131,7 @@ function questTarget() {
   const i = questStep(); if (i < 0) return null;
   const st = QUEST[i]; if (st.wait && st.wait(state)) return null;
   if (st.tab && state.tab !== st.tab) { const nav = document.querySelector(`nav.side [data-k="${st.tab}"]`); return nav ? { el: nav, step: i + 1, text: `Go to ${nav.textContent.trim()}` } : null; }
+  if (st.plat && state.tab === 'ads' && ui.adsTab !== st.plat) { const tb = document.querySelector(`.adtabs [data-v="${st.plat}"]`); if (tb) return { el: tb, step: i + 1, text: `Open the ${CH[st.plat].name} tab` }; }
   const el = typeof st.sel === 'function' ? st.sel() : document.querySelector(st.sel);
   return el ? { el, step: i + 1, text: typeof st.cta === 'function' ? st.cta() : st.cta } : null;
 }
@@ -2309,11 +2318,11 @@ const SLOW = {
 };
 let busy = false;
 // instant on purpose: navigation, guides, clickers and dismissals
-const INSTANT = new Set(['menuNew', 'menuBack', 'menuNext', 'menuPrev', 'menuTalk', 'menuContinue', 'toMenu', 'draft', 'achCopy', 'achPaste', 'achImport', 'achievements', 'copySeed', 'anaMetric', 'chartReg', 'anaPlat', 'rowToggle', 'loadDone', 'questPass', 'orgFocus', 'resetYes', 'questGo', 'questSkip', 'loanAmt', 'loanTerm', 'huntFor', 'settings', 'pref', 'replayTour', 'resetGuides', 'about', 'officeBye', 'dev', 'devCash', 'devOffice', 'devTeam', 'officeTooSmall', 'officeMute', 'officeTalk', 'annexDrop', 'tab', 'draft', 'hush', 'tour', 'tourEnd', 'guide', 'guideDone', 'tips', 'manual', 'infResearch', 'libFilter', 'campOpen', 'pickOpen', 'reset', 'newGame', 'closeReport', 'endWeek', 'ack', 'infOpen', 'infType', 'start']);
+const INSTANT = new Set(['adTab', 'menuNew', 'menuBack', 'menuNext', 'menuPrev', 'menuTalk', 'menuContinue', 'toMenu', 'draft', 'achCopy', 'achPaste', 'achImport', 'achievements', 'copySeed', 'anaMetric', 'chartReg', 'anaPlat', 'rowToggle', 'loadDone', 'questPass', 'orgFocus', 'resetYes', 'questGo', 'questSkip', 'loanAmt', 'loanTerm', 'huntFor', 'settings', 'pref', 'replayTour', 'resetGuides', 'about', 'officeBye', 'dev', 'devCash', 'devOffice', 'devTeam', 'officeTooSmall', 'officeMute', 'officeTalk', 'annexDrop', 'tab', 'draft', 'hush', 'tour', 'tourEnd', 'guide', 'guideDone', 'tips', 'manual', 'infResearch', 'libFilter', 'campOpen', 'pickOpen', 'reset', 'newGame', 'closeReport', 'endWeek', 'ack', 'infOpen', 'infType', 'start']);
 // what each role actually changes in the game (keep in sync with the simulation)
 const ROLE_PERKS = {
   creative: ['Delivers about 4–10 creatives at the start of every week (more with skill), starting the week after you hire them', 'Winner chance 2.5–7% per creative, plus up to 6 points from the production budget', 'Each Marketing Artist adds 3 creative slots to every campaign', 'Can make variations of your Good and Winner creatives', 'Follows your platform, hook and format brief', 'Adds 1 organic post a week'],
-  perf: ['CPM on Meta, TikTok and Google 11–15% lower (varies week to week)', 'CTR 4–14% higher through better targeting', 'Learning phases hurt less: 88% of normal conversions instead of 75%', 'Puts every new creative into a campaign on its platform; opens a $500/week campaign if a platform has none live', 'Weekly campaign suggestions at the top of the Ads Manager', 'Adds cost per purchase or install to every campaign and a Top creatives table to reports', 'Unlocks the Creative test campaign type', 'More paid campaigns: +6 for the first, +4 for the second, +2 for the third (without one you can run 3 in total)'],
+  perf: ['CPM on Meta, TikTok and Google 11–15% lower (varies week to week)', 'CTR 4–14% higher through better targeting', 'Learning phases hurt less: 88% of normal conversions instead of 75%', 'Puts every new creative into a campaign on its platform; opens a $500/week campaign if a platform has none live', 'Weekly campaign suggestions at the top of the Ads Manager', 'Adds cost per purchase or install to every campaign and a Top creatives table to reports', 'More paid campaigns: +10 for the first, +3 for every extra one (without one you can run 5 in total)'],
   mkt: ['Researches one new region a week ($500) so you can sell there', 'Shows how well each market fits your app', 'Tracks competitor ads and shows the trending hook every week (+30% CTR for that hook)', 'Google ad quality +15% (better search copy)', 'Brand awareness grows 30% faster and trust +0.2 a week', 'Market ideas and localization warnings in the Markets tab'],
   social: ['3–6 organic posts a week (+1 if Fast)', 'Organic reach ×1.3 (builds awareness)', 'Trust +0.5–0.9 every week, which lifts conversion on every channel', 'A small trickle of organic signups; it won\'t pay their salary on its own', 'Chance an organic post goes viral (×3 with Viral Hunter)'],
   analyst: ['Real ROAS and real sales per channel in every report, instead of what the platforms claim', 'An Organic vs paid report on the Overview: ads vs organic social, word of mouth and creators', 'Conversion 3–6% higher from A/B testing', 'Shows real influencer signups and subscriber retention', 'Adds a 12-month value column to paywall tests'],
@@ -2597,11 +2606,16 @@ function rollEvents() {
 const pendingChoices = () => state.inbox.filter(i => !i.done && EVENTS[i.eid].choices).length;
 const unread = () => state.inbox.filter(i => !i.done).length;
 const campsOf = ch => state.camps.filter(cp => cp.ch === ch);
-// without a Performance Marketer you can juggle 3 paid campaigns in total; each one adds 2 per platform (Meta, TikTok, Google)
-const campCap = () => 3 + has('perf').reduce((a, m, i) => a + [6, 4, 2][i] || a + 1, 0);
-const platCap = () => 3 + has('perf').reduce((a, m, i) => a + ([2, 2][i] || 1), 0);
+// 5 paid campaigns on your own; the first Performance Marketer adds 10, every extra one 3 more
+const campCap = () => 5 + has('perf').reduce((a, m, i) => a + (i === 0 ? 10 : 3), 0);
+const platCap = () => campCap();
+// default names look like a real ad account: BAU_US_Week3 (with _2, _3 when taken)
+function campName(st, ch) {
+  const base = `BAU_${(st.brand && st.brand.country) || 'US'}_Week${st.week || 1}`, taken = new Set((st.camps || []).filter(c => c.ch === ch).map(c => c.name));
+  let n = base, k = 2; while (taken.has(n)) n = `${base}_${k++}`; return n;
+}
 const campCount = () => state.camps.length + (state.ads.google.on ? 1 : 0);
-const mkCamp = (ch, n, kind) => ({ id: uid(), ch, kind: kind || 'main', mkts: ['home'], os: campsOf(ch).some(c => (c.os || 'ios') === 'ios') ? 'android' : 'ios', name: kind === 'test' ? `${CH[ch].name} test ${n}` : `${CH[ch].name} campaign ${n}`, obj: state.brand.model === 'ads' ? 'install' : 'purchase', budget: 150, crs: [], auto: true, weeks: 0, lastBudget: 0, last: null, on: false });
+const mkCamp = (ch) => ({ id: uid(), ch, kind: 'main', mkts: ['home'], os: campsOf(ch).some(c => (c.os || 'ios') === 'ios') ? 'android' : 'ios', name: campName(state, ch), obj: state.brand.model === 'ads' ? 'install' : 'purchase', budget: 150, crs: [], auto: true, weeks: 0, lastBudget: 0, last: null, on: false });
 let ui = { picker: null, sel: new Set(), lib: 'all', camps: {} };
 const NAV_ICON = { analysis: 'M4 20V11M10 20V5M16 20v-7M21 20H3', loan: 'M3 10l9-6 9 6M5 10v8M9.5 10v8M14.5 10v8M19 10v8M3 20h18', organic: 'M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z', office: 'M3 21h18M5 21V8l7-5 7 5v13M9 21v-5h6v5M9 11h2M13 11h2', overview: 'M3 3h7v7H3zM14 3h7v7h-7zM3 14h7v7H3zM14 14h7v7h-7z', studio: 'M12 3l1.9 5.8L20 11l-6.1 2.2L12 19l-1.9-5.8L4 11l6.1-2.2z', ads: 'M3 11v2a1 1 0 0 0 1 1h2l5 4V6L6 10H4a1 1 0 0 0-1 1zM16 8a5 5 0 0 1 0 8M19 5a9 9 0 0 1 0 14', paywall: 'M5 11h14v11H5zM8 11V7a4 4 0 0 1 8 0v4', influencers: 'M12 2l3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1L12 2z', ugc: 'M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2zM12 9a4 4 0 1 0 0 8 4 4 0 0 0 0-8z', markets: 'M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zM2 12h20M12 2a15 15 0 0 1 4 10 15 15 0 0 1-4 10 15 15 0 0 1-4-10 15 15 0 0 1 4-10z', team: 'M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM22 21v-2a4 4 0 0 0-3-3.9M16 3.1a4 4 0 0 1 0 7.8', inbox: 'M22 12h-6l-2 3h-4l-2-3H2M5.5 5h13L22 12v6a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2v-6z' };
 
@@ -3479,22 +3493,35 @@ function budgetMap() {
   const weeks = tot ? Math.floor(s.cash / Math.max(1, plannedOut())) : null;
   return `<div class="stack bmap" style="gap:6px;flex:2;min-width:320px"><div class="row"><b>This week's ad budget: ${money(tot)}</b><span class="muted small">${campCount()}/${campCap()} campaigns${weeks != null ? ` · cash lasts ~${weeks} wk at this pace` : ''}</span></div>
     <div class="bmbar">${items.length ? items.map(x => `<i style="flex:${x.b};background:${col[x.ch]};${x.test ? 'background-image:repeating-linear-gradient(45deg,rgba(255,255,255,.25) 0 4px,transparent 4px 8px)' : ''}" data-tip="${esc(`${x.n}${x.os ? ' · ' + x.os : ''}: ${money(x.b)} (${pct(x.b / tot, 0)})${x.test ? ' · creative test' : ''}`)}"></i>`).join('') : '<span class="muted small" style="padding:0 8px">Nothing running. Switch a campaign on.</span>'}</div>
-    <div class="maplegend"><span><i style="background:#2E44D4"></i>Meta</span><span><i style="background:#E2557A"></i>TikTok</span><span><i style="background:#1E9C74"></i>Google</span><span>Striped = creative test</span></div></div>`;
+    <div class="maplegend"><span><i style="background:#2E44D4"></i>Meta</span><span><i style="background:#E2557A"></i>TikTok</span><span><i style="background:#1E9C74"></i>Google</span></div></div>`;
 }
 function vAds() {
   const s = state, pm = pixelM();
-  return `<div class="head"><div><h2>Ads Manager ${infoI(`Run up to ${campCap()} paid campaigns in total (3 on your own; Performance Marketers add 6, then 4, then 2), each with up to ${maxAds()} creatives (6, plus 3 for every Marketing Artist, up to 15). Campaigns on the same platform share an audience, so returns diminish. Changing a budget by more than 50% restarts that campaign's learning phase.`)}</h2></div></div>
+  return `<div class="head"><div><h2>Ads Manager ${infoI(`Run up to ${campCap()} paid campaigns in total (5 on your own; the first Performance Marketer adds 10, every extra one 3), each with up to ${maxAds()} creatives (6, plus 3 for every Marketing Artist, up to 15). Campaigns on the same platform share an audience, so returns diminish. Changing a budget by more than 50% restarts that campaign's learning phase.`)}</h2></div></div>
   <div class="panel row" style="flex-wrap:wrap;align-items:center">
     <div class="stack" style="gap:6px;flex:1;min-width:220px"><div class="row" style="justify-content:flex-start"><b>Pixel: ${pixelLabel()} ${infoI(pm < 1 ? 'A cold pixel doesn\'t know who buys yet: impressions cost more and fewer clicks convert. Every purchase from ads teaches it. Exact value hidden.' : 'Your pixel is fully trained. Ads now run at their real efficiency.')}</b></div>
       <div class="pixel">${[0, 1, 2, 3, 4].map(i => `<i class="${pm > i / 5 + .01 ? 'on' : ''}"></i>`).join('')}</div></div>
     ${budgetMap()}
   </div>
   ${best('perf') && (s.suggestions || []).length ? `<div class="panel stack"><div class="row"><h3>${esc(best('perf').name.split(' ')[0])}'s suggestions</h3><span class="muted small">Performance Marketer</span></div><ul class="sugg">${s.suggestions.map(x => `<li>${esc(x)}</li>`).join('')}</ul></div>` : ''}
-  ${PLATS.map(ch => { const cs = campsOf(ch); if (s.locked && s.locked[ch]) return `<div class="platsec"><div class="lockcard"><span class="chlogo">${PLOGO[ch]}</span><div><b style="color:var(--ink)">${CH[ch].name}</b><br>Focus on Meta for your first week. More channels open soon.</div></div></div>`; return `<div class="platsec"><div class="ph"><div style="display:flex;gap:10px;align-items:center"><span class="chlogo">${PLOGO[ch]}</span><div><h3>${CH[ch].name}</h3><span class="muted small">${CH[ch].sub} · ${cs.filter(c => c.on).length} live · ${money(platBudget(ch))}/week</span></div>${seasonPill(ch)}</div>
-    <div class="row" style="gap:6px">${cs.length < platCap() && campCount() < campCap() ? `<button class="btn xs" data-act="newCamp" data-ch="${ch}">+ Campaign</button>` : `<span class="tipwrap" data-tip="Campaign limit reached (${campCap()} total, ${platCap()} per platform). Each Performance Marketer adds more."><button class="btn xs" disabled>🔒 + Campaign</button></span>`}</div></div>
-    ${cs.length ? `<div class="campgrid">${cs.map(campCard).join('')}</div>` : `<div class="panel muted small">No ${CH[ch].name} campaigns yet.</div>`}</div>`; }).join('')}
-  ${s.locked && s.locked.google ? `<div class="platsec"><div class="lockcard"><span class="chlogo">${PLOGO.google}</span><div><b style="color:var(--ink)">Google Search</b><br>Opens after your first week.</div></div></div>` : `<div class="platsec"><div class="ph"><div style="display:flex;gap:10px;align-items:center"><span class="chlogo">${PLOGO.google}</span><div><h3>Google Search</h3><span class="muted small">${CH.google.sub}</span></div>${seasonPill('google')}</div></div>
-    <div class="campgrid">${googleCard()}</div></div>`}`;
+  ${adTabs()}`;
+}
+const AD_TABS = ['meta', 'tiktok', 'google'];
+function adTabs() {
+  const s = state, tab = ui.adsTab = AD_TABS.includes(ui.adsTab) ? ui.adsTab : 'meta';
+  const locked = ch => s.locked && s.locked[ch];
+  const sub = ch => locked(ch) ? '🔒 Locked' : ch === 'google' ? (s.ads.google.on ? `Live · ${money(s.ads.google.budget)}/wk` : 'Off') : `${campsOf(ch).filter(c => c.on).length} live · ${money(platBudget(ch))}/wk`;
+  const bar = `<div class="adtabs" role="tablist">${AD_TABS.map(ch => `<button role="tab" data-act="adTab" data-v="${ch}" aria-selected="${tab === ch}"><span class="chlogo">${PLOGO[ch]}</span><span><b>${ch === 'google' ? 'Google Search' : CH[ch].name}</b><span class="muted small">${sub(ch)}</span></span></button>`).join('')}</div>`;
+  let body;
+  if (locked(tab)) body = `<div class="lockcard"><span class="chlogo">${PLOGO[tab]}</span><div><b style="color:var(--ink)">${tab === 'google' ? 'Google Search' : CH[tab].name}</b><br>${tab === 'google' ? 'Opens after your first week.' : 'Focus on Meta for your first week. More channels open soon.'}</div></div>`;
+  else if (tab === 'google') body = `<div class="ph"><span class="muted small">${CH.google.sub}</span>${seasonPill('google')}</div><div class="camprow">${googleCard()}</div>`;
+  else {
+    const cs = campsOf(tab), can = campCount() < campCap();
+    body = `<div class="ph"><span class="muted small">${CH[tab].sub} · ${campCount()}/${campCap()} campaigns in total${cs.length > 1 ? ' · scroll sideways for more →' : ''}</span>${seasonPill(tab)}
+      ${can ? `<button class="btn xs" data-act="newCamp" data-ch="${tab}">+ Campaign</button>` : `<span class="tipwrap" data-tip="Campaign limit reached (${campCap()} in total). ${has('perf').length ? 'Each extra Performance Marketer adds 3.' : 'A Performance Marketer adds 10.'}"><button class="btn xs" disabled>🔒 + Campaign</button></span>`}</div>
+      ${cs.length ? `<div class="camprow">${cs.map(campCard).join('')}</div>` : `<div class="panel muted small">No ${CH[tab].name} campaigns yet.</div>`}`;
+  }
+  return `<div class="platsec adsec">${bar}${body}</div>`;
 }
 function statGrid(L, isG) {
   const s = state, ads = s.brand.model === 'ads', aov = s.lastReport ? s.lastReport.aov : 0, disc = s.lastReport && s.lastReport.bf && !ads ? .7 : 1;
@@ -3547,16 +3574,16 @@ function campCard(cp) {
   const openCard = ui.camps[cp.id] != null ? ui.camps[cp.id] : !L;
   if (!openCard) {
     const roas = L && L.spend && s.lastReport ? L.orders * s.lastReport.aov / L.spend : null;
-    return `<div class="panel adcard"><div class="hd"><div style="min-width:0"><h3 style="font-size:16px">${esc(cp.name)} ${cp.kind === 'test' ? '<span class="pill acc">Test</span>' : ''}</h3><div>${status}</div></div>
+    return `<div class="panel adcard"><div class="hd"><div style="min-width:0"><h3 style="font-size:16px">${esc(cp.name)}</h3><div>${status}</div></div>
       <div class="row" style="gap:6px"><button class="btn xs" data-act="campOpen" data-id="${cp.id}">Edit</button><button class="switch" data-act="toggleCamp" data-id="${cp.id}" aria-pressed="${cp.on}" aria-label="Turn ${esc(cp.name)} on or off"></button></div></div>
       <div class="row" style="justify-content:flex-start;gap:6px;flex-wrap:wrap"><span class="muted small">${OSX[cp.os || 'ios'].name} · ${ads ? OBJ[cp.obj || 'purchase'].adsName : OBJ[cp.obj || 'purchase'].name} · ${(cp.mkts || ['home']).map(mktName).join(', ')}</span>${segVerdict(cp.ch + '_' + (cp.os || 'ios'))}${campSpark(cp)}</div>
       <div class="campmini"><div><span>Budget</span><b>${money(cp.budget)}</b></div><div><span>Creatives</span><b>${cp.crs.length}/${capOf(cp)}</b></div>
         ${L && !L.paused ? `<div><span>Spend</span><b>${money(L.spend)}</b></div><div><span>CTR</span><b>${pct(L.ctr, 2)}</b></div><div><span>${ads ? 'Installs' : 'Purchases'}</span><b>${fmt(L.reported)}</b></div><div><span>ROAS</span><b>${roas != null ? dec(roas) + 'x' : '—'}</b></div>` : ''}</div>${funnel(L, ads)}</div>`;
   }
   return `<div class="panel adcard">
-    <div class="hd"><div style="min-width:0"><h3 style="font-size:16px">${esc(cp.name)} ${cp.kind === 'test' ? '<span class="pill acc">Test</span>' : ''}</h3><div class="row" style="justify-content:flex-start;gap:6px;flex-wrap:wrap">${status}${segVerdict(cp.ch + '_' + (cp.os || 'ios'))}${campSpark(cp)}</div></div>
+    <div class="hd"><div style="min-width:0"><h3 style="font-size:16px">${esc(cp.name)}</h3><div class="row" style="justify-content:flex-start;gap:6px;flex-wrap:wrap">${status}${segVerdict(cp.ch + '_' + (cp.os || 'ios'))}${campSpark(cp)}</div></div>
       <div class="row" style="gap:6px">${L ? `<button class="btn xs" data-act="campOpen" data-id="${cp.id}" data-v="0">Collapse</button>` : ''}<button class="xbtn" data-act="delCamp" data-id="${cp.id}" aria-label="Delete campaign" title="Delete campaign">×</button><button class="switch" data-act="toggleCamp" data-id="${cp.id}" aria-pressed="${cp.on}" aria-label="Turn ${esc(cp.name)} on or off"></button></div></div>
-    <div class="field"><span class="lbl">Type</span><div class="seg">${[['main', 'BAU', 'Business as usual: puts the budget behind your best creatives. This is where you make money.'], ['test', 'Creative test', 'Splits a small budget evenly across up to 5 new creatives (one per $60) to find winners. Costs a bit more per result; winners move to your BAU campaign.']].map(([k, n, t]) => { const lock = k === 'test' && cp.kind !== 'test' && (!best('perf') || campsOf(cp.ch).some(c => c !== cp && c.kind === 'test')); return `<button data-act="setKind" data-id="${cp.id}" data-v="${k}" aria-pressed="${(cp.kind || 'main') === k}" data-tip="${esc(lock ? (!best('perf') ? 'Needs a Performance Marketer' : 'One creative test per platform') : t)}">${lock ? '🔒 ' : ''}${n}</button>`; }).join('')}</div></div>
+    <div class="field"><label class="lbl" for="cn-${cp.id}">Campaign name</label><input type="text" id="cn-${cp.id}" class="campname" maxlength="40" value="${esc(cp.name)}" data-campname="${cp.id}" spellcheck="false"></div>
     ${mktChips(cp.mkts || ['home'], cp.id)}
     <div class="field"><span class="lbl">Store</span><div class="seg">${Object.entries(OSX).map(([k, o]) => `<button data-act="setOs" data-id="${cp.id}" data-v="${k}" aria-pressed="${(cp.os || 'ios') === k}" data-tip="${esc(o.desc)}">${k === 'both' ? PLOGO.ios + PLOGO.android : PLOGO[k]}${o.name}</button>`).join('')}</div></div>
     <div class="field"><span class="lbl">Objective</span><div class="seg">${Object.entries(OBJ).map(([k, o]) => `<button data-act="setObj" data-id="${cp.id}" data-v="${k}" aria-pressed="${(cp.obj || 'purchase') === k}" data-tip="${esc((ads ? o.adsDesc : o.desc) + ' Switching restarts the learning phase.')}">${ads ? o.adsName : o.name}</button>`).join('')}</div></div>
@@ -3700,7 +3727,7 @@ function menuOffice() {
   const keep = state;
   state = { office: 0, team: [], week: 1, annex: 0, brand: { name: (draft.name || '').trim() || 'Your app' } };
   let svg = ''; try { svg = officeSVG().svg; } finally { state = keep; }
-  return svg.replace(/ data-(act|tip|k|id)="[^"]*"/g, '').replace('class="op ', 'data-act="menuTalk" data-tip="You · Founder" class="op ');
+  return svg.replace(/<g class="hireplus">.*?<\/g>/g, '').replace(/ data-(act|tip|k|id)="[^"]*"/g, '').replace('class="op ', 'data-act="menuTalk" data-tip="You · Founder" class="op ');
 }
 function menuSay(text) {
   officeBubble('founder', 'fun', text || menuLine());
@@ -4198,8 +4225,9 @@ const ACT = {
     save(); render(); window.scrollTo(0, 0); showTour(0);
   },
   hush: () => { document.getElementById('dialog').innerHTML = ''; },
-  toggleAd: d => { const ad = state.ads[d.ch]; if (!ad.on && campCount() >= campCap()) { toast('Campaign limit reached. Delete one, or hire a Performance Marketer for 6 more.'); return; } ad.on = !ad.on; save(); render(); },
-  newCamp: d => { const n = campsOf(d.ch).length; if (n >= platCap() || campCount() >= campCap()) { toast(has('perf').length ? `You're at your campaign limit (${campCap()}). Another Performance Marketer adds a few more.` : 'You can run 3 paid campaigns on your own. Hire a Performance Marketer for 6 more.'); return; } if (d.kind === 'test' && !best('perf')) { toast('Test campaigns need a Performance Marketer to set up.'); return; } const cp = mkCamp(d.ch, n + 1, d.kind); state.camps.push(cp); toast(`${cp.name} created. Pick creatives and switch it on.`); save(); render(); },
+  toggleAd: d => { const ad = state.ads[d.ch]; if (!ad.on && campCount() >= campCap()) { toast('Campaign limit reached. Delete one, or hire a Performance Marketer for 10 more.'); return; } ad.on = !ad.on; save(); render(); },
+  adTab: d => { ui.adsTab = d.v; render(); },
+  newCamp: d => { if (campCount() >= campCap()) { toast(has('perf').length ? `You're at your campaign limit (${campCap()}). Another Performance Marketer adds 3 more.` : `You can run ${campCap()} campaigns on your own. A Performance Marketer adds 10 more.`); return; } const cp = mkCamp(d.ch); state.camps.push(cp); ui.adsTab = d.ch; toast(`${cp.name} created. Pick creatives and switch it on.`); save(); render(); setTimeout(() => { const r = document.querySelector('.camprow'); if (r) r.scrollLeft = r.scrollWidth; }, 0); },
   loanAmt: d => { ui.loanAmt = +d.v; render(); },
   loanTerm: d => { ui.loanTerm = +d.v; render(); },
   loanTake: () => {
@@ -4584,7 +4612,8 @@ document.addEventListener('click', e => {
 });
 document.addEventListener('input', e => {
   const t = e.target;
-  if (t.dataset.budget) {
+  if (t.dataset.campname) { const cp = state.camps.find(x => x.id === t.dataset.campname); if (cp && t.value.trim()) { cp.name = t.value.trim(); save(); } }
+  else if (t.dataset.budget) {
     const ch = t.dataset.budget; state.ads[ch].budget = +t.value;
     document.getElementById('bl-' + ch).textContent = money(+t.value);
   } else if (t.dataset.gh || t.dataset.gd) {
@@ -4628,7 +4657,8 @@ document.addEventListener('input', e => {
 });
 document.addEventListener('change', e => {
   const t = e.target;
-  if (t.dataset.budget || t.dataset.cbudget || 'crbudget' in t.dataset || 'seedn' in t.dataset) { save(); t.blur(); render(); }
+  if (t.dataset.campname) { const cp = state.camps.find(x => x.id === t.dataset.campname); if (cp && !t.value.trim()) { cp.name = campName(state, cp.ch); } save(); render(); }
+  else if (t.dataset.budget || t.dataset.cbudget || 'crbudget' in t.dataset || 'seedn' in t.dataset) { save(); t.blur(); render(); }
   else if ('draftcountry' in t.dataset) { draft.country = t.value; }
   else if ('draftseed' in t.dataset) { draft.seed = t.value.replace(/[^a-z0-9]/gi, '').toUpperCase(); }
   else if ('huntrole' in t.dataset) { state.huntRole = t.value; save(); }
