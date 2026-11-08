@@ -1,14 +1,14 @@
 ---
 import '../styles/global.css';
 import { SITE, SOCIALS } from '../site';
-interface Props { title?: string; description?: string; image?: string; lang?: string; article?: boolean; }
-const { title, description = SITE.description, image = '/og/home.jpg', lang = 'en', article = false } = Astro.props;
+interface Props { title?: string; description?: string; image?: string; lang?: string; article?: boolean; noindex?: boolean; }
+const { title, description = SITE.description, image = '/og/home.jpg', lang = 'en', article = false, noindex = false } = Astro.props;
 const fullTitle = title ? `${title} | ${SITE.name}` : SITE.title;
 const canonical = new URL(Astro.url.pathname, Astro.site);
 const ogImage = image ? new URL(image, Astro.site).href : undefined;
 const path = Astro.url.pathname;
 const nav = [
-  { href: '/portfolio', label: 'Portfolio' },
+  { href: '/', label: 'Home' },
   { href: '/creative-ops', label: 'AI Work' },
   { href: '/blog', label: 'Blog' },
   { href: '/connect', label: 'Connect' },
@@ -22,6 +22,7 @@ const nav = [
   <title>{fullTitle}</title>
   <meta name="description" content={description} />
   <link rel="canonical" href={canonical} />
+  {noindex && <meta name="robots" content="noindex, nofollow" />}
   <link rel="icon" href="/favicon.ico?v=3" sizes="any" />
   <link rel="icon" href="/favicon.svg?v=3" type="image/svg+xml" />
   <link rel="apple-touch-icon" href="/apple-touch-icon.png?v=3" />
@@ -48,7 +49,7 @@ const nav = [
         <span class="wm"><b>Uğur Uçar</b><small>Creative Strategist</small></span>
       </a>
       <nav>
-        {nav.map((n) => <a href={n.href} class={path.startsWith(n.href) ? 'active' : ''}>{n.label}</a>)}
+        {nav.map((n) => <a href={n.href} class={(n.href === '/' ? path === '/' : path.startsWith(n.href)) ? 'active' : ''}>{n.label}</a>)}
       </nav>
     </div>
   </header>
