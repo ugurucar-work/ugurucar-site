@@ -3586,7 +3586,17 @@ function vAds() {
   ${adTabs()}`;
 }
 const AD_TABS = ['meta', 'tiktok', 'google'];
+// default names follow the current week until the campaign has run once (or the player renames it)
+const AUTO_NAME = /^BAU_[A-Z]{2}_Week\d+(_\d+)?$/;
+function freshNames() {
+  const s = state;
+  for (const cp of s.camps) {
+    if (cp.named || !AUTO_NAME.test(cp.name) || cp.last || (cp.hist || []).length) continue;
+    if (!cp.name.startsWith(`BAU_${s.brand.country || 'US'}_Week${s.week}`)) cp.name = campName({ ...s, camps: s.camps.filter(x => x !== cp) }, cp.ch);
+  }
+}
 function adTabs() {
+  freshNames();
   const s = state, tab = ui.adsTab = AD_TABS.includes(ui.adsTab) ? ui.adsTab : 'meta';
   const locked = ch => s.locked && s.locked[ch];
   const sub = ch => locked(ch) ? '🔒 Locked' : ch === 'google' ? (s.ads.google.on ? `Live · ${money(s.ads.google.budget)}/wk` : 'Off') : `${campsOf(ch).filter(c => c.on).length} live · ${money(platBudget(ch))}/wk`;
@@ -4691,7 +4701,7 @@ document.addEventListener('click', e => {
 });
 document.addEventListener('input', e => {
   const t = e.target;
-  if (t.dataset.campname) { const cp = state.camps.find(x => x.id === t.dataset.campname); if (cp && t.value.trim()) { cp.name = t.value.trim(); save(); } }
+  if (t.dataset.campname) { const cp = state.camps.find(x => x.id === t.dataset.campname); if (cp && t.value.trim()) { cp.name = t.value.trim(); cp.named = !AUTO_NAME.test(cp.name); save(); } }
   else if (t.dataset.budget) {
     const ch = t.dataset.budget; state.ads[ch].budget = +t.value;
     document.getElementById('bl-' + ch).textContent = money(+t.value);
@@ -4736,7 +4746,7 @@ document.addEventListener('input', e => {
 });
 document.addEventListener('change', e => {
   const t = e.target;
-  if (t.dataset.campname) { const cp = state.camps.find(x => x.id === t.dataset.campname); if (cp && !t.value.trim()) { cp.name = campName(state, cp.ch); } save(); render(); }
+  if (t.dataset.campname) { const cp = state.camps.find(x => x.id === t.dataset.campname); if (cp && !t.value.trim()) { cp.name = campName(state, cp.ch); cp.named = false; } save(); render(); }
   else if (t.dataset.budget || t.dataset.cbudget || 'crbudget' in t.dataset || 'seedn' in t.dataset) { save(); t.blur(); render(); }
   else if ('draftcountry' in t.dataset) { draft.country = t.value; }
   else if ('draftseed' in t.dataset) { draft.seed = t.value.replace(/[^a-z0-9]/gi, '').toUpperCase(); }
