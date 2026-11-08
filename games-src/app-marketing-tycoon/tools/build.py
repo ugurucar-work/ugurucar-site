@@ -16,6 +16,7 @@ SRC = ROOT / 'source' / 'marketing-tycoon.html'
 # In the site repo this lives in games-src/app-marketing-tycoon, so write straight into the site's public/ folder.
 OUT = ROOT.parent.parent / 'public' / 'games' / 'app-marketing-tycoon'
 
+URL = 'https://app-marketing-tycoon.pages.dev/'
 TITLE = 'App Marketing Tycoon'
 DESC = ('Launch your app and market it for a year. Make creatives, run Meta, TikTok and Google ads, '
         'hire a team and try to turn a profit in 52 weeks. A free browser game about mobile app marketing.')
@@ -41,10 +42,21 @@ def main():
 <meta name="description" content="{DESC}">
 <meta name="theme-color" content="#2E44D4">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="canonical" href="{URL}">
 <meta property="og:type" content="website">
+<meta property="og:site_name" content="{TITLE}">
+<meta property="og:url" content="{URL}">
 <meta property="og:title" content="{TITLE}">
 <meta property="og:description" content="{DESC}">
-<meta name="twitter:card" content="summary">
+<meta property="og:image" content="{URL}og-image.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="627">
+<meta property="og:image:alt" content="App Marketing Tycoon title screen with a small garage office">
+<meta name="author" content="Uğur Uçar">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="{TITLE}">
+<meta name="twitter:description" content="{DESC}">
+<meta name="twitter:image" content="{URL}og-image.jpg">
 <style>html,body{{margin:0;padding:0}}</style>
 {head.strip()}
 </head>
