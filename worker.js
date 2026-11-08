@@ -7,10 +7,6 @@ export default {
       url.hostname = 'www.ugurucar.work';
       return Response.redirect(url.toString(), 301);
     }
-    // the game moved to its own address
-    if (url.pathname.startsWith('/games/app-marketing-tycoon')) {
-      return Response.redirect('https://app-marketing-tycoon.pages.dev/', 301);
-    }
     return env.ASSETS.fetch(request);
   },
 };

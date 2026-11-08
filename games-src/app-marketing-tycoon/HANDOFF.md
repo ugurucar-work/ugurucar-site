@@ -26,7 +26,7 @@ app-marketing-tycoon-handoff/
 
 ## 2. Deploying
 
-**Current setup (Nov 2026):** the game is served by its own Cloudflare Pages project `app-marketing-tycoon` at https://app-marketing-tycoon.pages.dev, built from this repo (build command `exit 0`, output `public/games/app-marketing-tycoon`, headers from that folder's `_headers`). `worker.js` 301-redirects the old `www.ugurucar.work/games/app-marketing-tycoon/` path there, and the site's Play button links to it. Saves live on the pages.dev origin. The steps below are the original same-domain setup.
+**Current setup (Nov 2026):** the game is served from www.ugurucar.work/games/app-marketing-tycoon/ (pages.dev was unreachable for players in Türkiye, so the redirect was removed). A Cloudflare Pages project also exists `app-marketing-tycoon` at https://app-marketing-tycoon.pages.dev, built from this repo (build command `exit 0`, output `public/games/app-marketing-tycoon`, headers from that folder's `_headers`). `worker.js` 301-redirects the old `www.ugurucar.work/games/app-marketing-tycoon/` path there, and the site's Play button links to it. Saves live on the pages.dev origin. The steps below are the original same-domain setup.
 
 ### Original: deploying to the Astro site
 

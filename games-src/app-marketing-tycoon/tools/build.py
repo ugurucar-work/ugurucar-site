@@ -16,7 +16,7 @@ SRC = ROOT / 'source' / 'marketing-tycoon.html'
 # In the site repo this lives in games-src/app-marketing-tycoon, so write straight into the site's public/ folder.
 OUT = ROOT.parent.parent / 'public' / 'games' / 'app-marketing-tycoon'
 
-URL = 'https://app-marketing-tycoon.pages.dev/'
+URL = 'https://www.ugurucar.work/games/app-marketing-tycoon/'
 TITLE = 'App Marketing Tycoon'
 DESC = ('Launch your app and market it for a year. Make creatives, run Meta, TikTok and Google ads, '
         'hire a team and try to turn a profit in 52 weeks. A free browser game about mobile app marketing.')
