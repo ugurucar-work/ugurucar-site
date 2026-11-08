@@ -552,6 +552,7 @@ html.reduce *{animation:none!important;transition:none!important}
 .adtabs button[data-v="meta"][aria-selected="true"]{background:linear-gradient(120deg,#0064E0,#0A84FF 55%,#7B4DFF)}
 .adtabs button[data-v="tiktok"][aria-selected="true"]{background:linear-gradient(120deg,#13D4CE,#111 48%,#FE2C55)}
 .adtabs button[data-v="google"][aria-selected="true"]{background:linear-gradient(120deg,#4285F4,#34A853 60%,#FBBC05)}
+.camplim{font-size:13px;font-weight:600;color:var(--muted);font-variant-numeric:tabular-nums}
 .camprow{display:flex;gap:14px;overflow-x:auto;scroll-snap-type:x proximity;padding:2px 2px 12px;align-items:flex-start}
 .camprow > .panel{flex:0 0 min(380px,86vw);scroll-snap-align:start}
 .campname{font-family:var(--f-mono,monospace);font-size:13px}
@@ -3580,11 +3581,10 @@ function adTabs() {
   const bar = `<div class="adtabs" role="tablist">${AD_TABS.map(ch => `<button role="tab" data-act="adTab" data-v="${ch}" aria-selected="${tab === ch}"><span class="chlogo">${PLOGO[ch]}</span><span><b>${ch === 'google' ? 'Google Search' : CH[ch].name}</b><span class="muted small">${sub(ch)}</span></span></button>`).join('')}</div>`;
   let body;
   if (locked(tab)) body = `<div class="lockcard"><span class="chlogo">${PLOGO[tab]}</span><div><b style="color:var(--ink)">${tab === 'google' ? 'Google Search' : CH[tab].name}</b><br>${tab === 'google' ? 'Opens after your first week.' : 'Focus on Meta for your first week. More channels open soon.'}</div></div>`;
-  else if (tab === 'google') body = `<div class="ph"><span class="muted small">${CH.google.sub}</span>${seasonPill('google')}</div><div class="camprow">${googleCard()}</div>`;
+  else if (tab === 'google') body = `${seasonPill('google') ? `<div class="ph">${seasonPill('google')}</div>` : ''}<div class="camprow">${googleCard()}</div>`;
   else {
-    const cs = campsOf(tab), can = campCount() < campCap();
-    body = `<div class="ph"><span class="muted small">${CH[tab].sub} · ${campCount()}/${campCap()} campaigns in total${cs.length > 1 ? ' · scroll sideways for more →' : ''}</span>${seasonPill(tab)}
-      ${can ? `<button class="btn xs" data-act="newCamp" data-ch="${tab}">+ Campaign</button>` : `<span class="tipwrap" data-tip="Campaign limit reached (${campCap()} in total). ${has('perf').length ? 'Each extra Performance Marketer adds 3.' : 'A Performance Marketer adds 10.'}"><button class="btn xs" disabled>🔒 + Campaign</button></span>`}</div>
+    const cs = campsOf(tab), can = campCount() < campCap(), lim = `<span class="camplim" data-tip="Campaigns across all platforms. ${has('perf').length ? 'Each extra Performance Marketer adds 3.' : 'A Performance Marketer adds 10.'}">${campCount()}/${campCap()} campaigns</span>`;
+    body = `<div class="ph"><div class="row" style="gap:10px;justify-content:flex-start">${can ? `<button class="btn primary xs" data-act="newCamp" data-ch="${tab}">Create campaign</button>` : `<button class="btn xs" disabled>🔒 Create campaign</button>`}${lim}</div>${seasonPill(tab)}</div>
       ${cs.length ? `<div class="camprow">${cs.map(campCard).join('')}</div>` : `<div class="panel muted small">No ${CH[tab].name} campaigns yet.</div>`}`;
   }
   return `<div class="platsec adsec">${bar}${body}</div>`;
