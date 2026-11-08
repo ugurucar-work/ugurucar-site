@@ -24,7 +24,11 @@ app-marketing-tycoon-handoff/
 
 `source/marketing-tycoon.html` is written as a claude.ai Artifact body: no `<!doctype>`/`<head>` skeleton. Never deploy it directly. Always run `python3 tools/build.py`, which writes `site/public/games/app-marketing-tycoon/index.html` with doctype, viewport, description, Open Graph tags, favicon and a margin reset.
 
-## 2. Deploying to the Astro site
+## 2. Deploying
+
+**Current setup (Nov 2026):** the game is served by its own Cloudflare Pages project `app-marketing-tycoon` at https://app-marketing-tycoon.pages.dev, built from this repo (build command `exit 0`, output `public/games/app-marketing-tycoon`, headers from that folder's `_headers`). `worker.js` 301-redirects the old `www.ugurucar.work/games/app-marketing-tycoon/` path there, and the site's Play button links to it. Saves live on the pages.dev origin. The steps below are the original same-domain setup.
+
+### Original: deploying to the Astro site
 
 1. Copy `site/public/games/app-marketing-tycoon/` into the Astro repo at `public/games/app-marketing-tycoon/`. Astro copies `public/` as-is, so the game is served at `https://<domain>/games/app-marketing-tycoon/`.
    - Make sure no Astro page or route already claims `/games/app-marketing-tycoon` (e.g. `src/pages/games/[slug].astro`). If one does, move the game to a different public path; the page uses only relative URLs (`favicon.svg`), so any folder works.
