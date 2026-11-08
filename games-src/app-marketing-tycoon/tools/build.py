@@ -21,7 +21,7 @@ TITLE = 'App Marketing Tycoon'
 DESC = ('Launch your app and market it for a year. Make creatives, run Meta, TikTok and Google ads, '
         'hire a team and try to turn a profit in 52 weeks. A free browser game about mobile app marketing.')
 
-FAVICON = '''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" rx="14" fill="#2E44D4"/><path d="M14 28v8a3 3 0 0 0 3 3h5l14 10V15L22 25h-5a3 3 0 0 0-3 3z" fill="#fff"/><path d="M43 24a10 10 0 0 1 0 16M48 18a18 18 0 0 1 0 28" stroke="#fff" stroke-width="4" stroke-linecap="round" fill="none"/></svg>'''
+FAVICON = '''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#3B4BD8"/><stop offset=".55" stop-color="#E2557A"/><stop offset="1" stop-color="#F5A524"/></linearGradient></defs><rect width="64" height="64" rx="15" fill="url(#g)"/><rect x="12" y="38" width="9" height="14" rx="2.5" fill="#fff" opacity=".75"/><rect x="27.5" y="30" width="9" height="22" rx="2.5" fill="#fff" opacity=".85"/><rect x="43" y="22" width="9" height="30" rx="2.5" fill="#fff"/><path d="M11 30 L26 19 L34 24 L50 11" fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/><path d="M41 10 H51 V20" fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/></svg>'''
 
 
 def main():

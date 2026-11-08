@@ -2242,6 +2242,7 @@ function questTarget() {
 }
 function questMark() {
   document.querySelectorAll('.qbox, .qtip').forEach(e => e.remove());
+  if (atMenu) { qTarget = null; return; }
   qTarget = questTarget(); if (!qTarget) return;
   if (qTarget.el.closest('nav.side')) qTarget.el.classList.add('qnav');
   const box = document.createElement('div'), tip = document.createElement('div');
@@ -3309,7 +3310,7 @@ const TABS = [['overview', 'Overview'], ['studio', 'Creative Studio'], ['ads', '
 
 function render() {
   const app = document.getElementById('app'), navY = document.querySelector('nav.side')?.scrollTop || 0;
-  if (atMenu || !state || !state.brand) { app.innerHTML = vSetup(); return; }
+  if (atMenu || !state || !state.brand) { app.innerHTML = vSetup(); document.querySelectorAll('.qbox, .qtip').forEach(e => e.remove()); qTarget = null; return; }
   const views = { overview: vOverview, ads: vAds, analysis: vAnalysis, studio: vStudio, paywall: () => state.brand.model === 'ads' ? vAdMon() : vPaywall(), influencers: vInfluencers, ugc: vUGC, organic: vOrganic, loan: vLoan, markets: vMarkets, office: vOffice, team: vTeam, inbox: vInbox };
   const u = unread(), live = false;
   app.innerHTML = vTop() + `<div class="shell"><nav class="side" aria-label="Sections">${TABS.map(([k, n]) =>
@@ -3862,10 +3863,10 @@ function vTitle() {
     <div class="menubody">
       <div class="menubtns">
         ${saved ? `<button class="mbtn primary" data-act="menuContinue"><b>Continue</b><span>${markHTML(state.brand)}${esc(state.brand.name)} · week ${state.week}</span></button>` : ''}
-        <button class="mbtn ${saved ? '' : 'primary'}${menuArm ? ' armed' : ''}" data-act="menuNew"><b>${menuArm ? 'Sure? Start over' : 'New game'}</b><span>${menuArm ? `${esc(state.brand.name)} will be lost. Click again.` : 'Launch your first app'}</span></button>
-        <button class="mbtn" data-act="achievements"><b>Achievements</b><span>${ACH.filter(a => achLoad()[a.id]).length} / ${ACH.length} unlocked</span></button>
-        <button class="mbtn" data-act="settings"><b>Settings</b><span>Sound, theme, office chatter</span></button>
-        <button class="mbtn" data-act="about"><b>About</b><span>Who made this</span></button>
+        <button class="mbtn ${saved ? '' : 'primary'}" data-act="menuNew"><b>New game</b></button>
+        <button class="mbtn" data-act="achievements"><b>Achievements</b></button>
+        <button class="mbtn" data-act="settings"><b>Settings</b></button>
+        <button class="mbtn" data-act="about"><b>About</b></button>
       </div>
       <div class="menuscene scene" aria-label="Your garage office">${menuOffice()}</div>
     </div>
@@ -4323,9 +4324,18 @@ const ACT = {
   brokeQuit: () => { state.gaveUp = true; save(); showFinal(); },
   musicToggle: () => { const was = prefs.sound && prefs.music; prefs.music = !was; if (!was) prefs.sound = true; savePrefs(); MUSIC.sync(); render(); },
   menuContinue: () => { atMenu = false; menuArm = false; closeModal(); render(); window.scrollTo(0, 0); if (state.over) showFinal(); },
-  menuNew: () => {
-    if (state && state.brand && !menuArm) { menuArm = true; render(); return; }
-    menuArm = false; draft = { country: 'TR', name: '', cat: 'fitness', price: 'orta', tone: 'samimi', color: 0, model: 'subs', icon: 'letter', letter: '', fg: 0 };
+  menuNew: (d = {}) => {
+    if (state && state.brand && !d.ok) {
+      const s = state;
+      document.getElementById('modal').innerHTML = `<div class="overlay" role="alertdialog" aria-modal="true" aria-labelledby="ng-t" aria-describedby="ng-d"><div class="modal confirm" style="max-width:420px">
+        <div class="cfm-ic">!</div>
+        <h3 id="ng-t">Start a new game?</h3>
+        <p id="ng-d"><b>Your current game will be deleted. Achievements stay.</b> ${esc(s.brand.name)}, week ${s.week} and ${money(s.cash)} in the bank will be gone for good.</p>
+        <div class="row" style="justify-content:flex-end;gap:8px"><button class="btn" data-act="closeReport" id="ng-no">Cancel</button><button class="btn danger" data-act="menuNew" data-ok="1">Yes, start over</button></div>
+      </div></div>`;
+      document.getElementById('ng-no')?.focus(); return;
+    }
+    closeModal(); menuArm = false; draft = { country: 'TR', name: '', cat: 'fitness', price: 'orta', tone: 'samimi', color: 0, model: 'subs', icon: 'letter', letter: '', fg: 0 };
     menuStep = 'app'; render(); window.scrollTo(0, 0); document.getElementById('bname')?.focus();
   },
   menuBack: () => { menuStep = 'title'; render(); window.scrollTo(0, 0); },
