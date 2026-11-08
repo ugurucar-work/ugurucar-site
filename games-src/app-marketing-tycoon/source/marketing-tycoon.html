@@ -417,6 +417,7 @@ header.top{backdrop-filter:blur(10px);background:color-mix(in srgb,var(--panel) 
 .achin{display:flex;gap:6px}.achin[hidden]{display:none}.achin input{flex:1;min-width:0;font-family:var(--mono,monospace);font-size:12px}
 .achtoast{display:flex;gap:10px;align-items:center;border-left-color:#E0913A}.achtoast b{display:block}.achtoast .lbl{display:block;font-size:10px}
 .kbd{display:inline-block;margin-left:8px;padding:1px 6px;border-radius:5px;border:1px solid currentColor;font-size:10px;font-weight:600;opacity:.55;letter-spacing:.02em;vertical-align:1px}
+@media (hover:none),(pointer:coarse){.kbd{display:none}}
 .spark{display:inline-flex;align-items:center;gap:3px;cursor:help}.spark svg{width:64px;height:20px}.spark span{font-size:10px}
 .mmplogo{width:42px;height:42px;border-radius:12px;display:grid;place-items:center;background:linear-gradient(135deg,#1E9C74,#2E44D4);color:#fff;font:800 15px var(--f-display);flex:none}
 .navlock{font-size:11px;margin-left:2px;opacity:.75}
@@ -437,6 +438,27 @@ header.top{backdrop-filter:blur(10px);background:color-mix(in srgb,var(--panel) 
 .setup .hero h1{font-size:clamp(38px,7vw,64px);font-weight:800;line-height:.95;letter-spacing:-.03em}
 .setup .hero h1 span{color:var(--accent)}
 .setup .hero p{margin-top:12px;color:var(--muted);font-size:16px;max-width:58ch}
+.menu{min-height:100vh;min-height:100dvh;max-width:1240px;margin:0 auto;padding:clamp(20px,4vh,44px) max(16px,env(safe-area-inset-left,0px)) 40px;display:flex;flex-direction:column;gap:clamp(16px,3vh,32px)}
+.menuhead{text-align:center}
+.gtitle{font-family:var(--f-display);font-weight:800;font-size:clamp(40px,6.4vw,84px);line-height:.86;letter-spacing:-.045em;margin:10px 0 0;display:flex;flex-direction:column;align-items:center}
+.gtitle span{font-size:1.32em;background:linear-gradient(100deg,var(--accent),#E2557A 55%,#F5A524);-webkit-background-clip:text;background-clip:text;color:transparent;padding-bottom:.06em}
+.menubody{display:grid;grid-template-columns:minmax(260px,360px) minmax(0,1fr);gap:clamp(18px,3vw,40px);align-items:center}
+.menubtns{display:flex;flex-direction:column;gap:10px}
+.mbtn{display:flex;flex-direction:column;align-items:flex-start;gap:3px;text-align:left;padding:15px 20px;border-radius:14px;border:1px solid var(--line);background:var(--panel);color:var(--ink);cursor:pointer;font:inherit;transition:transform .12s,border-color .12s,box-shadow .12s}
+.mbtn b{font-family:var(--f-display);font-size:21px;font-weight:800;letter-spacing:-.01em}
+.mbtn span{display:flex;align-items:center;gap:7px;color:var(--muted);font-size:13px}
+.mbtn span .mark{width:20px;height:20px;font-size:11px;border-radius:6px}
+.mbtn:hover{transform:translateX(4px);border-color:var(--accent);box-shadow:0 8px 24px rgba(5,6,13,.12)}
+.mbtn.primary{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.mbtn.primary span{color:var(--accent-ink);opacity:.82}
+.mbtn.armed{border-color:#D6455D;background:#D6455D;color:#fff}.mbtn.armed span{color:#fff}
+.menuscene{border-radius:18px;border:1px solid var(--line);overflow:hidden}.menuscene svg{max-height:min(56vh,540px)}
+.menuscene .op{cursor:pointer}
+.steps{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--muted)}.steps i{width:22px;height:2px;background:var(--line)}
+.steps .on{color:var(--accent);font-weight:700}.steps .done{color:var(--ink)}
+.sethead{font-family:var(--f-display);font-size:clamp(28px,4.5vw,40px);font-weight:800;letter-spacing:-.02em;margin:0}
+@media (max-width:820px){.menubody{grid-template-columns:minmax(0,1fr)}.menuscene svg{max-height:42vh}}
+@media (prefers-reduced-motion:reduce){.mbtn{transition:none}.mbtn:hover{transform:none}}
 .opts{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px}
 .opt{text-align:left;border:1px solid var(--line);background:var(--panel);color:var(--ink);border-radius:12px;padding:14px;cursor:pointer;display:flex;flex-direction:column;gap:6px;font:14px var(--f-body)}
 .opt b{font-family:var(--f-display);font-size:17px}
@@ -1688,7 +1710,7 @@ function officeBubble(id, cat, text) {
   }, 20);
 }
 setInterval(() => {
-  if (!state || !state.brand || state.tab !== 'office' || document.hidden || prefs.chatter === 'off') { chatNext = 0; return; }
+  if (atMenu || !state || !state.brand || state.tab !== 'office' || document.hidden || prefs.chatter === 'off') { chatNext = 0; return; }
   if (obActive || document.querySelector('.overlay, .coach')) return;
   const now = Date.now(); if (!chatNext) { chatNext = now + 5000; return; } if (now < chatNext) return;
   chatNext = now + (prefs.chatter === 'often' ? 8000 + Math.random() * 4000 : 15000 + Math.random() * 5000);
@@ -2280,7 +2302,7 @@ const SLOW = {
 };
 let busy = false;
 // instant on purpose: navigation, guides, clickers and dismissals
-const INSTANT = new Set(['achCopy', 'achPaste', 'achImport', 'achievements', 'copySeed', 'anaMetric', 'chartReg', 'anaPlat', 'rowToggle', 'loadDone', 'questPass', 'orgFocus', 'resetYes', 'questGo', 'questSkip', 'loanAmt', 'loanTerm', 'huntFor', 'settings', 'pref', 'replayTour', 'resetGuides', 'about', 'officeBye', 'dev', 'devCash', 'devOffice', 'devTeam', 'officeTooSmall', 'officeMute', 'officeTalk', 'annexDrop', 'tab', 'draft', 'hush', 'tour', 'tourEnd', 'guide', 'guideDone', 'tips', 'manual', 'infResearch', 'libFilter', 'campOpen', 'pickOpen', 'reset', 'newGame', 'closeReport', 'endWeek', 'ack', 'infOpen', 'infType', 'start']);
+const INSTANT = new Set(['menuNew', 'menuBack', 'menuNext', 'menuPrev', 'menuTalk', 'menuContinue', 'toMenu', 'draft', 'achCopy', 'achPaste', 'achImport', 'achievements', 'copySeed', 'anaMetric', 'chartReg', 'anaPlat', 'rowToggle', 'loadDone', 'questPass', 'orgFocus', 'resetYes', 'questGo', 'questSkip', 'loanAmt', 'loanTerm', 'huntFor', 'settings', 'pref', 'replayTour', 'resetGuides', 'about', 'officeBye', 'dev', 'devCash', 'devOffice', 'devTeam', 'officeTooSmall', 'officeMute', 'officeTalk', 'annexDrop', 'tab', 'draft', 'hush', 'tour', 'tourEnd', 'guide', 'guideDone', 'tips', 'manual', 'infResearch', 'libFilter', 'campOpen', 'pickOpen', 'reset', 'newGame', 'closeReport', 'endWeek', 'ack', 'infOpen', 'infType', 'start']);
 // what each role actually changes in the game (keep in sync with the simulation)
 const ROLE_PERKS = {
   creative: ['Delivers about 4–10 creatives at the start of every week (more with skill), starting the week after you hire them', 'Winner chance 2.5–7% per creative, plus up to 6 points from the production budget', 'Each Marketing Artist adds 3 creative slots to every campaign', 'Can make variations of your Good and Winner creatives', 'Follows your platform, hook and format brief', 'Adds 1 organic post a week'],
@@ -3161,7 +3183,7 @@ const TABS = [['overview', 'Overview'], ['studio', 'Creative Studio'], ['ads', '
 
 function render() {
   const app = document.getElementById('app'), navY = document.querySelector('nav.side')?.scrollTop || 0;
-  if (!state || !state.brand) { app.innerHTML = vSetup(); return; }
+  if (atMenu || !state || !state.brand) { app.innerHTML = vSetup(); return; }
   const views = { overview: vOverview, ads: vAds, analysis: vAnalysis, studio: vStudio, paywall: () => state.brand.model === 'ads' ? vAdMon() : vPaywall(), influencers: vInfluencers, ugc: vUGC, organic: vOrganic, loan: vLoan, markets: vMarkets, office: vOffice, team: vTeam, inbox: vInbox };
   const u = unread(), live = false;
   app.innerHTML = vTop() + `<div class="shell"><nav class="side" aria-label="Sections">${TABS.map(([k, n]) =>
@@ -3169,10 +3191,11 @@ function render() {
     ${questCard()}
     <div class="spacer" style="flex:1;min-height:24px"></div>
     <button data-act="guide" style="font-size:12.5px">Guide for this page</button>
+    <button data-act="toMenu" style="font-size:12.5px">Main menu</button>
     <button data-act="achievements" style="font-size:12.5px">Achievements <span class="muted">${ACH.filter(a => achLoad()[a.id]).length}/${ACH.length}</span></button>
     <button data-act="settings" style="font-size:12.5px">Settings</button>
     <button data-act="about" style="font-size:12.5px">About</button>
-    <button data-act="reset" class="newgame" style="font-size:12.5px">New game</button>
+    <button data-act="reset" class="newgame" style="font-size:12.5px">Quit</button>
     </nav><main>${tabLocked(state.tab) ? lockedView(state.tab) : views[state.tab]()}</main></div>`;
   const strip = tabLocked(state.tab) ? '' : crewStrip(state.tab), hd = app.querySelector('main > .head');
   if (strip && hd) hd.insertAdjacentHTML('afterend', strip);
@@ -3662,31 +3685,83 @@ function heroSVG() {
     ${hearts}
   </svg>`;
 }
-function vSetup() {
+// ---------- title screen + new game flow ----------
+let atMenu = true, menuStep = 'title', menuArm = false, menuChat = 0;
+const MENU_LINES = ['One day this garage will be a campus. Probably.', 'An angel just wired me ' + money(START_CASH) + '. Press New game before they change their mind.', 'Step one: launch an app. Step two: ads. Step three: profit. Step two is the hard part.', 'AI doesn\'t exist yet, so every ad is made by hand. Character building.', 'Gerald from the bank already knows my name. That\'s not a good sign.', 'Fifty-two weeks to make this thing worth something. No pressure.', 'I named the cat "Runway". I check on him a lot.', 'Somebody has to hire a social media manager eventually. Not today.'];
+const menuLine = () => pick([...MENU_LINES, ...MENU_LINES, ...OFFICE_FUN.founder, ...OFFICE_TIPS.founder]);
+function menuOffice() {
+  const keep = state;
+  state = { office: 0, team: [], week: 1, annex: 0, brand: { name: (draft.name || '').trim() || 'Your app' } };
+  let svg = ''; try { svg = officeSVG().svg; } finally { state = keep; }
+  return svg.replace(/ data-(act|tip|k|id)="[^"]*"/g, '').replace('class="op ', 'data-act="menuTalk" data-tip="You · Founder" class="op ');
+}
+function menuSay(text) {
+  officeBubble('founder', 'fun', text || menuLine());
+  const b = document.querySelector('.menuscene .obub b'); if (b) b.textContent = 'You · Founder';
+}
+setInterval(() => {
+  if (!atMenu || menuStep !== 'title' || document.hidden || prefs.chatter === 'off' || !document.querySelector('.menuscene')) { menuChat = 0; return; }
+  if (obActive || document.querySelector('#modal .overlay')) return;
+  const now = Date.now(); if (!menuChat) { menuChat = now + 1800; return; } if (now < menuChat) return;
+  menuChat = now + (prefs.chatter === 'often' ? 6000 : 10000) + Math.random() * 4000;
+  menuSay();
+}, 500);
+function vTitle() {
+  const saved = state && state.brand;
+  return `<div class="menu">
+    <div class="menuhead"><span class="lbl">Make ads · buy reach · find the winner</span><h1 class="gtitle">App Marketing<span>Tycoon</span></h1></div>
+    <div class="menubody">
+      <div class="menubtns">
+        ${saved ? `<button class="mbtn primary" data-act="menuContinue"><b>Continue</b><span>${markHTML(state.brand)}${esc(state.brand.name)} · week ${state.week}</span></button>` : ''}
+        <button class="mbtn ${saved ? '' : 'primary'}${menuArm ? ' armed' : ''}" data-act="menuNew"><b>${menuArm ? 'Sure? Start over' : 'New game'}</b><span>${menuArm ? `${esc(state.brand.name)} will be lost. Click again.` : 'Launch your first app'}</span></button>
+        <button class="mbtn" data-act="achievements"><b>Achievements</b><span>${ACH.filter(a => achLoad()[a.id]).length} / ${ACH.length} unlocked</span></button>
+        <button class="mbtn" data-act="settings"><b>Settings</b><span>Sound, theme, office chatter</span></button>
+        <button class="mbtn" data-act="about"><b>About</b><span>Who made this</span></button>
+      </div>
+      <div class="menuscene scene" aria-label="Your garage office">${menuOffice()}</div>
+    </div>
+  </div>`;
+}
+function setupSteps(n) {
+  return `<div class="steps"><span class="${n === 1 ? 'on' : 'done'}">1 · Your app</span><i></i><span class="${n === 2 ? 'on' : ''}">2 · Your market</span></div>`;
+}
+function setupPreview(d) {
+  return `<div class="preview">${markHTML(d, 'pvmark')}
+      <div><b style="font-family:var(--f-display);font-size:20px" id="pvname">${esc(d.name || 'Your brand')}</b><div class="muted">${CATS[d.cat].desc} · ${MODELS[d.model].name} · ${TONE[d.tone].name}</div></div></div>`;
+}
+function vSetupApp() {
+  const d = draft;
+  return `<div class="setup">
+    <div class="row" style="justify-content:space-between"><button class="linkbtn" data-act="menuBack">← Main menu</button>${setupSteps(1)}</div>
+    <h2 class="sethead">Name your first app</h2>
+    <div class="field"><label class="lbl" for="bname">App name</label><input type="text" id="bname" maxlength="24" placeholder="e.g. Fitmo, Lingo, Calmly" value="${esc(d.name)}" data-draftname></div>
+    <div class="field"><span class="lbl">Logo</span>
+      <div class="icongrid"><button class="icb" data-act="draft" data-k="icon" data-v="letter" aria-pressed="${d.icon === 'letter'}" aria-label="Letter">Aa</button>${Object.keys(ICONS).map(k => `<button class="icb" data-act="draft" data-k="icon" data-v="${k}" aria-pressed="${d.icon === k}" aria-label="${k} icon">${iconSvg(k)}</button>`).join('')}</div>
+      ${d.icon === 'letter' ? `<div class="lettrow"><label class="muted small" for="blet">Letter</label><input type="text" id="blet" maxlength="2" value="${esc(d.letter)}" placeholder="${esc(upper(d.name))}" data-draftletter><span class="muted small">One or two characters. Empty uses your app's first letter.</span></div>` : ''}
+      <div class="row" style="flex-wrap:wrap;justify-content:flex-start"><span class="muted small" style="width:84px">Background</span><div class="swatches">${SWATCH.map((c, k) => `<button class="sw" style="background:${c}" data-act="draft" data-k="color" data-v="${k}" aria-pressed="${d.color === k}" aria-label="Background color ${k + 1}"></button>`).join('')}</div></div>
+      <div class="row" style="flex-wrap:wrap;justify-content:flex-start"><span class="muted small" style="width:84px">Icon color</span><div class="swatches">${ICON_FG.map((c, k) => `<button class="sw" style="background:${c};outline:1px solid var(--line)" data-act="draft" data-k="fg" data-v="${k}" aria-pressed="${d.fg === k}" aria-label="Icon color ${k + 1}"></button>`).join('')}</div></div></div>
+    <div class="field"><label class="lbl" for="bseed">Game seed <span class="muted small">(optional)</span> ${infoI('Every game hides a different market: which platform works, which one lies, when the seasons hit. Leave this empty for a fresh one, or type a friend\'s code to play the same market.')}</label><input type="text" id="bseed" maxlength="8" placeholder="Random" value="${esc(d.seed || '')}" data-draftseed style="max-width:200px;text-transform:uppercase"></div>
+    ${setupPreview(d)}
+    <div class="row" style="justify-content:flex-end"><button class="btn primary big" data-act="menuNext">Next →</button></div>
+  </div>`;
+}
+function vSetupMarket() {
   const d = draft;
   const opt = (k, map, extra) => Object.entries(map).map(([id, o]) => `<button class="opt" data-act="draft" data-k="${k}" data-v="${id}" aria-pressed="${d[k] === id}"><b>${o.name}</b><span>${o.desc}</span>${extra ? extra(o) : ''}</button>`).join('');
   return `<div class="setup">
-    <div class="hero"><div class="heroart">${heroSVG()}</div><span class="lbl">${GAME_NAME} · make ads, buy reach, find the winner</span><h1 style="margin-top:8px">Launch your app.<br><span>Market it to the top.</span></h1>
-      <p>You've just shipped a mobile app and an angel gave you ${money(START_CASH)}. In 52 weeks you make ads, run Meta, TikTok and Google campaigns, price your paywall and hire a team, and the company is worth whatever your marketing turns it into.</p></div>
-    <div class="field"><span class="lbl">Your app</span></div>
-    <div class="field"><label class="lbl" for="bname">Brand name</label><input type="text" id="bname" maxlength="24" placeholder="e.g. Fitmo, Lingo, Calmly" value="${esc(d.name)}" data-draftname></div>
-    <div class="field"><label class="lbl" for="bseed">Game code <span class="muted small">(optional)</span> ${infoI('Every game hides a different market: which platform works, which one lies, when the seasons hit. Leave this empty for a fresh one, or type a friend\'s code to play the same market.')}</label><input type="text" id="bseed" maxlength="8" placeholder="e.g. X7K2QF" value="${esc(d.seed || '')}" data-draftseed style="max-width:200px;text-transform:uppercase"></div>
+    <div class="row" style="justify-content:space-between"><button class="linkbtn" data-act="menuPrev">← Back</button>${setupSteps(2)}</div>
+    <h2 class="sethead">Where and how does ${esc(d.name.trim() || 'it')} make money?</h2>
     <div class="field"><label class="lbl" for="bcountry">Home country</label><select id="bcountry" data-draftcountry style="max-width:360px">${[1, 2, 3].map(t => `<optgroup label="Tier ${t}">${COUNTRIES.filter(c => MARKETS[c[2]].tier === t).map(c => `<option value="${c[0]}" ${d.country === c[0] ? 'selected' : ''}>${c[1]}</option>`).join('')}</optgroup>`).join('')}</select>
       <span class="muted small">You launch here. Other regions open up later through research.</span></div>
     <div class="field"><span class="lbl">App category</span><div class="opts">${opt('cat', CATS, o => `<span class="mono">Suggested yearly price $${o.aov}</span>`)}</div></div>
     <div class="field"><span class="lbl">Revenue model</span><div class="opts">${opt('model', MODELS)}</div></div>
     ${d.model === 'subs' ? `<div class="field"><span class="lbl">Price position</span><div class="opts">${opt('price', PRICE)}</div></div>` : ''}
     <div class="field"><span class="lbl">Brand voice</span><div class="opts">${opt('tone', TONE)}</div></div>
-    <div class="field"><span class="lbl">Logo</span>
-      <div class="icongrid"><button class="icb" data-act="draft" data-k="icon" data-v="letter" aria-pressed="${d.icon === 'letter'}" aria-label="Letter">Aa</button>${Object.keys(ICONS).map(k => `<button class="icb" data-act="draft" data-k="icon" data-v="${k}" aria-pressed="${d.icon === k}" aria-label="${k} icon">${iconSvg(k)}</button>`).join('')}</div>
-      ${d.icon === 'letter' ? `<div class="lettrow"><label class="muted small" for="blet">Letter</label><input type="text" id="blet" maxlength="2" value="${esc(d.letter)}" placeholder="${esc(upper(d.name))}" data-draftletter><span class="muted small">One or two characters. Empty uses your brand's first letter.</span></div>` : ''}
-      <div class="row" style="flex-wrap:wrap;justify-content:flex-start"><span class="muted small" style="width:84px">Background</span><div class="swatches">${SWATCH.map((c, k) => `<button class="sw" style="background:${c}" data-act="draft" data-k="color" data-v="${k}" aria-pressed="${d.color === k}" aria-label="Background color ${k + 1}"></button>`).join('')}</div></div>
-      <div class="row" style="flex-wrap:wrap;justify-content:flex-start"><span class="muted small" style="width:84px">Icon color</span><div class="swatches">${ICON_FG.map((c, k) => `<button class="sw" style="background:${c};outline:1px solid var(--line)" data-act="draft" data-k="fg" data-v="${k}" aria-pressed="${d.fg === k}" aria-label="Icon color ${k + 1}"></button>`).join('')}</div></div></div>
-    <div class="preview">${markHTML(d, 'pvmark')}
-      <div><b style="font-family:var(--f-display);font-size:20px" id="pvname">${esc(d.name || 'Your brand')}</b><div class="muted">${CATS[d.cat].desc} · ${MODELS[d.model].name} · ${TONE[d.tone].name}</div></div></div>
-    <div><button class="btn primary big" data-act="start">Launch the app &amp; start the clock</button></div>
+    ${setupPreview(d)}
+    <div class="row" style="justify-content:flex-end"><button class="btn primary big" data-act="start">Launch the app 🚀</button></div>
   </div>`;
 }
+function vSetup() { return menuStep === 'app' ? vSetupApp() : menuStep === 'market' ? vSetupMarket() : vTitle(); }
 
 // ---------- modals ----------
 function closeModal() { document.getElementById('modal').innerHTML = ''; document.body.classList.remove('touring'); }
@@ -4055,9 +4130,21 @@ const ACT = {
     if (d.k === 'ads' && !state.flags.adsIntro && best('perf')) { state.flags.adsIntro = 1; save(); say(best('perf'), pick(LINES.perf)); }
   },
   draft: d => { draft[d.k] = d.k === 'color' || d.k === 'fg' ? +d.v : d.v; render(); },
+  menuContinue: () => { atMenu = false; menuArm = false; closeModal(); render(); window.scrollTo(0, 0); if (state.over) showFinal(); },
+  menuNew: () => {
+    if (state && state.brand && !menuArm) { menuArm = true; render(); return; }
+    menuArm = false; draft = { country: 'US', name: '', cat: 'fitness', price: 'orta', tone: 'samimi', color: 0, model: 'subs', icon: 'letter', letter: '', fg: 0 };
+    menuStep = 'app'; render(); window.scrollTo(0, 0); document.getElementById('bname')?.focus();
+  },
+  menuBack: () => { menuStep = 'title'; render(); window.scrollTo(0, 0); },
+  menuNext: () => { if (!draft.name.trim()) { toast('Give your app a name first.'); document.getElementById('bname').focus(); return; } menuStep = 'market'; render(); window.scrollTo(0, 0); },
+  menuPrev: () => { menuStep = 'app'; render(); window.scrollTo(0, 0); },
+  toMenu: () => { closeModal(); document.getElementById('dialog').innerHTML = ''; atMenu = true; menuStep = 'title'; menuArm = false; save(); render(); window.scrollTo(0, 0); },
+  menuTalk: () => { if (!obActive) menuSay(); },
   start: () => {
     const name = draft.name.trim();
-    if (!name) { toast('Give your brand a name first.'); document.getElementById('bname').focus(); return; }
+    if (!name) { menuStep = 'app'; render(); toast('Give your app a name first.'); return; }
+    atMenu = false; menuStep = 'title';
     newState({ name, country: draft.country, cat: draft.cat, price: draft.price, tone: draft.tone, color: draft.color, model: draft.model, icon: draft.icon, letter: draft.letter, fg: draft.fg, seed: draft.seed || '' });
     save(); render(); window.scrollTo(0, 0); showTour(0);
   },
@@ -4207,9 +4294,9 @@ const ACT = {
       <div class="setgroup"><span class="lbl">Sound</span>${row('All sounds', '', onoff('sound'))}${row('Typing sound', 'The blips when someone talks in the office', onoff('voice'))}</div>
       <div class="setgroup"><span class="lbl">Office</span>${row('Random chatter', 'How often someone starts talking on their own', seg('chatter', [['often', 'Often'], ['normal', 'Normal'], ['off', 'Off']]))}</div>
       <div class="setgroup"><span class="lbl">Look</span>${row('Theme', '', seg('theme', [['auto', 'Auto'], ['light', 'Light'], ['dark', 'Dark']]))}${row('Reduce animations', 'Shorter waits, no wiggling, no blinking lights', onoff('reduce'))}</div>
-      ${state && state.seed ? `<div class="setgroup"><span class="lbl">This game</span><div class="setrow"><div><b>Game code: <span class="mono">${state.seed}</span></b><span class="muted small">Share it: a friend who starts with this code gets the same market.</span></div><button class="btn xs" data-act="copySeed">Copy</button></div></div>` : ''}
-      <div class="setgroup"><span class="lbl">Help</span><div class="row" style="gap:8px;justify-content:flex-start;flex-wrap:wrap"><button class="btn xs" data-act="replayTour">Replay the tour</button><button class="btn xs" data-act="resetGuides">Show page guides again</button></div></div>
-      <div class="setgroup"><span class="lbl">Testing</span><div class="row" style="gap:8px;justify-content:flex-start"><button class="btn xs" data-act="dev">Developer tools</button></div></div>
+      ${!atMenu && state && state.seed ? `<div class="setgroup"><span class="lbl">This game</span><div class="setrow"><div><b>Game code: <span class="mono">${state.seed}</span></b><span class="muted small">Share it: a friend who starts with this code gets the same market.</span></div><button class="btn xs" data-act="copySeed">Copy</button></div></div>` : ''}
+      ${atMenu ? '' : `<div class="setgroup"><span class="lbl">Help</span><div class="row" style="gap:8px;justify-content:flex-start;flex-wrap:wrap"><button class="btn xs" data-act="replayTour">Replay the tour</button><button class="btn xs" data-act="resetGuides">Show page guides again</button></div></div>
+      <div class="setgroup"><span class="lbl">Testing</span><div class="row" style="gap:8px;justify-content:flex-start"><button class="btn xs" data-act="dev">Developer tools</button></div></div>`}
     </div></div></div>`;
   },
   copySeed: () => { try { navigator.clipboard.writeText(state.seed); toast('Game code copied.'); } catch (e) { toast('Game code: ' + state.seed); } },
@@ -4270,18 +4357,18 @@ const ACT = {
   mmpToggle: () => { const s = state; s.mmp = !s.mmp; save(); render(); toast(s.mmp ? 'AppsSlayer is installed. Real numbers show up after this week.' : 'AppsSlayer cancelled. Back to trusting the platforms. Good luck.'); },
   rowToggle: (d, el) => { el.classList.toggle('open'); el.closest('tbody').querySelectorAll('.sub-' + d.k).forEach(x => x.classList.toggle('open')); },
   loadDone: () => { showReport(); },
-  closeReport: () => { closeModal(); if (state.over) showFinal(); else { if (pendingChoices()) { state.tab = 'inbox'; render(); } const ld = state.lastDelivery, m = ld && state.team.find(x => x.id === ld.id); if (m && Math.random() < .6) say(m, pick(LINES.creative)); } window.scrollTo(0, 0); },
+  closeReport: () => { closeModal(); if (atMenu || !state) { render(); return; } if (state.over) showFinal(); else { if (pendingChoices()) { state.tab = 'inbox'; render(); } const ld = state.lastDelivery, m = ld && state.team.find(x => x.id === ld.id); if (m && Math.random() < .6) say(m, pick(LINES.creative)); } window.scrollTo(0, 0); },
   reset: () => {
     const s = state;
     document.getElementById('modal').innerHTML = `<div class="overlay" role="alertdialog" aria-modal="true" aria-labelledby="rst-t" aria-describedby="rst-d"><div class="modal confirm" style="max-width:420px">
       <div class="cfm-ic">!</div>
-      <h3 id="rst-t">Start a new game?</h3>
-      <p id="rst-d">You will lose your progress: ${esc(s.brand.name)}, week ${s.week}, ${money(s.cash)} in the bank and a team of ${s.team.length}. This can't be undone.</p>
-      <div class="row" style="justify-content:flex-end;gap:8px"><button class="btn" data-act="closeReport" id="rst-no">No, keep playing</button><button class="btn danger" data-act="resetYes">Yes, start over</button></div>
+      <h3 id="rst-t">Quit this game?</h3>
+      <p id="rst-d"><b>You will lose all your progress except your achievements.</b> ${esc(s.brand.name)}, week ${s.week} and ${money(s.cash)} in the bank will be gone for good.</p>
+      <div class="row" style="justify-content:flex-end;gap:8px"><button class="btn" data-act="closeReport" id="rst-no">No, keep playing</button><button class="btn danger" data-act="resetYes">Yes, quit</button></div>
     </div></div>`;
     document.getElementById('rst-no')?.focus();
   },
-  resetYes: () => { ACT.newGame(); },
+  resetYes: () => { ACT.newGame(); menuStep = 'title'; render(); },
   campOpen: d => { ui.camps[d.id] = d.v !== '0'; render(); },
   campMkt: d => { const s = state, t = d.id === 'google' ? s.ads.google : s.camps.find(x => x.id === d.id); if (!t) return; t.mkts = t.mkts || ['home']; const i = t.mkts.indexOf(d.v); if (i >= 0) { if (t.mkts.length === 1) { toast('A campaign needs at least one market.'); return; } t.mkts.splice(i, 1); } else { t.mkts.push(d.v); if (d.v !== 'home' && MARKETS[d.v].loc && !s.localized.includes(d.v)) toast(`${MARKETS[d.v].name} isn't localized yet, so it will convert poorly.`); } if (t.weeks != null) t.weeks = 0; save(); render(); },
   mktToggleOld: d => { const s = state, i = s.markets.indexOf(d.id); if (i >= 0) { if (s.markets.length === 1) { toast('You need at least one market.'); return; } s.markets.splice(i, 1); } else { s.markets.push(d.id); if (MARKETS[d.id].loc && !s.localized.includes(d.id)) toast('Heads up: this market isn\'t localized yet, so it will convert poorly.'); } for (const cp of s.camps) cp.weeks = 0; save(); render(); },
@@ -4396,7 +4483,7 @@ const ACT = {
     P.live = i; P.ab = false; toast(`Variant ${VAR_NAMES[i]} is now live for everyone.`); save(); render();
   },
   pwResetAB: () => { state.pw.tot = null; state.pw.hist = []; save(); render(); },
-  newGame: () => { closeModal(); state = null; draft = { country: 'US', name: '', cat: 'fitness', price: 'orta', tone: 'samimi', color: 0, model: 'subs', icon: 'letter', letter: '', fg: 0 }; try { localStorage.removeItem(SAVE_KEY); } catch (e) { } render(); window.scrollTo(0, 0); },
+  newGame: () => { closeModal(); state = null; atMenu = true; menuStep = 'app'; menuArm = false; draft = { country: 'US', name: '', cat: 'fitness', price: 'orta', tone: 'samimi', color: 0, model: 'subs', icon: 'letter', letter: '', fg: 0 }; try { localStorage.removeItem(SAVE_KEY); } catch (e) { } render(); window.scrollTo(0, 0); },
 };
 (() => {
   const tip = document.createElement('div'); tip.id = 'htip'; document.body.appendChild(tip); let cur = null;
@@ -4413,7 +4500,7 @@ const ACT = {
   document.addEventListener('scroll', () => { cur = null; tip.classList.remove('on'); }, true);
 })();
 document.addEventListener('keydown', e => {
-  if (!state || state.tab !== 'office' || !officeSel || e.metaKey || e.ctrlKey || e.altKey || /input|textarea|select/i.test((e.target.tagName || ''))) return;
+  if (atMenu || !state || state.tab !== 'office' || !officeSel || e.metaKey || e.ctrlKey || e.altKey || /input|textarea|select/i.test((e.target.tagName || ''))) return;
   const k = { 1: 'tip', 2: 'work', 3: 'fun' }[e.key]; if (k) ACT.officeTalk({ id: officeSel, cat: k });
 });
 // Space = continue: report steps first, otherwise End week
@@ -4510,7 +4597,7 @@ let pwLastAct = 0;
 for (const ev of ['pointerdown', 'keydown', 'input', 'wheel']) document.addEventListener(ev, () => { pwLastAct = Date.now(); }, { passive: true });
 document.addEventListener('pointermove', () => { pwLastAct = Date.now(); }, { passive: true });
 setInterval(() => {
-  if (!state || !state.pw || state.over || state.brand.model === 'ads' || state.tab !== 'paywall' || document.visibilityState !== 'visible' || Date.now() - pwLastAct > 45000) return;
+  if (atMenu || !state || !state.pw || state.over || state.brand.model === 'ads' || state.tab !== 'paywall' || document.visibilityState !== 'visible' || Date.now() - pwLastAct > 45000) return;
   const P = state.pw; P.time++;
   if (P.time % 10 === 0) save();
   const marks = [60, 240, 600, 1200];
@@ -4523,7 +4610,7 @@ function boot(data) {
   ensurePw(state);
   ensureExtras(state);
   render();
-  if (state && state.over) showFinal();
+  if (state && state.over && !atMenu) showFinal();
 }
 window.claude?.hot?.snapshot?.(() => ({ state }));
 window.claude?.hot?.ready ? window.claude.hot.ready(boot) : boot(window.claude?.hot?.data ?? {});
