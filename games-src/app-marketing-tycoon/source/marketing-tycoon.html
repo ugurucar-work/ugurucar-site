@@ -2302,14 +2302,17 @@ const tiktokSec = () => [...document.querySelectorAll('.platsec')].find(e => /Ti
 const QUEST = [
   { tab: 'studio', sel: '#clicker', title: 'Make your first ad', body: 'Nobody\'s invented a machine for this yet, so you make it by hand.', cta: 'Click this button 8 times to make an ad', done: s => s.stats.manual >= 1 },
   { tab: 'ads', plat: 'meta', sel: () => document.querySelector('.adcard .picker') || document.querySelector('.adcard [data-act="pickOpen"]'), title: 'Put it in your Meta campaign', body: 'An ad does nothing until it runs in a campaign.', cta: () => document.querySelector('.adcard .picker') ? 'Tick your new ad, then press "Add selected"' : 'Press "+ Add creatives"', done: s => s.camps.some(c => c.ch === 'meta' && c.crs.some(id => { const x = crById(id); return x && !x.starter; })) },
-  { tab: 'ads', plat: 'meta', sel: '.adcard input[type=range]', title: 'Set the budget to $500', body: 'Below that the algorithm barely learns and your fixed costs eat you first.', cta: 'Drag this slider to $500 or more', done: s => s.camps.some(c => c.ch === 'meta' && c.budget >= 500) },
-  { tab: 'ads', plat: 'meta', sel: '.adcard .switch[data-act="toggleCamp"]', title: 'Switch it on', body: 'Campaigns start switched off.', cta: 'Turn this switch on', done: s => s.camps.some(c => c.ch === 'meta' && c.on && c.budget >= 500) },
+  { tab: 'ads', plat: 'meta', sel: '.adcard input[type=range]', title: 'Set your budget', body: 'Around $500 a week gives the algorithm enough data to learn. Too little and your fixed costs eat you first.', cta: 'Drag this slider to set your weekly budget', done: s => s.camps.some(c => c.ch === 'meta' && c.touched) },
+  { tab: 'ads', plat: 'meta', sel: '.adcard .switch[data-act="toggleCamp"]', title: 'Switch it on', body: 'Campaigns start switched off.', cta: 'Turn this switch on', done: s => s.camps.some(c => c.ch === 'meta' && c.on) },
   { tab: null, sel: '[data-act="endWeek"]', title: 'End the week', body: 'Your ads run for 7 days and you get a report. Most ads flop. That\'s normal.', cta: 'Press End week', done: s => s.history.length >= 1 },
   { tab: 'team', sel: () => state.candidates.some(c => c.role === 'creative') ? document.querySelectorAll('.teamgrid .panel')[2] : document.querySelectorAll('.teamgrid .panel')[1], title: 'Hire a Marketing Artist', body: 'Handmade ads are slow and rarely win. A Marketing Artist makes 4 to 10 a week.', cta: () => state.candidates.some(c => c.role === 'creative') ? 'Pick a Marketing Artist here and press Hire' : state.hunt ? `Candidates arrive next week. End the week, then come back here` : 'Pick "Marketing Artist" and press "Post the job"', done: s => has('creative').length > 0 },
-  { tab: 'ads', plat: 'tiktok', sel: () => document.querySelector('.adsec .adcard') || document.querySelector('.adsec [data-act="newCamp"]'), title: 'Open TikTok too', body: 'Same drill as Meta.', cta: 'Add creatives, set $300 or more and switch it on', wait: s => s.locked && s.locked.tiktok, waitText: 'TikTok unlocks after your first week.', done: s => s.camps.some(c => c.ch === 'tiktok' && c.on && c.budget >= 300) },
+  { tab: 'ads', plat: 'tiktok', sel: () => document.querySelector('.adsec .adcard') || document.querySelector('.adsec [data-act="newCamp"]'), title: 'Open TikTok too', body: 'Same drill as Meta.', cta: 'Add creatives, set a budget and switch it on', wait: s => s.locked && s.locked.tiktok, waitText: 'TikTok unlocks after your first week.', done: s => s.camps.some(c => c.ch === 'tiktok' && c.on) },
   { tab: null, sel: '[data-act="endWeek"]', title: 'Hold steady for 3 weeks', body: 'The first weeks lose money while the pixel learns who buys. Don\'t slash budgets. If cash gets tight, the bank is under Loans.', cta: 'Press End week, and again, and again', done: s => s.history.length >= 4 },
 ];
-const questStep = () => { const q = state.quest || {}; if (q.skip || q.over) return -1; return QUEST.findIndex((st, i) => !st.done(state) && !(q.passed || []).includes(i)); };
+const questStep = () => { const q = state.quest || (state.quest = {}); if (q.skip || q.over) return -1; q.passed = q.passed || [];
+  // a finished step stays finished, even if the player changes their mind later
+  QUEST.forEach((st, i) => { if (!q.passed.includes(i) && st.done(state)) q.passed.push(i); });
+  return QUEST.findIndex((st, i) => !q.passed.includes(i)); };
 function questCard() {
   const s = state, q = s.quest = s.quest || {};
   if (q.skip || q.over || s.over) return '';
@@ -5039,7 +5042,7 @@ document.addEventListener('input', e => {
     const bar = document.getElementById('gbar'); if (bar) bar.innerHTML = [0, 1, 2, 3].map(k => `<i class="${st > k / 4 + .05 ? 'on' : ''}"></i>`).join('');
     save();
   } else if (t.dataset.cbudget) {
-    const cp = state.camps.find(x => x.id === t.dataset.cbudget); if (cp) cp.budget = +t.value;
+    const cp = state.camps.find(x => x.id === t.dataset.cbudget); if (cp) { cp.budget = +t.value; if (!cp.touched) { cp.touched = true; questMark(); } }
     document.getElementById('cbl-' + t.dataset.cbudget).textContent = money(+t.value);
   } else if ('crbudget' in t.dataset) {
     state.crBudget = +t.value;
