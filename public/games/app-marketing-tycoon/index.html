@@ -1889,7 +1889,17 @@ const MUSIC = (() => {
   return { start, stop, sync: () => (prefs.sound && prefs.music && !document.hidden ? start() : stop()), get on() { return on; } };
 })();
 // browsers only allow sound after the player does something
-for (const ev of ['pointerdown', 'keydown']) document.addEventListener(ev, () => MUSIC.sync(), { passive: true });
+// unlock audio on every kind of user gesture (Safari only counts some of them), even with music off
+function audioUnlock() {
+  if (!prefs.sound) return;
+  try {
+    actx = actx || new (window.AudioContext || window.webkitAudioContext)();
+    if (actx.state !== 'running') actx.resume();
+    if (!audioUnlock.done) { const b = actx.createBuffer(1, 1, 22050), n = actx.createBufferSource(); n.buffer = b; n.connect(actx.destination); n.start(0); audioUnlock.done = true; }
+  } catch (e) { }
+  MUSIC.sync();
+}
+for (const ev of ['pointerdown', 'pointerup', 'mousedown', 'click', 'touchend', 'keydown']) document.addEventListener(ev, audioUnlock, { passive: true, capture: true });
 document.addEventListener('visibilitychange', () => MUSIC.sync());
 
 // toasts sit above the speech dialog (both live bottom-right)
