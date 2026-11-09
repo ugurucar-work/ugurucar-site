@@ -239,6 +239,7 @@ select,input[type=text],input[type=search]{width:100%;font:14px var(--f-body);co
 /* modal */
 .overlay{position:fixed;inset:0;z-index:50;background:color-mix(in srgb,#05060d 55%,transparent);display:grid;place-items:center;
   padding:calc(16px + env(safe-area-inset-top,0px)) max(16px,env(safe-area-inset-right,0px)) calc(16px + env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px))}
+.modal > *{flex-shrink:0}
 .modal{background:var(--panel);color:var(--ink);border:1px solid var(--line);border-radius:16px;width:100%;max-width:760px;max-height:100%;overflow:auto;padding:24px;display:flex;flex-direction:column;gap:18px;animation:pop .22s ease-out}
 @keyframes pop{from{transform:translateY(8px) scale(.98)}to{transform:none}}
 .bigrow{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:12px}
@@ -455,10 +456,13 @@ header.top{backdrop-filter:blur(10px);background:color-mix(in srgb,var(--panel) 
 @keyframes rtpulse{50%{background:color-mix(in srgb,#F5A524 32%,transparent)}}
 .reduce .rtabs button.rtnew{animation:none}
 .rthint{font-size:13.5px;padding:9px 12px;border-radius:10px;background:color-mix(in srgb,#F5A524 14%,var(--panel));border:1px solid color-mix(in srgb,#F5A524 45%,transparent)}
+.rfoot{position:sticky;bottom:-24px;margin:0 -24px -24px;padding:14px 24px 18px;background:var(--panel);border-top:1px solid var(--line);display:flex;gap:10px;flex-wrap:wrap;align-items:center;z-index:2}
+details.more summary{cursor:pointer;font-size:13px;color:var(--accent);font-weight:600;padding:4px 0}
+details.more .notes{margin-top:8px}
 .rbody{display:flex;flex-direction:column;gap:16px;min-height:220px}
-.rkpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+.rkpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}
 .rk{display:flex;flex-direction:column;gap:2px;padding:12px 14px;border:1px solid var(--line);border-radius:12px;background:var(--panel-2)}
-.rk b{font-family:var(--f-display);font-size:24px;font-weight:800;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.rk{min-width:0}.rk b{overflow-wrap:anywhere;font-family:var(--f-display);font-size:clamp(18px,2.2vw,24px);font-weight:800;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
 .rsec{display:flex;flex-direction:column;gap:10px}.rsec h3{font-size:15px}
 .hbar{display:flex;flex-direction:column;gap:6px}.hbar .row{font-size:14px}
 .hbtrack{height:10px;border-radius:99px;background:var(--line);overflow:hidden}.hbtrack i{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,var(--accent),#7B4DFF)}
@@ -486,7 +490,7 @@ header.top{backdrop-filter:blur(10px);background:color-mix(in srgb,var(--panel) 
 .rteam li{display:flex;gap:10px;padding:12px;border:1px solid var(--line);border-radius:12px;background:var(--panel-2)}
 .rteam li div{display:flex;flex-direction:column;gap:1px;min-width:0}.rteam p{margin:4px 0 0;font-size:13.5px}
 .callout.good{background:color-mix(in srgb,#1E9C74 12%,var(--panel))}
-@media (max-width:640px){.rkpis{grid-template-columns:repeat(2,minmax(0,1fr))}.mgrid{grid-template-columns:minmax(0,1fr)}}
+@media (max-width:640px){.rkpis{grid-template-columns:repeat(2,minmax(0,1fr))}.mgrid{grid-template-columns:minmax(0,1fr)}.rtabs{gap:0}.rtabs button{flex:1 1 auto;padding:9px 6px;font-size:13.5px}}
 .glossary dl{margin:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:10px 18px}
 .glossary dl div{padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:var(--panel-2)}
 .glossary dt{font-weight:700;font-family:var(--f-display)}.glossary dd{margin:3px 0 0;font-size:13.5px;color:var(--muted)}
@@ -4210,7 +4214,8 @@ function showReport() {
     ? `Platforms claimed <b>${fmt(r.reportedTotal)}</b> sales. Your analyst's real split: <b>${fmt(r.orders - r.src.organic - r.src.direct - (r.src.influencer || 0))}</b> from ads, the rest from organic, direct and influencers.`
     : diff > 0 ? `Platforms claimed <b>${fmt(r.reportedTotal)}</b> sales, but only <b>${fmt(r.orders)}</b> really came in. They count the same sale twice. A Data Analyst shows real ROAS.`
       : `Platforms claimed ${fmt(r.reportedTotal)} sales and ${fmt(r.orders)} came in overall. Organic and direct make up the gap.`) : '';
-  const notes = r.notes.filter(n => !/^Awareness /.test(n.m));
+  const HOUSE = /auto-rotate|is wearing out|finished testing|learning phase\. Budget was split/;
+  const notes = r.notes.filter(n => !/^Awareness /.test(n.m) && !HOUSE.test(n.m)), house = r.notes.filter(n => HOUSE.test(n.m));
   if (!srcRows.length && !r.posts) notes.push({ t: 'warn', m: 'No channel was active. Sales came from awareness alone.' });
   const newEv = s.inbox.filter(i => i.week === s.week && !i.done).length;
   const quote = r.newWinners.length && has('creative').length ? [pick(has('creative')), pick(LINES.winner)] : teamQuote();
@@ -4229,7 +4234,8 @@ function showReport() {
   if (repTab === 'sum') body = `
     <div class="rkpis">${kp('Money in', '+' + money(totIn), ads ? `${fmt(r.orders)} installs` : `${fmt(r.orders)} new subs`, 'good')}${kp('Money out', '−' + money(totOut), r.adSpend ? `${money(r.adSpend)} on ads` : 'No ad spend', 'bad')}${kp('Net', money(r.profit), r.adSpend ? `ROAS ${dec(r.revenue / r.adSpend)}x` : '', r.profit >= 0 ? 'good' : 'bad')}${kp('Cash', money(r.cash), r.principal ? `after ${money(r.principal)} loan repayment` : '')}</div>
     <div class="rsec"><h3>Brand health</h3>${repBar('Awareness', r.aw[0], r.aw[1], 'How many people in your markets know the app. Ads and organic posts raise it; it fades without them.')}${repBar('Trust', r.trust[0], r.trust[1], 'How much people believe in the app. Happy customers, social posts and a fair paywall raise it.')}</div>
-    ${notes.length ? `<div class="rsec"><h3>This week</h3><ul class="notes">${notes.map(n => `<li class="${n.t}">${n.m}</li>`).join('')}</ul></div>` : ''}
+    ${notes.length ? `<div class="rsec"><h3>This week</h3><ul class="notes">${notes.slice(0, 6).map(n => `<li class="${n.t}">${n.m}</li>`).join('')}</ul>${notes.length > 6 ? `<details class="more"><summary>${notes.length - 6} more</summary><ul class="notes">${notes.slice(6).map(n => `<li class="${n.t}">${n.m}</li>`).join('')}</ul></details>` : ''}</div>` : ''}
+    ${house.length ? `<p class="muted small" style="margin:0">${house.length} campaign update${house.length > 1 ? 's' : ''} (rotations, tired ads) are in <b>Campaigns</b>.</p>` : ''}
     ${quote ? `<div class="say"><span class="avatar">${esc(initials(quote[0].name))}</span><div class="bubble"><b>${esc(quote[0].name)} · ${ROLES[quote[0].role].name}</b>${esc(quote[1])}</div></div>` : ''}`;
   else if (repTab === 'money') body = `
     <div class="mgrid">
@@ -4248,18 +4254,20 @@ function showReport() {
     const top = best('perf') ? s.creatives.filter(c => Object.values(c.stats).some(v => v.week === r.week)).map(c => ({ c, ctr: Math.max(...Object.values(c.stats).filter(v => v.week === r.week).map(v => v.ctr)) })).sort((a, b) => b.ctr - a.ctr).slice(0, 3) : [];
     body = srcRows.length ? `<div class="rcamps">${srcRows.map(card).join('')}</div><div class="callout">${att}</div>${other}
       ${top.length ? `<div class="rsec"><h3>Top creatives</h3><ul class="toplist">${top.map((t, i) => `<li><span class="tn">${i + 1}</span><span>${esc(crName(t.c))} <span class="muted small">${SRC[srcOf(t.c)]}</span></span><b>${pct(t.ctr, 2)} CTR</b></li>`).join('')}</ul></div>` : ''}
+      ${house.length ? `<details class="more"><summary>Campaign updates (${house.length})</summary><ul class="notes">${house.map(n => `<li class="${n.t}">${n.m}</li>`).join('')}</ul></details>` : ''}
       ${r.newWinners.length ? `<div class="callout good">🏆 ${r.newWinners.length} new winner${r.newWinners.length > 1 ? 's' : ''} found in testing.</div>` : ''}`
       : `<div class="empty">No paid campaigns ran this week.</div>`;
     if (r.ab) body += `<div class="rsec"><h3>Paywall test · this week ${infoI('One week is a small sample. Check the running totals in Paywall Lab before you ship.')}</h3>${abTable(r.ab)}</div>`;
-  } else body = `${(r.team || []).length ? `<ul class="rteam">${r.team.map(l => { const m = s.team.find(x => x.id === l.id); return `<li>${avatarSVG(l.id, 36)}<div><b>${esc(l.name)}</b>${m ? `<span class="muted small">${ROLES[m.role].name}</span>` : ''}<p>${esc(l.text.charAt(0).toUpperCase() + l.text.slice(1))}</p></div></li>`; }).join('')}</ul>` : ''}
-    ${r.posts ? `<div class="callout">Your team published <b>${r.posts}</b> organic posts for <b>${fmt(r.reach)}</b> total reach.</div>` : ''}`;
+  } else { const byId = []; for (const l of r.team || []) { const o = byId.find(x => x.id === l.id); if (o) o.text += ' ' + l.text.charAt(0).toUpperCase() + l.text.slice(1); else byId.push({ ...l }); }
+    body = `${byId.length ? `<ul class="rteam">${byId.map(l => { const m = s.team.find(x => x.id === l.id); return `<li>${avatarSVG(l.id, 36)}<div><b>${esc(l.name)}</b>${m ? `<span class="muted small">${ROLES[m.role].name}</span>` : ''}<p>${esc(l.text.charAt(0).toUpperCase() + l.text.slice(1))}</p></div></li>`; }).join('')}</ul>` : ''}
+    ${r.posts ? `<div class="callout">Your team published <b>${r.posts}</b> organic posts for <b>${fmt(r.reach)}</b> total reach.</div>` : ''}`; }
   const m = document.getElementById('modal'), prev = m.querySelector('.modal');
   m.innerHTML = `<div class="overlay" role="dialog" aria-modal="true" aria-label="Weekly report"><div class="modal report">
     <div><span class="lbl">Week ${r.week} report · ${dateOf(r.week)}${r.bf ? ' · Black Friday' : ''}</span><h2 style="margin-top:4px">${title}</h2></div>
-    <div class="rtabs" role="tablist">${tabs.map(([k, n]) => `<button role="tab" data-act="repTab" data-v="${k}" aria-selected="${repTab === k}" class="${['money', 'camp'].includes(k) && !s.flags['rt_' + k] && repTab !== k ? 'rtnew' : ''}">${n}${k === 'team' ? ` <span class="muted">${(r.team || []).length || ''}</span>` : ''}</button>`).join('')}</div>
+    <div class="rtabs" role="tablist">${tabs.map(([k, n]) => `<button role="tab" data-act="repTab" data-v="${k}" aria-selected="${repTab === k}" class="${['money', 'camp'].includes(k) && !s.flags['rt_' + k] && repTab !== k ? 'rtnew' : ''}">${n}${k === 'team' ? ` <span class="muted">${new Set((r.team || []).map(l => l.id)).size || ''}</span>` : ''}</button>`).join('')}</div>
     ${['money', 'camp'].some(k => !s.flags['rt_' + k]) && repTab === 'sum' ? `<div class="rthint">👆 Where did the money go, and which ad worked? Open <b>Money</b> and <b>Campaigns</b>.</div>` : ''}
     <div class="rbody">${body}</div>
-    <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center"><button class="btn primary big" data-act="closeReport">On to week ${s.week}<span class="kbd" aria-hidden="true">Space</span></button>${newEv ? `<span class="pill warn">${newEv} new message${newEv > 1 ? 's' : ''}</span>` : ''}</div>
+    <div class="rfoot"><button class="btn primary big" data-act="closeReport">On to week ${s.week}<span class="kbd" aria-hidden="true">Space</span></button>${newEv ? `<span class="pill warn">${newEv} new message${newEv > 1 ? 's' : ''}</span>` : ''}</div>
   </div></div>`;
 }
 // 0 bankrupt · 1 garage · 2 office · 3 tower · 4 unicorn
