@@ -5,3 +5,5 @@ dist/
 linkedin-posts.md
 linkedin-cover.png
 turkce-yazilar.zip
+/*.png
+!/public/**
