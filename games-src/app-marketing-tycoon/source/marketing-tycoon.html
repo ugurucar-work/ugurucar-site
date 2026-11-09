@@ -1409,7 +1409,7 @@ let resetArmed = false;
 const SAVE_KEY = 'marketing-tycoon-app-v1';
 // player preferences live outside the save, so they survive a new game
 const PREFS_KEY = 'marketing-tycoon-prefs';
-const prefs = (() => { const d = { sound: true, music: true, voice: true, chatter: 'normal', theme: 'auto', reduce: false }; try { return { ...d, ...JSON.parse(localStorage.getItem(PREFS_KEY) || '{}') }; } catch (e) { return d; } })();
+const prefs = (() => { const d = { sound: true, music: true, sfx: true, voice: true, chatter: 'normal', theme: 'auto', reduce: false }; try { return { ...d, ...JSON.parse(localStorage.getItem(PREFS_KEY) || '{}') }; } catch (e) { return d; } })();
 const savePrefs = () => { try { localStorage.setItem(PREFS_KEY, JSON.stringify(prefs)); } catch (e) { } };
 const reduceMotion = () => prefs.reduce || !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
 function applyPrefs() {
@@ -1745,6 +1745,36 @@ const officeAsks = id => id === 'founder'
   : { tip: 'Got any advice for me?', work: 'What are you working on?', fun: 'How\'s life?' };
 // speech bubbles: typed out quickly with a soft blip, then fade. Someone chats on their own every 15–20s.
 let obT = null, obClose = null, obActive = false, actx = null, chatNext = 0;
+// ---------- sound effects: tiny Web Audio sounds, queued so two never play on top of each other ----------
+let sfxFree = 0, sfxLater = null;
+const SFX = {
+  coin: { d: .09, f: (c, o, t) => { [1568, 2093].forEach((f, i) => sTone(c, o, f, t + i * .035, .08, .05, 'square')); } },
+  kaching: { d: .55, f: (c, o, t) => { sTone(c, o, 1318, t, .09, .08, 'square'); sTone(c, o, 1760, t + .07, .4, .08, 'square'); sNoise(c, o, t, .05, .05, 5000); } },
+  ach: { d: .75, f: (c, o, t) => { [784, 988, 1175, 1568].forEach((f, i) => sTone(c, o, f, t + i * .09, i === 3 ? .45 : .14, .07, 'triangle')); } },
+  click: { d: .06, f: (c, o, t) => { sNoise(c, o, t, .03, .08, 2500); sTone(c, o, 900, t, .03, .04, 'square'); } },
+  pop: { d: .16, f: (c, o, t) => { const x = c.createOscillator(), g = c.createGain(); x.frequency.setValueAtTime(380, t); x.frequency.exponentialRampToValueAtTime(1100, t + .09); g.gain.setValueAtTime(.12, t); g.gain.exponentialRampToValueAtTime(.0001, t + .14); x.connect(g).connect(o); x.start(t); x.stop(t + .15); } },
+  tick: { d: .04, f: (c, o, t) => sTone(c, o, 1400 + Math.random() * 300, t, .03, .035, 'square') },
+  whoosh: { d: .35, f: (c, o, t) => { const n = c.createBufferSource(), fl = c.createBiquadFilter(), g = c.createGain(); n.buffer = sBuf(c); fl.type = 'bandpass'; fl.Q.value = 1.2; fl.frequency.setValueAtTime(400, t); fl.frequency.exponentialRampToValueAtTime(4000, t + .28); g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(.12, t + .12); g.gain.exponentialRampToValueAtTime(.0001, t + .32); n.connect(fl).connect(g).connect(o); n.start(t); n.stop(t + .34); sTone(c, o, 1318, t + .22, .12, .05, 'triangle'); } },
+  stamp: { d: .3, f: (c, o, t) => { const x = c.createOscillator(), g = c.createGain(); x.frequency.setValueAtTime(160, t); x.frequency.exponentialRampToValueAtTime(55, t + .12); g.gain.setValueAtTime(.35, t); g.gain.exponentialRampToValueAtTime(.0001, t + .2); x.connect(g).connect(o); x.start(t); x.stop(t + .22); sNoise(c, o, t, .06, .12, 1200); } },
+  inbox: { d: .3, f: (c, o, t) => { sTone(c, o, 880, t, .1, .07, 'sine'); sTone(c, o, 1320, t + .1, .18, .07, 'sine'); } },
+  alarm: { d: 1, f: (c, o, t) => { for (let i = 0; i < 3; i++) { sTone(c, o, 220, t + i * .32, .22, .09, 'sawtooth'); sTone(c, o, 185, t + i * .32 + .11, .14, .07, 'sawtooth'); } } },
+  fanfare: { d: 1.6, f: (c, o, t) => { [[523, 0], [659, .12], [784, .24], [1047, .36], [784, .6], [1047, .72]].forEach(([f, dt], i) => sTone(c, o, f, t + dt, i === 5 ? .8 : .16, .08, 'triangle')); [262, 330, 392].forEach(f => sTone(c, o, f, t + .72, .8, .04, 'sine')); } },
+};
+let sNoiseBuf = null;
+function sBuf(c) { if (!sNoiseBuf) { sNoiseBuf = c.createBuffer(1, c.sampleRate / 2, c.sampleRate); const d = sNoiseBuf.getChannelData(0); for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1; } return sNoiseBuf; }
+function sTone(c, o, f, t, dur, vol, type) { const x = c.createOscillator(), g = c.createGain(); x.type = type; x.frequency.value = f; g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(vol, t + .008); g.gain.exponentialRampToValueAtTime(.0001, t + dur); x.connect(g).connect(o); x.start(t); x.stop(t + dur + .02); }
+function sNoise(c, o, t, dur, vol, hp) { const n = c.createBufferSource(), fl = c.createBiquadFilter(), g = c.createGain(); n.buffer = sBuf(c); fl.type = 'highpass'; fl.frequency.value = hp; g.gain.setValueAtTime(vol, t); g.gain.exponentialRampToValueAtTime(.0001, t + dur); n.connect(fl).connect(g).connect(o); n.start(t); n.stop(t + dur + .02); }
+function sfx(name) {
+  if (!prefs.sound || !prefs.sfx || document.hidden || !SFX[name]) return;
+  try {
+    actx = actx || new (window.AudioContext || window.webkitAudioContext)(); if (actx.state === 'suspended') actx.resume();
+    const now = actx.currentTime, at = Math.max(now, sfxFree);
+    if (at - now > 1.6) return; // too much queued: skip rather than pile up
+    const o = actx.createGain(); o.gain.value = .9; o.connect(actx.destination);
+    SFX[name].f(actx, o, at); sfxFree = at + SFX[name].d;
+  } catch (e) { }
+}
+
 // ---------- music: a small lo-fi loop made on the fly with Web Audio (no files, no network) ----------
 const MUSIC = (() => {
   const BPM = 82, STEP = 60 / BPM / 4;
@@ -3916,6 +3946,7 @@ function vSetup() { return menuStep === 'app' ? vSetupApp() : menuStep === 'mark
 // ---------- modals ----------
 function closeModal() { document.getElementById('modal').innerHTML = ''; document.body.classList.remove('touring'); }
 function showReport() {
+  if (sfxLater) { const n = sfxLater; sfxLater = null; setTimeout(() => sfx(n), 150); }
   const r = state.lastReport, s = state;
   const srcRows = [['Meta', 'meta'], ['TikTok', 'tiktok'], ['Google Search', 'google']].filter(([, k]) => r.ch[k]);
   const paidRows = srcRows.map(([n, k]) => { const c = r.ch[k]; return `<tr><td>${n}</td><td>${money(c.spend)}</td><td>${fmt(c.reported)}</td><td>${dec(c.reported * r.aov * (r.bf ? .7 : 1) / c.spend)}x</td>${r.analyst ? `<td>${fmt(c.orders)}</td><td>${dec(c.orders * r.aov * (r.bf ? .7 : 1) / c.spend)}x</td>` : ''}</tr>`; }).join('');
@@ -3993,6 +4024,7 @@ function brokeOffer(s) {
 }
 function brokeNeed() { return Math.max(5000, Math.ceil((-state.cash + plannedOut() * 2) / 5000) * 5000); }
 function showBroke() {
+  if (!document.querySelector('.brokeopts')) sfx('alarm');
   const s = state, b = brokeOffer(s), need = brokeNeed(), lmax = loanMax(), l = mkLoan(need, 26), hole = -s.cash;
   const card = (act, icon, title, sub, ok, why) => `<button class="brokeopt" data-act="${act}" ${ok ? '' : 'disabled'}><span class="bi">${icon}</span><span><b>${title}</b><span class="muted small">${ok ? sub : why}</span></span></button>`;
   const opts = [
@@ -4018,6 +4050,7 @@ function showFinal() {
   if (state.over === 'bankrupt' && !state.gaveUp) { showBroke(); return; }
   const s = state, v = valuation(), h = s.history;
   const tot = h.reduce((a, x) => a + x.revenue, 0), bk = s.over === 'bankrupt';
+  if (!bk) sfx('fanfare');
   const grade = bk ? 'Out of cash' : v.mine < 500000 ? 'Garage Startup' : v.mine < 2000000 ? 'Rising App' : v.mine < 6000000 ? 'Category Player' : 'Unicorn Material';
   const firstProfit = h.find(x => x.profit > 0);
   document.getElementById('modal').innerHTML = `<div class="overlay" role="dialog" aria-modal="true" aria-label="Game over"><div class="modal">
@@ -4162,8 +4195,9 @@ function showLoading(r) {
     if (!ul) return;
     const f = Math.min(1, (i + 1) / steps.length), lr = document.getElementById('lrev'), lc = document.getElementById('lcost');
     if (lr) lr.textContent = '+' + money(Math.round(rev * f)); if (lc) lc.textContent = '−' + money(Math.round(cost * f));
+    if (rev > 0 && i < steps.length && !fast) sfx('coin');
     if (i < steps.length) { const li = document.createElement('li'); li.textContent = steps[i].t; if (steps[i].fun) li.className = 'fun'; ul.appendChild(li); i++; bar.style.width = (i / steps.length * 100) + '%'; setTimeout(tick, per); }
-    else { const sc = document.getElementById('wscene'), ln = document.getElementById('lnet'); if (sc) sc.classList.add(net >= 0 ? 'up' : 'down', 'end'); if (ln) ln.textContent = `${net >= 0 ? 'Profit' : 'Loss'} ${money(net)}`;
+    else { const sc = document.getElementById('wscene'), ln = document.getElementById('lnet'); if (sc) sc.classList.add(net >= 0 ? 'up' : 'down', 'end'); if (net > 0) sfx('kaching'); if (ln) ln.textContent = `${net >= 0 ? 'Profit' : 'Loss'} ${money(net)}`;
       const box = document.querySelector('.loadbox'); if (box && !box.querySelector('[data-act="loadDone"]')) { box.insertAdjacentHTML('beforeend', `<div class="row" style="justify-content:flex-end"><button class="btn primary" data-act="loadDone">See the full report →<span class="kbd" aria-hidden="true">Space</span></button></div>`); box.querySelector('[data-act="loadDone"]').focus(); } }
   };
   setTimeout(tick, fast ? 50 : 250);
@@ -4276,6 +4310,7 @@ function achDecode(code) {
 }
 const achBadge = (a, on, big) => `<span class="achb${on ? '' : ' off'}${big ? ' big' : ''}" style="--ac:${ACH_CATS[a.cat][1]}" aria-hidden="true">${on || !a.hid ? a.g : '?'}</span>`;
 function achToast(a) {
+  if (document.querySelector('.loadbox')) sfxLater = 'ach'; else sfx('ach');
   let box = document.getElementById('toasts'); if (!box) { box = document.createElement('div'); box.id = 'toasts'; document.body.appendChild(box); }
   const t = document.createElement('div'); t.className = 'toast achtoast'; t.setAttribute('role', 'status');
   t.innerHTML = `${achBadge(a, true)}<span><span class="lbl">Achievement unlocked</span><b>${esc(a.n)}</b></span>`; box.appendChild(t);
@@ -4319,7 +4354,7 @@ const ACT = {
   },
   draft: d => { draft[d.k] = d.k === 'color' || d.k === 'fg' ? +d.v : d.v; render(); },
   brokeSavings: () => { const s = state; if (s.savingsUsed) return; s.savingsUsed = true; s.cash += SAVINGS; brokeResume(`${money(SAVINGS)} moved from your personal account.`); },
-  brokeLoan: () => { const s = state, P = brokeNeed(); if (loanMax() < P) return; const l = mkLoan(P, 26); loans().push(l); s.achS = s.achS || {}; s.achS.loans = (s.achS.loans || 0) + 1; s.cash += P; spendNow(Math.round(P * LOAN_FEE), 'loanfee'); brokeResume(`Gerald approved ${money(P)}. ${money(Math.round(l.pay))} a week for 26 weeks.`); },
+  brokeLoan: () => { const s = state, P = brokeNeed(); if (loanMax() < P) return; const l = mkLoan(P, 26); loans().push(l); sfx('stamp'); s.achS = s.achS || {}; s.achS.loans = (s.achS.loans || 0) + 1; s.cash += P; spendNow(Math.round(P * LOAN_FEE), 'loanfee'); brokeResume(`Gerald approved ${money(P)}. ${money(Math.round(l.pay))} a week for 26 weeks.`); },
   brokeInvest: () => { const s = state, b = s.broke; if (!b || !b.inv || b.invDone) return; b.invDone = true; s.bailouts = (s.bailouts || 0) + 1; s.cash += b.inv; s.ownership *= .8; brokeResume(`${money(b.inv)} from Lighthouse Angels. You now own ${Math.round(s.ownership * 100)}%.`); },
   brokeQuit: () => { state.gaveUp = true; save(); showFinal(); },
   musicToggle: () => { const was = prefs.sound && prefs.music; prefs.music = !was; if (!was) prefs.sound = true; savePrefs(); MUSIC.sync(); render(); },
@@ -4358,7 +4393,7 @@ const ACT = {
   loanTerm: d => { ui.loanTerm = +d.v; render(); },
   loanTake: () => {
     const s = state, P = ui.loanAmt, n = ui.loanTerm || 26; if (!P || P > loanMax()) { toast('That\'s over your limit.'); return; }
-    const l = mkLoan(P, n), fee = Math.round(P * LOAN_FEE); loans().push(l); s.achS = s.achS || {}; s.achS.loans = (s.achS.loans || 0) + 1; s.cash += P; spendNow(fee, 'loanfee');
+    const l = mkLoan(P, n), fee = Math.round(P * LOAN_FEE); loans().push(l); sfx('stamp'); s.achS = s.achS || {}; s.achS.loans = (s.achS.loans || 0) + 1; s.cash += P; spendNow(fee, 'loanfee');
     toast(`Borrowed ${money(P)} for ${n} weeks: ${money(Math.round(l.pay))} a week. ${pick(LOAN_TAKE_LINES)}`); save(); render();
   },
   loanExtra: d => {
@@ -4395,7 +4430,7 @@ const ACT = {
     toast(d.v === 'test' ? `${cp.name} is now a creative test. Learning restarts.` : `${cp.name} is back to BAU. Learning restarts.`); save(); render();
   },
   delCamp: d => { const cp = state.camps.find(x => x.id === d.id); if (!cp) return; state.camps = state.camps.filter(x => x.id !== d.id); toast(`${cp.name} deleted.`); save(); render(); },
-  toggleCamp: d => { const cp = state.camps.find(x => x.id === d.id); if (!cp) return; cp.on = !cp.on; save(); render(); },
+  toggleCamp: d => { const cp = state.camps.find(x => x.id === d.id); if (!cp) return; cp.on = !cp.on; sfx('click'); save(); render(); },
   autoCamp: d => { const cp = state.camps.find(x => x.id === d.id); if (cp) cp.auto = !cp.auto; save(); render(); },
   rmCr: d => { const cp = state.camps.find(x => x.id === d.id); if (cp) cp.crs = cp.crs.filter(x => x !== d.cr); save(); render(); },
   pickOpen: d => { ui.picker = d.id || null; ui.sel = new Set(); render(); },
@@ -4424,6 +4459,7 @@ const ACT = {
     const s = state;
     if ((s.flags['m' + s.week] || 0) >= MANUAL_WEEK) { say('founder', pick(MANUAL_LIMIT_LINES)); toast('Weekly limit for handmade creatives reached.'); return; }
     s.manual++;
+    sfx(s.manual >= MANUAL_CLICKS ? 'whoosh' : 'tick');
     if (s.manual >= MANUAL_CLICKS) {
       s.manual = 0; s.stats.manual++; s.flags['m' + s.week] = (s.flags['m' + s.week] || 0) + 1;
       const c = addCreative({ tier: rollTier(MANUAL_ODDS), by: 'You', src: 'hand', type: pick(Object.keys(TYPES)), hook: pick(Object.keys(HOOKS)), code: `Handmade ${pick(NOUN)} ${(s.stats.manual)}` });
@@ -4444,7 +4480,7 @@ const ACT = {
   hire: d => {
     const s = state, i = s.candidates.findIndex(c => c.id === d.id); if (i < 0) return;
     if (s.team.length >= deskCap()) { toast('No free desk. Get a bigger office first.'); return; }
-    const m = s.candidates.splice(i, 1)[0]; m.hired = s.week; s.team.push(m); checkAch();
+    const m = s.candidates.splice(i, 1)[0]; m.hired = s.week; s.team.push(m); sfx('pop'); checkAch();
     toast(`${m.name} joined the team.`); save(); render();
     if (m.role === 'creative') say(m, 'Hi! Photoshop, Premiere, CapCut and a lot of patience. I do everything by hand, there\'s no other way anyway. First week I\'m setting up my desk and arguing with the printer. My first full batch lands next week.');
     else if (LINES[m.role]) say(m, pick(LINES[m.role]));
@@ -4494,7 +4530,7 @@ const ACT = {
     const onoff = k => seg(k, [[true, 'On'], [false, 'Off']]);
     document.getElementById('modal').innerHTML = `<div class="overlay" role="dialog" aria-modal="true" aria-label="Settings"><div class="modal" style="max-width:560px"><div class="stack">
       <div class="row"><h3>Settings</h3><button class="xbtn" data-act="closeReport" aria-label="Close">×</button></div>
-      <div class="setgroup"><span class="lbl">Sound</span>${row('All sounds', '', onoff('sound'))}${row('Music', 'A quiet lo-fi loop', onoff('music'))}${row('Typing sound', 'The blips when someone talks in the office', onoff('voice'))}</div>
+      <div class="setgroup"><span class="lbl">Sound</span>${row('All sounds', '', onoff('sound'))}${row('Music', 'A quiet lo-fi loop', onoff('music'))}${row('Sound effects', 'Coins, achievements, clicks', onoff('sfx'))}${row('Typing sound', 'The blips when someone talks in the office', onoff('voice'))}</div>
       <div class="setgroup"><span class="lbl">Office</span>${row('Random chatter', 'How often someone starts talking on their own', seg('chatter', [['often', 'Often'], ['normal', 'Normal'], ['off', 'Off']]))}</div>
       <div class="setgroup"><span class="lbl">Look</span>${row('Theme', '', seg('theme', [['auto', 'Auto'], ['light', 'Light'], ['dark', 'Dark']]))}${row('Reduce animations', 'Shorter waits, no wiggling, no blinking lights', onoff('reduce'))}</div>
       ${!atMenu && state && state.seed ? `<div class="setgroup"><span class="lbl">This game</span><div class="setrow"><div><b>Game code: <span class="mono">${state.seed}</span></b><span class="muted small">Share it: a friend who starts with this code gets the same market.</span></div><button class="btn xs" data-act="copySeed">Copy</button></div></div>` : ''}
@@ -4562,7 +4598,7 @@ const ACT = {
   mmpToggle: () => { const s = state; s.mmp = !s.mmp; save(); render(); toast(s.mmp ? 'AppsSlayer is installed. Real numbers show up after this week.' : 'AppsSlayer cancelled. Back to trusting the platforms. Good luck.'); },
   rowToggle: (d, el) => { el.classList.toggle('open'); el.closest('tbody').querySelectorAll('.sub-' + d.k).forEach(x => x.classList.toggle('open')); },
   loadDone: () => { showReport(); },
-  closeReport: () => { closeModal(); if (atMenu || !state) { render(); return; } if (state.over) showFinal(); else { if (pendingChoices()) { state.tab = 'inbox'; render(); } const ld = state.lastDelivery, m = ld && state.team.find(x => x.id === ld.id); if (m && Math.random() < .6) say(m, pick(LINES.creative)); } window.scrollTo(0, 0); },
+  closeReport: () => { const hadReport = !!document.querySelector('#modal .overlay[aria-label="Weekly report"]'); closeModal(); if (atMenu || !state) { render(); return; } if (hadReport && !state.over && unread()) setTimeout(() => sfx('inbox'), 120); if (state.over) showFinal(); else { if (pendingChoices()) { state.tab = 'inbox'; render(); } const ld = state.lastDelivery, m = ld && state.team.find(x => x.id === ld.id); if (m && Math.random() < .6) say(m, pick(LINES.creative)); } window.scrollTo(0, 0); },
   reset: () => {
     const s = state;
     document.getElementById('modal').innerHTML = `<div class="overlay" role="alertdialog" aria-modal="true" aria-labelledby="rst-t" aria-describedby="rst-d"><div class="modal confirm" style="max-width:420px">
