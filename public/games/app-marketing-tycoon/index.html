@@ -1581,7 +1581,7 @@ const isWinner = c => PLATS.some(ch => testedOn(c, ch) && tierOf(c, ch) === 'win
 const isGood = c => PLATS.some(ch => testedOn(c, ch) && (tierOf(c, ch) === 'winner' || tierOf(c, ch) === 'iyi'));
 const isFlop = c => c.anyTested && PLATS.every(ch => !testedOn(c, ch) || tierOf(c, ch) === 'flop');
 const liveIds = () => new Set(state.camps.flatMap(cp => cp.crs));
-const tierPill = (c, ch) => testedOn(c, ch) ? `<span class="pill ${TIERS[tierOf(c, ch)].cls}">${TIERS[tierOf(c, ch)].name}</span>` : '<span class="pill">Untested</span>';
+const tierPill = (c, ch) => testedOn(c, ch) ? `<span class="pill ${TIERS[tierOf(c, ch)].cls}">${TIERS[tierOf(c, ch)].name}</span>` : `<span class="pill" data-tip="${esc(`Needs about $40 of spend on ${CH[ch] ? CH[ch].name : 'this platform'} before it can be judged. ${money(Math.round((c.tsp || {})[ch] || 0))} so far.`)}">Untested</span>`;
 const tierPills = c => PLATS.map(ch => testedOn(c, ch) ? `<span class="pill ${TIERS[tierOf(c, ch)].cls}">${CH[ch].name}: ${TIERS[tierOf(c, ch)].name}</span>` : `<span class="pill" title="Not tested on ${CH[ch].name} yet">${CH[ch].name}: not tested</span>`).join('');
 // a creative is made for one platform; on the other it's a coin flip whether it works as well
 function spreadTiers(home, tier, q) {
@@ -2998,7 +2998,9 @@ function simulate() {
       const before = c.fatigue;
       c.stats[ch] = { ctr, share, spend: bi, week: w }; c.usedWeek = w;
       c.fatigue = Math.min(.8, c.fatigue + C.fatigue * Math.pow(bi / 700, .35));
-      if (!testedOn(c, ch) && bi >= (cp.kind === 'test' ? 25 : 40)) {
+      // spend adds up across weeks: a creative is judged once it has had enough budget in total
+      c.tsp = c.tsp || {}; c.tsp[ch] = (c.tsp[ch] || 0) + bi;
+      if (!testedOn(c, ch) && c.tsp[ch] >= (cp.kind === 'test' ? 25 : 40)) {
         c.ptest[ch] = true; c.tin = c.tin || {}; c.tin[ch] = cp.kind || 'main';
         if (!c.anyTested && !c.starter) s.stats.tested++;
         c.anyTested = true;
