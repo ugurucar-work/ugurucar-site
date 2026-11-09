@@ -974,7 +974,7 @@ const ROLES = {
   influencer: { name: 'Influencer Marketer', desc: 'Finds creators, gets their rates the same day, spots fake followers and negotiates deals', base: 950 },
   ugc: { name: 'UGC Marketer', desc: 'Orders a UGC video every week, boosts Talking Head ads, and runs product seeding', base: 900 },
   hr: { name: 'HR Manager', desc: 'Brings 9 stronger candidates across roles every week, and now and then a star', base: 850 },
-  product: { name: 'Product Manager', desc: 'Improves the product: conversion +2–5%, retention +2–4 pts', base: 1250 },
+  product: { name: 'Product Manager', desc: 'Improves the product: conversion +2–4%, retention +1.5–3 pts', base: 1250 },
 };
 const LEVELS = {
   junior: { name: 'Junior', lo: 30, hi: 58, mul: .7, batches: 2, sec: 14 },
@@ -1196,7 +1196,7 @@ function infWeek(s, w, perClick, r) {
 function adsWeek(s, installs, quality, ae) {
   const U = s.users;
   if (installs > 0) { U.q = (U.q * U.n + quality * installs) / (U.n + installs); }
-  const ret = clamp(CATS[s.brand.cat].adRet + ae.retAdj - (1 - U.q) * .13 + (best('product') ? .02 + .02 * sk(best('product')) : 0), .2, .93);
+  const ret = clamp(CATS[s.brand.cat].adRet + ae.retAdj - (1 - U.q) * .13 + (best('product') ? (.015 + .015 * sk(best('product'))) * teamScale('product') : 0), .2, .93);
   U.n *= ret;
   const renew = U.n * ae.arpu;
   U.n += installs;
@@ -1274,7 +1274,7 @@ function planStats(c) {
 }
 function pwEffect(c) {
   const st = planStats(c);
-  let cvr = st.pull / state.pwK, retAdj = best('product') ? .02 + .02 * sk(best('product')) : 0, first = 1;
+  let cvr = st.pull / state.pwK, retAdj = best('product') ? (.015 + .015 * sk(best('product'))) * teamScale('product') : 0, first = 1;
   if (c.offer === 'trial') { const t = { 3: [1.7, .62], 7: [1.9, .55], 14: [2, .5] }[c.trialDays]; cvr *= t[0] * t[1]; retAdj += .04; }
   if (c.offer === 'discount') { cvr *= 1 + c.disc; first = 1 - c.disc; retAdj -= .1 * c.disc; }
   cvr *= 1 + pwScore(c);
@@ -1529,6 +1529,7 @@ const best = r => has(r).reduce((b, m) => !b || m.skill > b.skill ? m : b, null)
 // 1st person in a role counts fully, the 2nd about half, the 3rd a quarter; after that it's mostly overhead
 const ROLE_W = [1, .55, .3, .12, .05];
 const roleW = i => ROLE_W[Math.min(i, ROLE_W.length - 1)];
+const teamScale = role => { const w = has(role).reduce((a, m) => a + roleW(rankOf(m)), 0); return w ? Math.pow(w, .55) : 0; };
 const ranked = r => has(r).slice().sort((a, b) => b.skill - a.skill);
 const rankOf = m => ranked(m.role).indexOf(m);
 // teammates in the same role back up the lead: up to about +0.2 skill for the best one
@@ -2545,15 +2546,15 @@ let busy = false;
 const INSTANT = new Set(['ugcChase', 'cardDownload', 'cardShare', 'glossary', 'repTab', 'musicToggle', 'adTab', 'menuNew', 'menuBack', 'menuNext', 'menuPrev', 'menuTalk', 'menuContinue', 'toMenu', 'draft', 'achCopy', 'achPaste', 'achImport', 'achievements', 'copySeed', 'anaMetric', 'chartReg', 'anaPlat', 'rowToggle', 'loadDone', 'questPass', 'orgFocus', 'resetYes', 'questGo', 'questSkip', 'loanAmt', 'loanTerm', 'huntFor', 'settings', 'pref', 'replayTour', 'resetGuides', 'about', 'officeBye', 'dev', 'devCash', 'devOffice', 'devTeam', 'officeTooSmall', 'officeMute', 'officeTalk', 'annexDrop', 'tab', 'draft', 'hush', 'tour', 'tourEnd', 'guide', 'guideDone', 'tips', 'manual', 'infResearch', 'libFilter', 'campOpen', 'pickOpen', 'reset', 'newGame', 'closeReport', 'endWeek', 'ack', 'infOpen', 'infType', 'start']);
 // what each role actually changes in the game (keep in sync with the simulation)
 const ROLE_PERKS = {
-  creative: ['Delivers about 4–10 creatives at the start of every week (more with skill), starting the week after you hire them', 'Winner chance 2.5–7% per creative, plus up to 6 points from the production budget', 'Each Marketing Artist adds 3 creative slots to every campaign', 'Can make variations of your Good and Winner creatives', 'Follows your platform, hook and format brief', 'Adds 1 organic post a week'],
-  perf: ['CPM on Meta, TikTok and Google 11–15% lower (varies week to week)', 'CTR 4–14% higher through better targeting', 'Learning phases hurt less: 88% of normal conversions instead of 75%', 'Puts every new creative into a campaign on its platform; opens a $500/week campaign if a platform has none live', 'Weekly campaign suggestions at the top of the Ads Manager', 'Adds cost per purchase or install to every campaign and a Top creatives table to reports', 'More paid campaigns: +10 for the first, +3 for every extra one (without one you can run 5 in total)'],
+  creative: ['Delivers about 4–10 creatives at the start of every week (more with skill), starting the week after you hire them', 'Winner chance 2.5–7% per creative, plus up to 6 points from the production budget', 'Can make variations of your Good and Winner creatives', 'Follows your platform, hook and format brief', 'Adds 1 organic post a week'],
+  perf: ['CPM on Meta, TikTok and Google 5–10% lower, up to about 14% with a 2nd and 3rd marketer', 'CTR 4–10% higher through better targeting, more with a bigger team', 'Learning phases hurt less: 88% of normal conversions instead of 75%', 'Runs a locked creative-test campaign on each platform for your untested creatives', 'Puts every new creative into a campaign on its platform; opens a $500/week campaign if a platform has none live', 'Weekly campaign suggestions at the top of the Ads Manager', 'Adds cost per purchase or install to every campaign and a Top creatives table to reports', 'More paid campaigns: +10 for the first, +3 for every extra one (without one you can run 5 in total)'],
   mkt: ['Researches one new region a week ($500) so you can sell there', 'Shows how well each market fits your app', 'Tracks competitor ads and shows the trending hook every week (+30% CTR for that hook)', 'Google ad quality +15% (better search copy)', 'Brand awareness grows 30% faster and trust +0.2 a week', 'Market ideas and localization warnings in the Markets tab'],
   social: ['3–6 organic posts a week (+1 if Fast)', 'Organic reach ×1.3 (builds awareness)', 'Trust +0.5–0.9 every week, which lifts conversion on every channel', 'A small trickle of organic signups; it won\'t pay their salary on its own', 'Chance an organic post goes viral (×3 with Viral Hunter)'],
   analyst: ['Real ROAS and real sales per channel in every report, instead of what the platforms claim', 'An Organic vs paid report on the Overview: ads vs organic social, word of mouth and creators', 'Conversion 3–6% higher from A/B testing', 'Shows real influencer signups and subscriber retention', 'Adds a 12-month value column to paywall tests'],
   influencer: ['Opens the Influencers tab: find creators, get rates, sign 1, 3 or 5-post deals', 'Gets a creator\'s rate the same day you reach out', 'Finds 1–3 creators a week on their own, and you can scroll for more', 'Spots fake followers and real engagement before you pay', 'Negotiates: prices 8% lower and 12 points more yeses', 'Runs up to 5 deals and 8 DMs a week (a 2nd marketer adds a few more)'],
   ugc: ['Orders 1 UGC video every week on their own ($100), delivered the week after', 'Lets you chase 1 extra UGC video a week yourself (15 clicks)', 'Marketing Artists\' Talking Head videos win more often while they\'re on the team', 'Briefs creators on platform and hook', 'Runs product seeding'],
   hr: ['Brings 1–10 candidates every week across roles (more with skill)', 'Candidates are stronger than what you find on your own', 'Once your Studio reputation reaches 60, some of them are stars with 91–99 skill'],
-  product: ['Opens the Paywall Lab: design the paywall, set prices and offers, run A/B tests (or ad settings for ad-funded apps)', 'Conversion 2–5% higher', 'Retention 2–4 points higher for subscribers and ad users', 'Ships one improvement every week'],
+  product: ['Opens the Paywall Lab: design the paywall, set prices and offers, run A/B tests (or ad settings for ad-funded apps)', 'Conversion 2–4% higher, a bit more with a 2nd and 3rd Product Manager', 'Retention 1.5–3 points higher for subscribers and ad users, more with a bigger team', 'Ships one improvement every week'],
 };
 const MANUAL_LIMIT_LINES = [
   'Your wrist has filed a formal complaint. Three handmade ads a week, or it unionizes.',
@@ -2979,12 +2980,12 @@ function rotateTrend() {
 function simulate() {
   const s = state, w = s.week, cat = CATS[s.brand.cat], pr = PRICE[s.brand.price], tone = TONE[s.brand.tone];
   const sea = season(w), perf = best('perf'), analyst = best('analyst'), pm = pixelM();
-  const perfCpm = perf ? 1 - .15 * (.5 + sk(perf) / 2) * rand(.7, 1.2) : 1;
+  const perfCpm = perf ? Math.max(.78, 1 - .1 * (.5 + sk(perf) / 2) * rand(.7, 1.2) * teamScale('perf')) : 1;
   s.teamLog = [];
   const tl = (m, text) => s.teamLog.push({ id: m.id, name: m.name, role: m.role, text });
   if (perf) tl(perf, `tuned bids and placements. CPM about ${pct(1 - perfCpm, 0)} lower this week.`);
   const mk = mktMix(usedMkts());
-  const perfCtr = perf ? 1.04 + .1 * sk(perf) : 1;
+  const perfCtr = perf ? 1 + (.03 + .07 * sk(perf)) * teamScale('perf') : 1;
   const pixCpm = 1.2 - .2 * pm, pixCvr = .7 + .3 * pm;
   const pwE = pwLive(), isAds = s.brand.model === 'ads', ae = isAds ? adEcon() : null;
   if (isAds) ae.arpu *= mk.ecpm * 1.35;
@@ -2992,7 +2993,7 @@ function simulate() {
   const bf = s.bfDiscount === w;
   const trustF = .5 + .9 * s.trust / 100;
   const premF = s.brand.price === 'premium' ? .65 + .7 * s.trust / 100 : 1;
-  const cvr0 = cat.cvr * pr.cvr * premF * (tone.cvr || 1) * trustF * sea.cvr * (analyst ? 1 + .06 * (.5 + sk(analyst) / 2) : 1) * (bf ? 1.6 : 1) * (isAds ? 1 : pwE.cvr * s.cvrScale * PAY_CONV) * (best('product') ? 1.02 + .03 * sk(best('product')) : 1);
+  const cvr0 = cat.cvr * pr.cvr * premF * (tone.cvr || 1) * trustF * sea.cvr * (analyst ? 1 + .06 * (.5 + sk(analyst) / 2) : 1) * (bf ? 1.6 : 1) * (isAds ? 1 : pwE.cvr * s.cvrScale * PAY_CONV) * (best('product') ? 1 + (.015 + .025 * sk(best('product'))) * teamScale('product') : 1);
   const ordMul = eff('orders') * teamSync();
   const r = { week: w, ch: {}, src: {}, notes: [], adSpend: 0, imp: 0, aov, bf, analyst: !!analyst, newWinners: [], pixel: [pixelLabel()] };
   let flops = 0, qSum = 0, qN = 0, iosPaid = 0, paidN = 0;

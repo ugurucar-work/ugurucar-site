@@ -12,7 +12,7 @@
   window.runBot = function (o) {
     newState({ name: 'Bot', country: o.country || 'TR', cat: 'fitness', price: 'orta', tone: 'samimi', color: 0, model: 'subs', icon: 'letter', letter: '', fg: 0, seed: o.seed || String(Math.random()).slice(2, 10) });
     ensureExtras(state);
-    const s = state, comp = COMPS[o.comp || 'balanced'], out = { first: null, roas: {}, minCash: 1e9, dirShare: [] };
+    const s = state, comp = typeof o.comp === 'object' ? o.comp : COMPS[o.comp || 'balanced'], out = { first: null, roas: {}, minCash: 1e9, dirShare: [] };
     const plats = o.plats || ['meta', 'tiktok'];
     for (let w = 1; w <= 52 && !s.over; w++) {
       const off = o.offAt && w >= o.offAt;
@@ -36,12 +36,17 @@
           if (!s.camps.some(c => c.ch === ch && c.os === os) && campCount() < campCap() && campsOf(ch).length < platCap()) { const cp = mkCamp(ch, campsOf(ch).length + 1); cp.os = os; cp.budget = o.budget || 150; cp.on = true; s.camps.push(cp); }
         }
         if (plats.includes('google')) { s.ads.google.on = true; s.ads.google.budget = o.budget || 150; }
+        // scale like a player: once a platform's campaigns are maxed out and paying back, open another one (US region included)
+        if (!o.fixed) for (const ch of plats) { if (ch === 'google') continue; const cs = s.camps.filter(c => c.ch === ch && !c.managed);
+          const maxed = cs.length && cs.every(c => c.budget >= campMax(c) * .9), good = cs.some(c => c.last && c.last.spend && (c.last.orders || 0) * (s.lastReport ? s.lastReport.aov : 0) / c.last.spend > .3);
+          if (maxed && good && campCount() < campCap() && s.cash > 15000) { const cp = mkCamp(ch); cp.mkts = ['home', 't1en']; cp.budget = 500; cp.on = true; s.camps.push(cp); } }
         // extra campaigns on the best platform once capped
         for (const cp of s.camps) {
           cp.on = true; const L = cp.last;
           if (o.fixed || !L || !L.spend) continue;
           const roas = (L.orders || 0) * (s.lastReport ? s.lastReport.aov : 0) / L.spend;
-          if (roas > .3 && cp.budget < CH[cp.ch].max) cp.budget = Math.min(CH[cp.ch].max, Math.round(cp.budget * 1.3));
+          if (cp.managed) continue;
+          if (roas > .3 && cp.budget < campMax(cp)) cp.budget = Math.min(campMax(cp), Math.round(cp.budget * 1.3));
           else if (roas < .08 && cp.weeks > 4) cp.budget = Math.max(100, Math.round(cp.budget * .8));
         }
       } else { s.camps.forEach(c => c.on = false); s.ads.google.on = false; if (o.fire) s.team = []; }
