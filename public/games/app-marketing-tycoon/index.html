@@ -160,7 +160,7 @@ table.tbl{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums}
 .row{display:flex;justify-content:space-between;align-items:center;gap:10px}
 @media (max-width:520px){.row{flex-wrap:wrap}}
 input[type=range]{width:100%;accent-color:var(--accent)}
-select,input[type=text]{width:100%;font:14px var(--f-body);color:var(--ink);background:var(--panel-2);border:1px solid var(--line);border-radius:8px;padding:9px 10px}
+select,input[type=text],input[type=search]{width:100%;font:14px var(--f-body);color:var(--ink);background:var(--panel-2);border:1px solid var(--line);border-radius:8px;padding:9px 10px}
 .stats{display:grid;grid-template-columns:repeat(auto-fill,minmax(98px,1fr));gap:10px 12px;background:var(--panel-2);border-radius:10px;padding:12px}
 .stats div{display:flex;flex-direction:column;gap:2px;min-width:0}
 .stats b{font:500 14px var(--f-mono);font-variant-numeric:tabular-nums}
@@ -509,6 +509,13 @@ header.top{backdrop-filter:blur(10px);background:color-mix(in srgb,var(--panel) 
 .rteam li div{display:flex;flex-direction:column;gap:1px;min-width:0}.rteam p{margin:4px 0 0;font-size:13.5px}
 .callout.good{background:color-mix(in srgb,#1E9C74 12%,var(--panel))}
 @media (max-width:640px){.rkpis{grid-template-columns:repeat(2,minmax(0,1fr))}.mgrid{grid-template-columns:minmax(0,1fr)}}
+.glossary dl{margin:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:10px 18px}
+.glossary dl div{padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:var(--panel-2)}
+.glossary dt{font-weight:700;font-family:var(--f-display)}.glossary dd{margin:3px 0 0;font-size:13.5px;color:var(--muted)}
+.glgrp{display:flex;flex-direction:column;gap:8px}
+#glq{width:100%}
+.sharebox{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;padding:12px 14px;border-radius:12px;border:1px dashed var(--line);background:var(--panel-2)}
+.sharebox > div:first-child{display:flex;flex-direction:column;gap:2px}
 .menuhead{text-align:center}
 .gtitle{font-family:var(--f-display);font-weight:800;font-size:clamp(40px,6.4vw,84px);line-height:.86;letter-spacing:-.045em;margin:10px 0 0;display:flex;flex-direction:column;align-items:center}
 .gtitle span{font-size:1.32em;background:linear-gradient(100deg,var(--accent),#E2557A 55%,#F5A524);-webkit-background-clip:text;background-clip:text;color:transparent;padding-bottom:.06em}
@@ -2290,8 +2297,9 @@ function bankSVG() {
   </svg>`;
 }
 function vLoan() {
-  const s = state, L = loans(), owe = debt(), mx = loanMax(), amts = [10000, 25000, 50000, 100000, 250000].filter(a => a <= Math.max(mx, 10000));
-  if (!ui.loanAmt || ui.loanAmt > mx) ui.loanAmt = [...amts].reverse().find(a => a <= mx) || 10000;
+  const s = state, L = loans(), owe = debt(), mx = loanMax(), AMTS = [5000, 10000, 25000, 50000, 100000, 250000];
+  // fixed steps plus "Max" for exactly your limit
+  if (!ui.loanAmt || ui.loanAmt > mx) ui.loanAmt = mx >= 5000 ? mx : 5000;
   const n = ui.loanTerm || 26, apr = LOAN_TERMS[n], r = wRate(apr), P = ui.loanAmt, pay = annuity(P, r, n), can = P <= mx;
   const loanCard = l => { const po = payoffOf(l), saved = Math.max(0, l.pay * l.left - po), done = 1 - l.bal / l.P;
     return `<div class="loanc"><div class="row"><b>${money(l.P)} · ${l.n} weeks</b><span class="pill">${pct(l.apr, 0)} a year</span></div>
@@ -2302,9 +2310,9 @@ function vLoan() {
   <div class="grid2">
     <div class="panel stack bankcard">${bankSVG()}<div class="say"><span class="avatar">B</span><div class="bubble"><b>Gerald · Loan officer</b>${pick(L.length ? GERALD_OWED : GERALD_FREE)}</div></div></div>
     <div class="stack">
-      <div class="kpis" style="grid-template-columns:repeat(3,minmax(0,1fr))">${kpi('You owe', money(Math.round(owe)), L.length ? `${L.length} loan${L.length > 1 ? 's' : ''}` : 'Debt free', owe ? 'bad' : 'good')}${kpi('Weekly payments', money(Math.round(loanPayments())), 'Paid when the week ends')}${kpi('You can borrow', money(mx), 'Grows with revenue')}</div>
+      <div class="kpis" style="grid-template-columns:repeat(3,minmax(0,1fr))">${kpi('You owe', money(Math.round(owe)), L.length ? `${L.length} loan${L.length > 1 ? 's' : ''}` : 'Debt free', owe ? 'bad' : 'good')}${kpi('Weekly payments', money(Math.round(loanPayments())), 'Paid when the week ends')}${kpi(`You can borrow ${infoI(`Limit = ${money(25000)} + 6 × your average weekly revenue over the last 4 weeks − what you still owe, rounded down to ${money(5000)}. Right now: ${money(25000)} + 6 × ${money(Math.round(state.history.slice(-4).reduce((a, x) => a + x.revenue, 0) / Math.max(1, state.history.slice(-4).length)))} − ${money(Math.round(owe))}.`)}`, money(mx), 'Grows with revenue')}</div>
       <div class="panel stack"><h3>New loan</h3>
-        <div class="field"><span class="lbl">Amount</span><div class="seg">${[10000, 25000, 50000, 100000, 250000].map(a => `<button data-act="loanAmt" data-v="${a}" aria-pressed="${P === a}" ${a > mx ? 'data-tip="Over your limit"' : ''}>${a > mx ? '🔒 ' : ''}${money(a)}</button>`).join('')}</div></div>
+        <div class="field"><span class="lbl">Amount</span><div class="seg">${AMTS.filter(a => a <= mx || a <= Math.max(mx, 10000) * 2).map(a => `<button data-act="loanAmt" data-v="${a}" aria-pressed="${P === a}" ${a > mx ? 'data-tip="Over your limit"' : ''}>${a > mx ? '🔒 ' : ''}${money(a)}</button>`).join('')}${mx >= 5000 && !AMTS.includes(mx) ? `<button data-act="loanAmt" data-v="${mx}" aria-pressed="${P === mx}" data-tip="Your full limit">Max · ${money(mx)}</button>` : ''}</div></div>
         <div class="field"><span class="lbl">Term</span><div class="seg">${Object.entries(LOAN_TERMS).map(([w, a]) => `<button data-act="loanTerm" data-v="${w}" aria-pressed="${n === +w}">${w} weeks · ${pct(a, 0)}</button>`).join('')}</div></div>
         <div class="loanq"><div><span>Weekly payment</span><b>${money(Math.round(pay))}</b></div><div><span>Total interest</span><b>${money(Math.round(pay * n - P))}</b></div><div><span>Fee today</span><b>${money(Math.round(P * LOAN_FEE))}</b></div></div>
         <div><button class="btn primary" data-act="loanTake" ${can ? '' : 'disabled'}>${can ? `Borrow ${money(P)} for ${n} weeks` : '🔒 Over your limit'}</button></div></div>
@@ -2530,7 +2538,7 @@ const SLOW = {
 };
 let busy = false;
 // instant on purpose: navigation, guides, clickers and dismissals
-const INSTANT = new Set(['repTab', 'musicToggle', 'adTab', 'menuNew', 'menuBack', 'menuNext', 'menuPrev', 'menuTalk', 'menuContinue', 'toMenu', 'draft', 'achCopy', 'achPaste', 'achImport', 'achievements', 'copySeed', 'anaMetric', 'chartReg', 'anaPlat', 'rowToggle', 'loadDone', 'questPass', 'orgFocus', 'resetYes', 'questGo', 'questSkip', 'loanAmt', 'loanTerm', 'huntFor', 'settings', 'pref', 'replayTour', 'resetGuides', 'about', 'officeBye', 'dev', 'devCash', 'devOffice', 'devTeam', 'officeTooSmall', 'officeMute', 'officeTalk', 'annexDrop', 'tab', 'draft', 'hush', 'tour', 'tourEnd', 'guide', 'guideDone', 'tips', 'manual', 'infResearch', 'libFilter', 'campOpen', 'pickOpen', 'reset', 'newGame', 'closeReport', 'endWeek', 'ack', 'infOpen', 'infType', 'start']);
+const INSTANT = new Set(['cardDownload', 'cardShare', 'glossary', 'repTab', 'musicToggle', 'adTab', 'menuNew', 'menuBack', 'menuNext', 'menuPrev', 'menuTalk', 'menuContinue', 'toMenu', 'draft', 'achCopy', 'achPaste', 'achImport', 'achievements', 'copySeed', 'anaMetric', 'chartReg', 'anaPlat', 'rowToggle', 'loadDone', 'questPass', 'orgFocus', 'resetYes', 'questGo', 'questSkip', 'loanAmt', 'loanTerm', 'huntFor', 'settings', 'pref', 'replayTour', 'resetGuides', 'about', 'officeBye', 'dev', 'devCash', 'devOffice', 'devTeam', 'officeTooSmall', 'officeMute', 'officeTalk', 'annexDrop', 'tab', 'draft', 'hush', 'tour', 'tourEnd', 'guide', 'guideDone', 'tips', 'manual', 'infResearch', 'libFilter', 'campOpen', 'pickOpen', 'reset', 'newGame', 'closeReport', 'endWeek', 'ack', 'infOpen', 'infType', 'start']);
 // what each role actually changes in the game (keep in sync with the simulation)
 const ROLE_PERKS = {
   creative: ['Delivers about 4–10 creatives at the start of every week (more with skill), starting the week after you hire them', 'Winner chance 2.5–7% per creative, plus up to 6 points from the production budget', 'Each Marketing Artist adds 3 creative slots to every campaign', 'Can make variations of your Good and Winner creatives', 'Follows your platform, hook and format brief', 'Adds 1 organic post a week'],
@@ -2596,7 +2604,23 @@ function teamQuote() {
 }
 
 // ---------- events ----------
+const REWARDS = { rev1k: { at: 1000, amt: 10000 }, spend: { at: 2000, amt: 5000 } };
 const EVENTS = {
+  rewardAngel: {
+    from: 'Your angel investor', title: 'Your first $1K week',
+    body: (s, d) => `${money(d.rev)} in revenue in a single week. That's the moment I was waiting for. I've wired another ${money(REWARDS.rev1k.amt)}, no extra equity. Spend it on whatever got you here.`,
+    info: true, on: s => { s.cash += REWARDS.rev1k.amt; },
+  },
+  rewardMeta: {
+    from: 'Meta for Business', title: 'Ad credit added to your account',
+    body: (s, d) => `Thanks for growing with ${CH[d.ch].name}: you spent ${money(d.spend)} last week. We've added <b>${money(REWARDS.spend.amt)}</b> in ad credit. It pays for your next ${CH[d.ch].name} ads before your card is charged.`,
+    info: true, on: (s, d) => { s.adCredit = s.adCredit || {}; s.adCredit[d.ch] = (s.adCredit[d.ch] || 0) + REWARDS.spend.amt; },
+  },
+  rewardTikTok: {
+    from: 'TikTok for Business', title: 'Ad credit added to your account',
+    body: (s, d) => `Thanks for growing with ${CH[d.ch].name}: you spent ${money(d.spend)} last week. We've added <b>${money(REWARDS.spend.amt)}</b> in ad credit. It pays for your next ${CH[d.ch].name} ads before your card is charged.`,
+    info: true, on: (s, d) => { s.adCredit = s.adCredit || {}; s.adCredit[d.ch] = (s.adCredit[d.ch] || 0) + REWARDS.spend.amt; },
+  },
   welcome: {
     from: 'Founder\'s Note', title: `Welcome. You have 52 weeks and ${money(START_CASH)}.`,
     body: s => `${esc(s.brand.name)} launched today. Your goal: grow the company's value as much as you can in 52 weeks without running out of cash. Fair warning: most subscription apps burn money for months before ads pay back. Your ad account is brand new, so the pixel knows nothing about who buys. The biggest lever you have is creative. Most creatives flop, and the only way to find a winner is to make a lot of them and test. You can make them by hand, but it's painfully slow. Hire a Marketing Artist and get the flow going.`,
@@ -3090,7 +3114,11 @@ function simulate() {
   for (const l of loans()) { const i = l.bal * l.r, p = l.left <= 1 ? l.bal : Math.min(l.bal, l.pay - i); interest += i; principal += p; l.bal -= p; l.left--; l.paid += i + p; }
   s.loans = loans().filter(l => l.left > 0 && l.bal > .5);
   interest = Math.round(interest); principal = Math.round(principal); r.interest = interest; r.principal = principal;
-  const op = revenue - cogs - r.adSpend - pay - prodCost - fixedCost() - interest;
+  // partner ad credit pays for that platform's spend first
+  let credit = 0; s.adCredit = s.adCredit || {};
+  for (const ch of ['meta', 'tiktok']) { const sp = r.ch[ch] ? r.ch[ch].spend : 0, u = Math.min(s.adCredit[ch] || 0, sp); if (u > 0) { s.adCredit[ch] -= u; credit += u; r.creditBy = r.creditBy || {}; r.creditBy[ch] = u; } }
+  r.credit = credit;
+  const op = revenue + credit - cogs - r.adSpend - pay - prodCost - fixedCost() - interest;
   // corporate tax on this week's profit, after using up losses from earlier weeks
   const taxable = op - s.weekMisc;
   let tax = 0;
@@ -3155,6 +3183,11 @@ function simulate() {
   if ((r.posts2 || []).length) pushEvent('creators', { week: w, unit: isAds ? 'installs' : 'signups', posts: r.posts2 });
   if (s.teamLog.length) pushEvent('team', { week: w, lines: s.teamLog.slice() });
   s.effects = s.effects.filter(e => e.until >= s.week);
+  // partner rewards: one-time milestones
+  s.rewards = s.rewards || {};
+  if (!s.rewards.rev1k && revenue >= REWARDS.rev1k.at) { s.rewards.rev1k = w; pushEvent('rewardAngel', { rev: revenue }); r.notes.push({ t: 'good', m: `First ${money(REWARDS.rev1k.at)} week! Your angel wired ${money(REWARDS.rev1k.amt)}. Check your inbox.` }); }
+  for (const ch of ['meta', 'tiktok']) { const sp = r.ch[ch] ? r.ch[ch].spend : 0, k = 'spend_' + ch; if (!s.rewards[k] && sp >= REWARDS.spend.at) { s.rewards[k] = w; pushEvent(ch === 'tiktok' ? 'rewardTikTok' : 'rewardMeta', { ch, spend: sp }); r.notes.push({ t: 'good', m: `${CH[ch].name} sent you ${money(REWARDS.spend.amt)} in ad credit for spending ${money(REWARDS.spend.at)}+ in a week.` }); } }
+  r.cash = s.cash;
   if (s.cash < 0) s.over = 'bankrupt';
   else if (s.week > WEEKS) s.over = 'done';
   else rollEvents();
@@ -3424,11 +3457,11 @@ function render() {
     ${questCard()}
     <div class="spacer" style="flex:1;min-height:24px"></div>
     <button data-act="guide" style="font-size:12.5px">Guide for this page</button>
-    <button data-act="toMenu" style="font-size:12.5px">Main menu</button>
+    <button data-act="glossary" style="font-size:12.5px">Glossary</button>
     <button data-act="achievements" style="font-size:12.5px">Achievements <span class="muted">${ACH.filter(a => achLoad()[a.id]).length}/${ACH.length}</span></button>
     <button data-act="settings" style="font-size:12.5px">Settings</button>
     <button data-act="about" style="font-size:12.5px">About</button>
-    <button data-act="reset" class="newgame" style="font-size:12.5px">Quit</button>
+    <button data-act="toMenu" class="newgame" style="font-size:12.5px">Main menu</button>
     </nav><main>${tabLocked(state.tab) ? lockedView(state.tab) : views[state.tab]()}</main></div>`;
   const strip = tabLocked(state.tab) ? '' : crewStrip(state.tab), hd = app.querySelector('main > .head');
   if (strip && hd) hd.insertAdjacentHTML('afterend', strip);
@@ -3733,7 +3766,7 @@ function adTabs() {
   freshNames();
   const s = state, tab = ui.adsTab = AD_TABS.includes(ui.adsTab) ? ui.adsTab : 'meta';
   const locked = ch => s.locked && s.locked[ch];
-  const sub = ch => locked(ch) ? '🔒 Locked' : ch === 'google' ? (s.ads.google.on ? `Live · ${money(s.ads.google.budget)}/wk` : 'Off') : `${campsOf(ch).filter(c => c.on).length} live · ${money(platBudget(ch))}/wk`;
+  const sub = ch => locked(ch) ? '🔒 Locked' : ch === 'google' ? (s.ads.google.on ? `Live · ${money(s.ads.google.budget)}/wk` : 'Off') : `${campsOf(ch).filter(c => c.on).length} live · ${money(platBudget(ch))}/wk${(s.adCredit || {})[ch] > 0 ? ` · 🎁 ${money(s.adCredit[ch])} credit` : ''}`;
   const bar = `<div class="adtabs" role="tablist">${AD_TABS.map(ch => `<button role="tab" data-act="adTab" data-v="${ch}" aria-selected="${tab === ch}"><span class="chlogo">${PLOGO[ch]}</span><span><b>${ch === 'google' ? 'Google Search' : CH[ch].name}</b><span class="muted small">${sub(ch)}</span></span></button>`).join('')}</div>`;
   let body;
   if (locked(tab)) body = `<div class="lockcard"><span class="chlogo">${PLOGO[tab]}</span><div><b style="color:var(--ink)">${tab === 'google' ? 'Google Search' : CH[tab].name}</b><br>${tab === 'google' ? 'Opens after your first week.' : 'Focus on Meta for your first week. More channels open soon.'}</div></div>`;
@@ -3941,6 +3974,72 @@ function heroSVG() {
     ${hearts}
   </svg>`;
 }
+// ---------- glossary: plain-English meanings of the marketing terms in the game ----------
+const GLOSSARY = [
+  ['Ads & results', [
+    ['CPM', 'Cost per mille: what 1,000 ad impressions cost. Lower CPM means cheaper reach.'],
+    ['Impressions', 'How many times your ad was shown. One person can see it several times.'],
+    ['CTR', 'Click-through rate: the share of impressions that got a click. A good hook raises it.'],
+    ['CPC', 'Cost per click: ad spend divided by clicks. Used on Google Search.'],
+    ['CVR', 'Conversion rate: the share of clicks that turn into a purchase or install.'],
+    ['CAC', 'Customer acquisition cost: what you pay in ads for one new customer.'],
+    ['ROAS', 'Return on ad spend: revenue divided by ad spend. 2x means $2 back for every $1 spent.'],
+    ['Platform ROAS vs real ROAS', 'Each platform claims the sales it touched, so the same sale is often counted twice. Real ROAS counts each sale once; you need a Data Analyst to see it.'],
+    ['Attribution', 'Deciding which ad or channel gets credit for a sale. Platforms are generous with themselves.'],
+    ['MMP', 'Mobile measurement partner (AppsSlayer in the game): a tool that counts installs and sales once, across all platforms.'],
+    ['Pixel', 'The platform\'s tracking. It learns who buys from every sale, so ads get cheaper and convert better as it warms up.'],
+    ['Learning phase', 'The first week of a campaign, or after a big change. The algorithm is still finding buyers, so results are weaker.'],
+    ['Campaign', 'One set of ads on one platform, with its own budget, store and markets.'],
+    ['Objective', 'What the platform optimises for: purchases (fewer, better users) or installs (more, cheaper users).'],
+  ]],
+  ['Creatives', [
+    ['Creative', 'The ad itself: a video or image.'],
+    ['Hook', 'The first 1–3 seconds of an ad. It decides whether people stop scrolling.'],
+    ['Winner / Good / Flop', 'How a creative performed once tested. Most creatives flop; winners carry the account.'],
+    ['Creative fatigue', 'People get tired of seeing the same ad, so its results slowly drop. Refresh it with variations.'],
+    ['Variation', 'A new version of a proven ad: new hook, colour or text, same idea.'],
+    ['Auto-rotate', 'Swaps tired or flopped creatives out of a campaign and new ones in each week.'],
+    ['UGC', 'User-generated content: ads that look like a real person filmed them on a phone.'],
+    ['Influencer', 'A creator with an audience who posts about your app for a fee.'],
+    ['Seeding', 'Sending free access to small creators and hoping some of them post.'],
+  ]],
+  ['Revenue', [
+    ['Paywall', 'The screen where users choose a plan and pay.'],
+    ['A/B test', 'Showing two versions to different users to see which one converts better.'],
+    ['Renewal', 'A subscriber paying again for the next week, month or year.'],
+    ['Retention', 'The share of users who are still around (or still paying) after some time.'],
+    ['Churn', 'The opposite of retention: the share who cancel or leave.'],
+    ['MRR', 'Monthly recurring revenue: what your active subscriptions bring in each month.'],
+    ['LTV', 'Lifetime value: everything a customer pays you before they leave. Ads pay off when LTV is above CAC.'],
+    ['eCPM', 'For ad-funded apps: what you earn for every 1,000 ads shown inside your app.'],
+    ['Store commission', 'Apple and Google keep a share of every in-app purchase (15–30%).'],
+  ]],
+  ['Brand & markets', [
+    ['Awareness', 'How many people in your markets have heard of the app. It fades without ads or posts.'],
+    ['Trust', 'How much people believe in the app. Happy users, social posts and a fair paywall raise it.'],
+    ['Organic', 'Users who find you without a paid ad: social posts, search, the app store.'],
+    ['Direct / word of mouth', 'Users who come because someone told them about you. It grows with your paid reach.'],
+    ['Tier 1 / 2 / 3 markets', 'Groups of countries by ad price and spending power. Tier 1 is expensive but pays more.'],
+    ['Localization', 'Translating the app and store page. Non-English markets convert poorly without it.'],
+  ]],
+  ['Company', [
+    ['Burn rate', 'How much cash you lose per week.'],
+    ['Runway', 'How many weeks your cash lasts at the current burn rate.'],
+    ['Valuation', 'What the company is worth: cash, expected renewals and revenue growth.'],
+    ['Equity', 'Your share of the company. Investors take some in exchange for cash.'],
+    ['Amortised loan', 'A loan repaid in equal weekly payments: part interest, part principal.'],
+  ]],
+];
+function showGlossary(q = '') {
+  const f = q.trim().toLowerCase(), hit = ([t, d]) => !f || t.toLowerCase().includes(f) || d.toLowerCase().includes(f);
+  const groups = GLOSSARY.map(([g, list]) => [g, list.filter(hit)]).filter(([, l]) => l.length);
+  const html = groups.map(([g, l]) => `<div class="glgrp"><span class="lbl">${g}</span><dl>${l.map(([t, d]) => `<div><dt>${esc(t)}</dt><dd>${esc(d)}</dd></div>`).join('')}</dl></div>`).join('') || '<p class="muted">No term matches that.</p>';
+  const box = document.getElementById('glbody'); if (box) { box.innerHTML = html; return; }
+  document.getElementById('modal').innerHTML = `<div class="overlay" role="dialog" aria-modal="true" aria-label="Marketing glossary"><div class="modal glossary" style="max-width:720px"><div class="stack">
+    <div class="row"><div><span class="lbl">What the words mean</span><h2 style="margin:2px 0 0">Marketing glossary</h2></div><button class="xbtn" data-act="closeReport" aria-label="Close">×</button></div>
+    <input type="search" id="glq" placeholder="Search a term, e.g. ROAS" data-glq autocomplete="off">
+    <div id="glbody" class="stack">${html}</div></div></div></div>`;
+}
 // ---------- title screen + new game flow ----------
 let atMenu = true, menuStep = 'title', menuArm = false, menuChat = 0;
 const MENU_LINES = ['One day this garage will be a campus. Probably.', 'An angel just wired me ' + money(START_CASH) + '. Press New game before they change their mind.', 'Step one: launch an app. Step two: ads. Step three: profit. Step two is the hard part.', 'AI doesn\'t exist yet, so every ad is made by hand. Character building.', 'Gerald from the bank already knows my name. That\'s not a good sign.', 'Fifty-two weeks to make this thing worth something. No pressure.', 'I named the cat "Runway". I check on him a lot.', 'Somebody has to hire a social media manager eventually. Not today.'];
@@ -4066,7 +4165,8 @@ function showReport() {
   const title = r.newWinners.length ? 'Winner found' : r.profit >= 0 ? 'A profitable week' : r.revenue > 0 ? (r.profit > -2000 ? 'Getting closer' : 'Burning cash') : 'A quiet week';
   // money in / out
   const renew = r.renewRev || 0, fresh = Math.max(0, r.revenue - renew);
-  const inItems = [[ads ? `Ad revenue from new users` : `New subscriptions`, fresh, ads ? `${fmt(r.orders)} installs` : `${fmt(r.orders)} new subscribers`], [ads ? 'Ad revenue from returning users' : 'Renewals', renew, '']].filter(x => x[1] > .5);
+  const inItems = [[ads ? `Ad revenue from new users` : `New subscriptions`, fresh, ads ? `${fmt(r.orders)} installs` : `${fmt(r.orders)} new subscribers`], [ads ? 'Ad revenue from returning users' : 'Renewals', renew, ''], ['Partner ad credit', r.credit || 0, Object.entries(r.creditBy || {}).map(([k, v]) => `${CH[k].name} ${money(v)}`).join(' · ')]].filter(x => x[1] > .5);
+  const totIn = r.revenue + (r.credit || 0);
   const outItems = costItems(r), totOut = outItems.reduce((a, x) => a + x[2], 0), maxOut = Math.max(1, ...outItems.map(x => x[2]));
   const moneyRow = (n, v, sub, cls, w, kids) => { const line = `<span class="mn">${n}${sub ? `<small>${sub}</small>` : ''}</span><span class="mv ${cls}">${cls === 'bad' ? '−' : '+'}${money(v)}</span><i class="mb ${cls}" style="width:${(w * 100).toFixed(1)}%"></i>`;
     return kids && kids.length > 1 ? `<details class="mrow"><summary>${line}</summary>${kids.map(([kn, kv]) => `<div class="msub"><span>${esc(kn)}</span><span>−${money(kv)}</span></div>`).join('')}</details>` : `<div class="mrow">${line}</div>`; };
@@ -4075,13 +4175,13 @@ function showReport() {
   const kp = (lbl, val, sub, cls = '') => `<div class="rk"><span class="lbl">${lbl}</span><b class="${cls}">${val}</b>${sub ? `<span class="muted small">${sub}</span>` : ''}</div>`;
   let body = '';
   if (repTab === 'sum') body = `
-    <div class="rkpis">${kp('Money in', '+' + money(r.revenue), ads ? `${fmt(r.orders)} installs` : `${fmt(r.orders)} new subs`, 'good')}${kp('Money out', '−' + money(totOut), r.adSpend ? `${money(r.adSpend)} on ads` : 'No ad spend', 'bad')}${kp('Net', money(r.profit), r.adSpend ? `ROAS ${dec(r.revenue / r.adSpend)}x` : '', r.profit >= 0 ? 'good' : 'bad')}${kp('Cash', money(r.cash), r.principal ? `after ${money(r.principal)} loan repayment` : '')}</div>
+    <div class="rkpis">${kp('Money in', '+' + money(totIn), ads ? `${fmt(r.orders)} installs` : `${fmt(r.orders)} new subs`, 'good')}${kp('Money out', '−' + money(totOut), r.adSpend ? `${money(r.adSpend)} on ads` : 'No ad spend', 'bad')}${kp('Net', money(r.profit), r.adSpend ? `ROAS ${dec(r.revenue / r.adSpend)}x` : '', r.profit >= 0 ? 'good' : 'bad')}${kp('Cash', money(r.cash), r.principal ? `after ${money(r.principal)} loan repayment` : '')}</div>
     <div class="rsec"><h3>Brand health</h3>${repBar('Awareness', r.aw[0], r.aw[1], 'How many people in your markets know the app. Ads and organic posts raise it; it fades without them.')}${repBar('Trust', r.trust[0], r.trust[1], 'How much people believe in the app. Happy customers, social posts and a fair paywall raise it.')}</div>
     ${notes.length ? `<div class="rsec"><h3>This week</h3><ul class="notes">${notes.map(n => `<li class="${n.t}">${n.m}</li>`).join('')}</ul></div>` : ''}
     ${quote ? `<div class="say"><span class="avatar">${esc(initials(quote[0].name))}</span><div class="bubble"><b>${esc(quote[0].name)} · ${ROLES[quote[0].role].name}</b>${esc(quote[1])}</div></div>` : ''}`;
   else if (repTab === 'money') body = `
     <div class="mgrid">
-      <div class="mcol in"><div class="row"><h3>Money in</h3><b class="good num">+${money(r.revenue)}</b></div>${inItems.length ? inItems.map(([n, v, sub]) => moneyRow(n, v, sub, 'good', v / Math.max(1, r.revenue))).join('') : '<p class="muted small">No revenue this week.</p>'}</div>
+      <div class="mcol in"><div class="row"><h3>Money in</h3><b class="good num">+${money(totIn)}</b></div>${inItems.length ? inItems.map(([n, v, sub]) => moneyRow(n, v, sub, 'good', v / Math.max(1, totIn))).join('') : '<p class="muted small">No revenue this week.</p>'}</div>
       <div class="mcol out"><div class="row"><h3>Money out</h3><b class="bad num">−${money(totOut)}</b></div>${outItems.map(([k, n, v, kids]) => moneyRow(n, v, '', 'bad', v / maxOut, kids)).join('')}<p class="muted small">Tap a line with ▸ to see the breakdown.</p></div>
     </div>
     <div class="mnet ${r.profit >= 0 ? 'pos' : 'neg'}"><span>Net this week</span><b>${money(r.profit)}</b></div>
@@ -4123,6 +4223,45 @@ function finalArt(t) {
   const rainbow = t === 4 ? `<g opacity=".9" fill="none" stroke-width="7">${['#E2557A', '#F5A524', '#F5C548', '#1E9C74', '#3B4BD8', '#7A47D6'].map((c, i) => `<path d="M90 150 A160 120 0 0 1 410 150" stroke="${c}" transform="translate(0 ${i * 7}) scale(1 1)"/>`).join('')}</g><g transform="translate(330 98)"><ellipse cx="30" cy="22" rx="26" ry="14" fill="#fff" stroke="#E2D9F7" stroke-width="2"/><circle cx="56" cy="8" r="10" fill="#fff" stroke="#E2D9F7" stroke-width="2"/><path d="M60 -2 l10 -16 -2 18z" fill="#F5C548"/><path d="M48 0 q-8 -8 -2 -14 q2 8 10 6" fill="#B58CF0"/>${[10, 22, 38, 50].map(x => `<rect x="${x}" y="32" width="5" height="14" rx="2" fill="#fff" stroke="#E2D9F7"/>`).join('')}<circle cx="59" cy="7" r="1.6" fill="#3A2530"/></g>` : '';
   const conf = t >= 3 ? Array.from({ length: 16 }, (_, i) => `<g class="cf" style="animation-delay:-${(i * .27) % 2}s"><rect x="${30 + (i * 61) % 440}" y="${8 + (i * 23) % 50}" width="6" height="3" rx="1" fill="${['#F5C548', '#E2557A', '#3B4BD8', '#1E9C74'][i % 4]}" transform="rotate(${(i * 53) % 180} ${30 + (i * 61) % 440} ${8 + (i * 23) % 50})"/></g>`).join('') : '';
   return `<svg viewBox="0 0 500 160" role="img" aria-label="How your company ended up">${rainbow}${bg}<rect x="0" y="150" width="500" height="10" fill="var(--line)"/>${main}${conf}</svg>`;
+}
+// ---------- shareable result card (1200×627, LinkedIn size) ----------
+const PLAY_URL = 'ugurucar.work/play';
+function resultStats() {
+  const s = state, v = valuation(), h = s.history, bk = s.over === 'bankrupt';
+  const tot = h.reduce((a, x) => a + x.revenue, 0), bestR = Math.max(0, ...h.filter(x => x.spend > 200).map(x => x.revenue / x.spend));
+  const grade = bk ? 'Out of cash' : v.mine < 500000 ? 'Garage Startup' : v.mine < 2000000 ? 'Rising App' : v.mine < 6000000 ? 'Category Player' : 'Unicorn Material';
+  return { bk, grade, val: bk ? 0 : v.val, mine: bk ? 0 : v.mine, own: s.ownership, tot, bestR, weeks: bk ? s.week - 1 : WEEKS, winners: s.stats.winners };
+}
+async function drawCard() {
+  const s = state, b = s.brand, R = resultStats(), W = 1200, H = 627, c = document.createElement('canvas'); c.width = W; c.height = H;
+  const x = c.getContext('2d');
+  try { await Promise.all(['800 60px "Bricolage Grotesque"', '600 20px "IBM Plex Sans"', '600 20px "IBM Plex Mono"'].map(f => document.fonts.load(f))); } catch (e) { }
+  const bg = x.createLinearGradient(0, 0, W, H); bg.addColorStop(0, '#EEF1FF'); bg.addColorStop(1, '#FFF1EA'); x.fillStyle = bg; x.fillRect(0, 0, W, H);
+  const band = x.createLinearGradient(0, 0, W, 0); band.addColorStop(0, '#3B4BD8'); band.addColorStop(.55, '#E2557A'); band.addColorStop(1, '#F5A524'); x.fillStyle = band; x.fillRect(0, 0, W, 10);
+  const box = (X, Y, w, h, r) => { x.beginPath(); x.moveTo(X + r, Y); x.arcTo(X + w, Y, X + w, Y + h, r); x.arcTo(X + w, Y + h, X, Y + h, r); x.arcTo(X, Y + h, X, Y, r); x.arcTo(X, Y, X + w, Y, r); x.closePath(); };
+  x.fillStyle = SWATCH[b.color]; box(64, 64, 120, 120, 30); x.fill();
+  x.fillStyle = x.strokeStyle = ICON_FG[b.fg || 0];
+  if (!b.icon || b.icon === 'letter') { x.font = '800 64px "Bricolage Grotesque", sans-serif'; x.textAlign = 'center'; x.textBaseline = 'middle'; x.fillText(((b.letter || '').trim() || upper(b.name)).toUpperCase(), 124, 128); }
+  else { x.save(); x.translate(124 - 36, 124 - 36); x.scale(3, 3); x.lineWidth = 2.2; x.lineCap = x.lineJoin = 'round'; x.stroke(new Path2D(ICONS[b.icon])); x.restore(); }
+  x.textAlign = 'left'; x.textBaseline = 'alphabetic';
+  x.fillStyle = '#5A6078'; x.font = '600 22px "IBM Plex Sans", sans-serif'; x.fillText('MY YEAR IN APP MARKETING TYCOON', 214, 100);
+  x.fillStyle = '#12142A'; x.font = '800 64px "Bricolage Grotesque", sans-serif'; x.fillText(b.name.slice(0, 22), 212, 168);
+  const gr = x.createLinearGradient(64, 0, 700, 0); gr.addColorStop(0, '#3B4BD8'); gr.addColorStop(.6, '#E2557A'); gr.addColorStop(1, '#F5A524');
+  x.fillStyle = R.bk ? '#C3362C' : gr; x.font = '800 54px "Bricolage Grotesque", sans-serif'; x.fillText(R.bk ? `Out of cash in week ${R.weeks}` : R.grade, 64, 268);
+  const stats = R.bk ? [['Total revenue', money(R.tot)], ['Weeks survived', `${R.weeks}`], ['Best ROAS', R.bestR ? dec(R.bestR) + 'x' : '—'], ['Winning creatives', `${R.winners}`]]
+    : [['Company value', money(R.val)], ['Total revenue', money(R.tot)], ['Best ROAS', R.bestR ? dec(R.bestR) + 'x' : '—'], ['Winning creatives', `${R.winners}`]];
+  stats.forEach(([k, v], i) => { const X = 64 + i * 272, Y = 320; x.fillStyle = 'rgba(255,255,255,.75)'; box(X, Y, 252, 132, 20); x.fill(); x.strokeStyle = 'rgba(18,20,42,.08)'; x.lineWidth = 2; x.stroke();
+    x.fillStyle = '#5A6078'; x.font = '600 19px "IBM Plex Sans", sans-serif'; x.fillText(k.toUpperCase(), X + 24, Y + 44); x.fillStyle = '#12142A'; x.font = '800 42px "Bricolage Grotesque", sans-serif'; x.fillText(v, X + 24, Y + 100); });
+  x.fillStyle = '#5A6078'; x.font = '500 20px "IBM Plex Sans", sans-serif'; x.fillText(`${CATS[b.cat].name} app · ${MODELS[b.model || 'subs'].name} · 52 weeks, $${Math.round(START_CASH / 1000)}K to start`, 64, 500);
+  x.fillStyle = '#12142A'; x.font = '800 30px "Bricolage Grotesque", sans-serif'; x.fillText('Can you beat it?', 64, 566);
+  const w1 = x.measureText('Can you beat it?').width;
+  x.fillStyle = '#3B4BD8'; x.font = '600 30px "IBM Plex Mono", monospace'; x.fillText(PLAY_URL, 64 + w1 + 22, 566);
+  return c;
+}
+function shareText() {
+  const R = resultStats(), b = state.brand;
+  return R.bk ? `I ran ${b.name} for ${R.weeks} weeks in App Marketing Tycoon before the cash ran out. ${money(R.tot)} in revenue, best ROAS ${dec(R.bestR)}x. Can you last longer?\n\nPlay free: https://www.${PLAY_URL}/`
+    : `I finished a year of App Marketing Tycoon: ${b.name} ended as a "${R.grade}", worth ${money(R.val)}, with ${money(R.tot)} in revenue and a best ROAS of ${dec(R.bestR)}x. Can you beat it?\n\nPlay free: https://www.${PLAY_URL}/`;
 }
 // ---------- last chance: cash went negative ----------
 const SAVINGS = 10000;
@@ -4183,6 +4322,7 @@ function showFinal() {
     ${(s.achNew || []).length ? `<div class="row" style="justify-content:flex-start;gap:8px;flex-wrap:wrap"><span class="lbl">Unlocked this run</span>${s.achNew.map(id => ACH.find(a => a.id === id)).filter(Boolean).map(a => `<span class="pill" style="gap:6px">${achBadge(a, true)}${esc(a.n)}</span>`).join('')}<button class="linkbtn" data-act="achievements">See all</button></div>` : ''}
     ${s.pw && s.pw.time > 30 ? `<p class="muted small">Hidden stat: you spent ${Math.round(s.pw.time / 60)} active minutes polishing your paywall. That quietly added ${pct(pwTimeBonus(), 1)} to conversion.</p>` : ''}
     <div class="chart">${chart()}</div>
+    <div class="sharebox"><div><b>Share your result</b><span class="muted small">A 1200×627 card, ready for LinkedIn.</span></div><div class="row" style="gap:8px;flex-wrap:wrap;justify-content:flex-start"><button class="btn xs" data-act="cardDownload">⬇ Download card</button><button class="btn xs" data-act="cardShare">Share on LinkedIn</button></div></div>
     <div><button class="btn primary big" data-act="newGame">Play again</button></div>
   </div></div>`;
 }
@@ -4473,6 +4613,17 @@ const ACT = {
   brokeLoan: () => { const s = state, P = brokeNeed(); if (loanMax() < P) return; const l = mkLoan(P, 26); loans().push(l); sfx('stamp'); s.achS = s.achS || {}; s.achS.loans = (s.achS.loans || 0) + 1; s.cash += P; spendNow(Math.round(P * LOAN_FEE), 'loanfee'); brokeResume(`Gerald approved ${money(P)}. ${money(Math.round(l.pay))} a week for 26 weeks.`); },
   brokeInvest: () => { const s = state, b = s.broke; if (!b || !b.inv || b.invDone) return; b.invDone = true; s.bailouts = (s.bailouts || 0) + 1; s.cash += b.inv; s.ownership *= .8; brokeResume(`${money(b.inv)} from Lighthouse Angels. You now own ${Math.round(s.ownership * 100)}%.`); },
   brokeQuit: () => { state.gaveUp = true; save(); showFinal(); },
+  cardDownload: async () => { const c = await drawCard(), a = document.createElement('a'); a.download = `${state.brand.name.replace(/[^a-z0-9]+/gi, '-').toLowerCase()}-app-marketing-tycoon.png`; a.href = c.toDataURL('image/png'); a.click(); toast('Card saved. Add it to your post.'); },
+  cardShare: async () => {
+    const c = await drawCard(), txt = shareText();
+    try { const blob = await new Promise(r => c.toBlob(r, 'image/png')), file = new File([blob], 'app-marketing-tycoon.png', { type: 'image/png' });
+      if (navigator.canShare && navigator.canShare({ files: [file] })) { await navigator.share({ files: [file], text: txt }); return; } } catch (e) { if (e && e.name === 'AbortError') return; }
+    const a = document.createElement('a'); a.download = 'app-marketing-tycoon.png'; a.href = c.toDataURL('image/png'); a.click();
+    try { await navigator.clipboard.writeText(txt); } catch (e) { }
+    window.open('https://www.linkedin.com/feed/?shareActive=true&text=' + encodeURIComponent(txt), '_blank', 'noopener');
+    toast('Card downloaded and post text copied. Attach the image in LinkedIn.');
+  },
+  glossary: () => { showGlossary(); setTimeout(() => document.getElementById('glq')?.focus(), 30); },
   musicToggle: () => { const was = prefs.sound && prefs.music; prefs.music = !was; if (!was) prefs.sound = true; savePrefs(); MUSIC.sync(); render(); },
   menuContinue: () => { atMenu = false; menuArm = false; closeModal(); render(); window.scrollTo(0, 0); if (state.over) showFinal(); },
   menuNew: (d = {}) => {
@@ -4650,6 +4801,7 @@ const ACT = {
       <div class="setgroup"><span class="lbl">Office</span>${row('Random chatter', 'How often someone starts talking on their own', seg('chatter', [['often', 'Often'], ['normal', 'Normal'], ['off', 'Off']]))}</div>
       <div class="setgroup"><span class="lbl">Look</span>${row('Theme', '', seg('theme', [['auto', 'Auto'], ['light', 'Light'], ['dark', 'Dark']]))}${row('Reduce animations', 'Shorter waits, no wiggling, no blinking lights', onoff('reduce'))}</div>
       ${!atMenu && state && state.seed ? `<div class="setgroup"><span class="lbl">This game</span><div class="setrow"><div><b>Game code: <span class="mono">${state.seed}</span></b><span class="muted small">Share it: a friend who starts with this code gets the same market.</span></div><button class="btn xs" data-act="copySeed">Copy</button></div></div>` : ''}
+      <div class="setgroup"><span class="lbl">Learn</span><div class="row" style="gap:8px;justify-content:flex-start"><button class="btn xs" data-act="glossary">Marketing glossary</button></div></div>
       ${atMenu ? '' : `<div class="setgroup"><span class="lbl">Help</span><div class="row" style="gap:8px;justify-content:flex-start;flex-wrap:wrap"><button class="btn xs" data-act="replayTour">Replay the tour</button><button class="btn xs" data-act="resetGuides">Show page guides again</button></div></div>
       <div class="setgroup"><span class="lbl">Testing</span><div class="row" style="gap:8px;justify-content:flex-start"><button class="btn xs" data-act="dev">Developer tools</button></div></div>`}
     </div></div></div>`;
@@ -4893,6 +5045,7 @@ document.addEventListener('click', e => {
 });
 document.addEventListener('input', e => {
   const t = e.target;
+  if ('glq' in t.dataset) { showGlossary(t.value); return; }
   if (t.dataset.campname) { const cp = state.camps.find(x => x.id === t.dataset.campname); if (cp && t.value.trim()) { cp.name = t.value.trim(); cp.named = !AUTO_NAME.test(cp.name); save(); } }
   else if (t.dataset.budget) {
     const ch = t.dataset.budget; state.ads[ch].budget = +t.value;
