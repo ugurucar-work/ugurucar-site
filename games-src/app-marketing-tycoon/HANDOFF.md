@@ -85,6 +85,8 @@ One `<script>` with vanilla JS, no framework or build step:
 - **Out of cash** no longer ends the game at once: `showBroke()` offers personal savings (+$10K, once per game, only if it covers the hole), an emergency 26-week loan from Gerald (if `loanMax()` allows) and, by chance, a rescue round (+cash for 20%; odds rise with ROAS, users, trust and an early week, drop after a previous rescue). "Close the company" shows the final screen.
 - Team: diminishing returns per extra person in the same role (`ROLE_W`).
 - Home country defaults to Türkiye. The US & English-speaking region (`t1en`) is always open in campaigns (`freeMkt`/`openMkt`), so players can compare it with home before they can research; research still reveals its fit.
+- Investors (`fundamentals`, `investScore`, `offerSize`): offers only from week 30, and only when the last 8 weeks were clearly profitable and growing (score ≥ .7; chance rises with the score). The cheque is priced off valuation but capped at ~3 months of current profit (Series A: 6 months, also needs score ≥ .6 at week 40). No more fixed $120K / $750K floors.
+- Campaign budget cap: `campMax(cp)` = platform max + $1,000 per extra region.
 - Partner rewards (`REWARDS`, one-time): first $1K revenue week → +$10K from the angel (no equity); $2K+ weekly spend on Meta or TikTok → $5K ad credit for that platform (`s.adCredit`, used before cash; shown as "Partner ad credit" in Money in).
 - End screen has a shareable 1200×627 result card (`drawCard`, `shareText`): download, or Web Share / LinkedIn feed with prefilled text.
 - Glossary (`GLOSSARY`, `showGlossary`) from the sidebar and Settings. Sidebar: Glossary in place of the old Main menu slot, Main menu in place of Quit.
