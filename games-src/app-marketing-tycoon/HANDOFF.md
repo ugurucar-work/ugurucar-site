@@ -85,9 +85,21 @@ One `<script>` with vanilla JS, no framework or build step:
 - **Out of cash** no longer ends the game at once: `showBroke()` offers personal savings (+$10K, once per game, only if it covers the hole), an emergency 26-week loan from Gerald (if `loanMax()` allows) and, by chance, a rescue round (+cash for 20%; odds rise with ROAS, users, trust and an early week, drop after a previous rescue). "Close the company" shows the final screen.
 - Team: diminishing returns per extra person in the same role (`ROLE_W`).
 - Home country defaults to Türkiye. The US & English-speaking region (`t1en`) is always open in campaigns (`freeMkt`/`openMkt`), so players can compare it with home before they can research; research still reveals its fit.
+- Partner rewards (`REWARDS`, one-time): first $1K revenue week → +$10K from the angel (no equity); $2K+ weekly spend on Meta or TikTok → $5K ad credit for that platform (`s.adCredit`, used before cash; shown as "Partner ad credit" in Money in).
+- End screen has a shareable 1200×627 result card (`drawCard`, `shareText`): download, or Web Share / LinkedIn feed with prefilled text.
+- Glossary (`GLOSSARY`, `showGlossary`) from the sidebar and Settings. Sidebar: Glossary in place of the old Main menu slot, Main menu in place of Quit.
+- Loans: $5K step and a Max option; the limit formula is in the (i).
 - Ads Manager: one tab per platform (Meta, TikTok, Google), campaigns scroll sideways. No BAU/test campaign types any more (old test campaigns migrate to normal). Default names `BAU_<country>_Week<n>`, editable. Campaign cap: 5 on your own, +10 for the first Performance Marketer, +3 for each extra one. Studio reputation gates better candidates and stars.
 
-Latest bot results (16 games each):
+Bot results after the Nov 2026 changes ($30K start, rewards, TR home; 12 games each, rescue options not used by the bot):
+
+| Scenario | Bankrupt | Median value |
+|---|---|---|
+| Solo + loans, TR | 0/12 | ~$105K |
+| 2-person team + loans, TR | 5/12 (around week 43) | ~$299K |
+| Solo + loans, US | 0/12 | ~$127K |
+
+Older results (16 games each, $20K start):
 
 | Scenario | Bankrupt | Median value |
 |---|---|---|

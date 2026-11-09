@@ -10,7 +10,7 @@
   };
   const ORDER = ['creative', 'perf', 'analyst', 'creative', 'perf', 'social', 'product', 'ugc', 'influencer', 'mkt', 'creative', 'perf', 'hr'];
   window.runBot = function (o) {
-    newState({ name: 'Bot', country: 'US', cat: 'fitness', price: 'orta', tone: 'samimi', color: 0, model: 'subs', icon: 'letter', letter: '', fg: 0, seed: o.seed || String(Math.random()).slice(2, 10) });
+    newState({ name: 'Bot', country: o.country || 'TR', cat: 'fitness', price: 'orta', tone: 'samimi', color: 0, model: 'subs', icon: 'letter', letter: '', fg: 0, seed: o.seed || String(Math.random()).slice(2, 10) });
     ensureExtras(state);
     const s = state, comp = COMPS[o.comp || 'balanced'], out = { first: null, roas: {}, minCash: 1e9, dirShare: [] };
     const plats = o.plats || ['meta', 'tiktok'];
@@ -56,7 +56,7 @@
       out.minCash = Math.min(out.minCash, s.cash);
     }
     const v = valuation();
-    out.bk = s.over === 'bankrupt'; out.week = s.week; out.val = Math.round(v.val); out.team = s.team.length;
+    out.bk = s.over === 'bankrupt'; out.week = s.week; out.rw = Object.keys(s.rewards || {}).length; out.val = Math.round(v.val); out.team = s.team.length;
     out.rev = Math.round(s.history.slice(-4).reduce((a, h) => a + h.revenue, 0) / 4);
     out.dir = out.dirShare.length ? +(out.dirShare.reduce((a, b) => a + b, 0) / out.dirShare.length).toFixed(2) : 0;
     return out;
@@ -65,6 +65,6 @@
     const R = []; for (let i = 0; i < n; i++) R.push(runBot(o));
     const avg = f => R.reduce((a, x) => a + f(x), 0) / R.length, med = a => a.sort((x, y) => x - y)[a.length >> 1];
     const ro = w => { const a = R.filter(x => x.roas[w] != null).map(x => x.roas[w]); return a.length ? (a.reduce((p, q) => p + q, 0) / a.length).toFixed(2) : '-'; };
-    return `${name.padEnd(14)} bk ${R.filter(x => x.bk).length}/${n} val ${Math.round(med(R.map(x => x.val)) / 1000)}K rev/wk ${Math.round(avg(x => x.rev) / 1000 * 10) / 10}K first ${Math.round(avg(x => x.first || 53))} roas2/10/20/35 ${ro(2)}/${ro(10)}/${ro(20)}/${ro(35)} dir/paid ${avg(x => x.dir).toFixed(2)} team ${avg(x => x.team).toFixed(1)}`;
+    return `${name.padEnd(14)} bk ${R.filter(x => x.bk).length}/${n} val ${Math.round(med(R.map(x => x.val)) / 1000)}K rev/wk ${Math.round(avg(x => x.rev) / 1000 * 10) / 10}K first ${Math.round(avg(x => x.first || 53))} roas2/10/20/35 ${ro(2)}/${ro(10)}/${ro(20)}/${ro(35)} dir/paid ${avg(x => x.dir).toFixed(2)} team ${avg(x => x.team).toFixed(1)} rewards ${avg(x => x.rw || 0).toFixed(1)} bkWeek ${Math.round(avg(x => x.bk ? x.week : 0) / Math.max(1, R.filter(x => x.bk).length) * R.length)}`;
   };
 })();
