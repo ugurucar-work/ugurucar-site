@@ -520,6 +520,7 @@ header.top{backdrop-filter:blur(10px);background:color-mix(in srgb,var(--panel) 
 .ugcauto > div{display:flex;flex-direction:column;gap:2px}
 .ugcextra{display:flex;flex-direction:column;gap:8px;padding:12px;border-radius:12px;border:1px dashed var(--line)}
 .ugcextra .btn{align-self:flex-start}
+.btn.ship{background:#1E9C74;border-color:#1E9C74;color:#fff;box-shadow:0 3px 0 #14785A}.btn.ship:hover{background:#178A66}
 .menuhead{text-align:center}
 .gtitle{font-family:var(--f-display);font-weight:800;font-size:clamp(40px,6.4vw,84px);line-height:.86;letter-spacing:-.045em;margin:10px 0 0;display:flex;flex-direction:column;align-items:center}
 .gtitle span{font-size:1.32em;background:linear-gradient(100deg,var(--accent),#E2557A 55%,#F5A524);-webkit-background-clip:text;background-clip:text;color:transparent;padding-bottom:.06em}
@@ -3356,9 +3357,9 @@ function vPaywall() {
   <div class="panel stack">
     <div class="row" style="flex-wrap:wrap">
       <div class="vtabs"><span class="lbl" style="margin-right:4px">Variants</span>${P.vars.map((v, i) => `<button class="vt" data-act="pwSet" data-k="edit" data-v="${i}" aria-pressed="${P.edit === i}"><span class="vdot v${i}"></span>${VAR_NAMES[i]}</button>`).join('')}
-        ${P.vars.length < 4 ? `<button class="btn xs" data-act="pwAddVar">+ Add variant</button>` : ''}${P.edit > 0 ? `<button class="btn xs ghost danger" data-act="pwDelVar">Remove ${VAR_NAMES[P.edit]}</button>` : ''}</div>
+        ${P.vars.length < 4 ? `<button class="btn xs" data-act="pwAddVar">+ Add variant</button>` : ''}${P.edit !== P.live ? `<button class="btn xs ship" data-act="pwShip" data-v="${P.edit}">✓ Make ${VAR_NAMES[P.edit]} live</button>` : ''}${P.vars.length > 1 && P.edit !== P.live ? `<button class="btn xs ghost danger" data-act="pwDelVar">Remove ${VAR_NAMES[P.edit]}</button>` : ''}</div>
       <div class="row" style="gap:10px;flex-wrap:wrap">
-        ${testing ? `<span class="pill good">Test running · ${P.vars.length} variants</span>` : `<span class="pill acc">Live: Variant ${VAR_NAMES[P.live]}</span>${P.edit !== P.live ? `<button class="btn xs" data-act="pwShip" data-v="${P.edit}">Make ${VAR_NAMES[P.edit]} live</button>` : ''}`}
+        ${testing ? `<span class="pill good">Test running · ${P.vars.length} variants</span>` : `<span class="pill acc">Live: Variant ${VAR_NAMES[P.live]}</span>`}
         <span class="muted small">A/B test</span><button class="switch sm" data-act="pwAB" aria-pressed="${P.ab}" aria-label="Run A/B test"></button></div>
     </div>
     ${P.ab ? `<div class="row" style="flex-wrap:wrap;justify-content:flex-start;gap:10px"><span class="lbl">Traffic split</span><div class="seg">${Object.entries(PW_SPLITS).map(([k, n]) => `<button data-act="pwSplit" data-v="${k}" aria-pressed="${P.split === k}">${n}</button>`).join('')}</div>
@@ -5050,7 +5051,11 @@ const ACT = {
   pwRandAll: () => { const c = state.pw.vars[state.pw.edit]; for (const k of ['headline', 'sub', 'cta']) c[k] = randCopy(k, state.brand, c[k]); pwEdited(); save(); render(); pwFlash(); },
   pwTpl: d => { const P = state.pw, t = PW_TEMPLATES[+d.i]; applyTemplate(P.vars[P.edit], t, state.brand); pwEdited(); toast(`Loaded "${t.name}" into variant ${VAR_NAMES[P.edit]}.`); save(); render(); pwFlash(); },
   pwAddVar: () => { const P = state.pw; if (P.vars.length >= 4) return; P.vars.push(JSON.parse(JSON.stringify(P.vars[P.edit]))); P.edit = P.vars.length - 1; P.tot = null; P.hist = []; toast(`Variant ${VAR_NAMES[P.edit]} created as a copy. Change one thing and test it.`); save(); render(); },
-  pwDelVar: () => { const P = state.pw; if (P.edit === 0) return; P.vars.splice(P.edit, 1); if (P.live >= P.vars.length || P.live === P.edit) P.live = 0; P.edit = 0; P.tot = null; P.hist = []; save(); render(); },
+  pwDelVar: () => {
+    const P = state.pw, i = P.edit; if (P.vars.length < 2 || i === P.live) { toast("You can't remove the live variant. Make another one live first."); return; }
+    const gone = VAR_NAMES[i]; P.vars.splice(i, 1); if (P.live > i) P.live--; P.edit = P.live; P.tot = null; P.hist = [];
+    if (P.vars.length < 2) P.ab = false;
+    toast(`Variant ${gone} removed. The others moved up a letter.`); save(); render(); },
   pwAB: () => {
     const P = state.pw; P.ab = !P.ab;
     if (P.ab && P.vars.length < 2) { P.vars.push(JSON.parse(JSON.stringify(P.vars[0]))); P.edit = 1; }
