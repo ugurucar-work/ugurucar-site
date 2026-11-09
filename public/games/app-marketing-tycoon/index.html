@@ -468,6 +468,42 @@ header.top{backdrop-filter:blur(10px);background:color-mix(in srgb,var(--panel) 
 .menu{position:relative}
 .musicbtn{position:absolute;top:clamp(14px,3vh,28px);right:max(16px,env(safe-area-inset-right,0px));padding:8px 14px;border-radius:999px;border:1px solid var(--line);background:var(--panel);color:var(--ink);font:inherit;font-size:13px;font-weight:600;cursor:pointer}
 .musicbtn[aria-pressed="true"]{border-color:var(--accent);color:var(--accent)}
+.report{max-width:760px}
+.rtabs{display:flex;gap:4px;border-bottom:1px solid var(--line);overflow-x:auto;scrollbar-width:none}
+.rtabs button{padding:9px 14px;border:0;border-bottom:3px solid transparent;background:none;color:var(--muted);font:inherit;font-weight:600;cursor:pointer;margin-bottom:-1px;white-space:nowrap}
+.rtabs button[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--accent)}
+.rbody{display:flex;flex-direction:column;gap:16px;min-height:220px}
+.rkpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+.rk{display:flex;flex-direction:column;gap:2px;padding:12px 14px;border:1px solid var(--line);border-radius:12px;background:var(--panel-2)}
+.rk b{font-family:var(--f-display);font-size:24px;font-weight:800;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.rsec{display:flex;flex-direction:column;gap:10px}.rsec h3{font-size:15px}
+.hbar{display:flex;flex-direction:column;gap:6px}.hbar .row{font-size:14px}
+.hbtrack{height:10px;border-radius:99px;background:var(--line);overflow:hidden}.hbtrack i{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,var(--accent),#7B4DFF)}
+.mgrid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.25fr);gap:12px}
+.mcol{display:flex;flex-direction:column;gap:2px;padding:12px 14px;border-radius:12px;border:1px solid var(--line)}
+.mcol.in{background:color-mix(in srgb,#1E9C74 7%,var(--panel))}.mcol.out{background:color-mix(in srgb,#D6455D 6%,var(--panel))}
+.mcol > .row{margin-bottom:6px}.mcol h3{font-size:15px}
+.mrow{position:relative;padding:7px 0 9px;border-bottom:1px dashed var(--line)}
+.mrow > summary{list-style:none;cursor:pointer}.mrow > summary::-webkit-details-marker{display:none}
+.mrow > summary .mn::before{content:"▸ ";color:var(--muted)}.mrow[open] > summary .mn::before{content:"▾ "}
+.mrow > summary,.mrow:not(details){display:grid;grid-template-columns:1fr auto;gap:10px;align-items:start;font-size:14px}
+.mrow .mn{display:block}.mrow .mn small{display:block;color:var(--muted);font-size:12px}
+.mrow .mv{font-weight:700;font-variant-numeric:tabular-nums}
+.mrow .mb{position:absolute;left:0;bottom:3px;height:3px;border-radius:3px;opacity:.55}.mb.good{background:#1E9C74}.mb.bad{background:#D6455D}
+.msub{display:flex;justify-content:space-between;gap:10px;font-size:12.5px;color:var(--muted);padding:3px 0 3px 16px}
+.mnet{display:flex;justify-content:space-between;align-items:center;padding:14px 16px;border-radius:12px;font-weight:700}
+.mnet b{font-family:var(--f-display);font-size:26px}.mnet.pos{background:color-mix(in srgb,#1E9C74 14%,var(--panel));color:#14785A}.mnet.neg{background:color-mix(in srgb,#D6455D 12%,var(--panel));color:#B23248}
+.rcamps{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:10px}
+.rcamp{display:flex;flex-direction:column;gap:10px;padding:12px 14px;border:1px solid var(--line);border-radius:12px;background:var(--panel-2)}
+.rcstats{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:8px}
+.rcstats div{display:flex;flex-direction:column;gap:1px}.rcstats span{font-size:11.5px;color:var(--muted)}.rcstats b{font-variant-numeric:tabular-nums}
+.toplist{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px}
+.toplist li{display:grid;grid-template-columns:auto 1fr auto;gap:10px;align-items:center;font-size:14px}.toplist .tn{width:22px;height:22px;border-radius:50%;display:grid;place-items:center;background:var(--accent-soft);color:var(--accent);font-weight:700;font-size:12px}
+.rteam{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:10px}
+.rteam li{display:flex;gap:10px;padding:12px;border:1px solid var(--line);border-radius:12px;background:var(--panel-2)}
+.rteam li div{display:flex;flex-direction:column;gap:1px;min-width:0}.rteam p{margin:4px 0 0;font-size:13.5px}
+.callout.good{background:color-mix(in srgb,#1E9C74 12%,var(--panel))}
+@media (max-width:640px){.rkpis{grid-template-columns:repeat(2,minmax(0,1fr))}.mgrid{grid-template-columns:minmax(0,1fr)}}
 .menuhead{text-align:center}
 .gtitle{font-family:var(--f-display);font-weight:800;font-size:clamp(40px,6.4vw,84px);line-height:.86;letter-spacing:-.045em;margin:10px 0 0;display:flex;flex-direction:column;align-items:center}
 .gtitle span{font-size:1.32em;background:linear-gradient(100deg,var(--accent),#E2557A 55%,#F5A524);-webkit-background-clip:text;background-clip:text;color:transparent;padding-bottom:.06em}
@@ -2477,7 +2513,7 @@ const SLOW = {
 };
 let busy = false;
 // instant on purpose: navigation, guides, clickers and dismissals
-const INSTANT = new Set(['musicToggle', 'adTab', 'menuNew', 'menuBack', 'menuNext', 'menuPrev', 'menuTalk', 'menuContinue', 'toMenu', 'draft', 'achCopy', 'achPaste', 'achImport', 'achievements', 'copySeed', 'anaMetric', 'chartReg', 'anaPlat', 'rowToggle', 'loadDone', 'questPass', 'orgFocus', 'resetYes', 'questGo', 'questSkip', 'loanAmt', 'loanTerm', 'huntFor', 'settings', 'pref', 'replayTour', 'resetGuides', 'about', 'officeBye', 'dev', 'devCash', 'devOffice', 'devTeam', 'officeTooSmall', 'officeMute', 'officeTalk', 'annexDrop', 'tab', 'draft', 'hush', 'tour', 'tourEnd', 'guide', 'guideDone', 'tips', 'manual', 'infResearch', 'libFilter', 'campOpen', 'pickOpen', 'reset', 'newGame', 'closeReport', 'endWeek', 'ack', 'infOpen', 'infType', 'start']);
+const INSTANT = new Set(['repTab', 'musicToggle', 'adTab', 'menuNew', 'menuBack', 'menuNext', 'menuPrev', 'menuTalk', 'menuContinue', 'toMenu', 'draft', 'achCopy', 'achPaste', 'achImport', 'achievements', 'copySeed', 'anaMetric', 'chartReg', 'anaPlat', 'rowToggle', 'loadDone', 'questPass', 'orgFocus', 'resetYes', 'questGo', 'questSkip', 'loanAmt', 'loanTerm', 'huntFor', 'settings', 'pref', 'replayTour', 'resetGuides', 'about', 'officeBye', 'dev', 'devCash', 'devOffice', 'devTeam', 'officeTooSmall', 'officeMute', 'officeTalk', 'annexDrop', 'tab', 'draft', 'hush', 'tour', 'tourEnd', 'guide', 'guideDone', 'tips', 'manual', 'infResearch', 'libFilter', 'campOpen', 'pickOpen', 'reset', 'newGame', 'closeReport', 'endWeek', 'ack', 'infOpen', 'infType', 'start']);
 // what each role actually changes in the game (keep in sync with the simulation)
 const ROLE_PERKS = {
   creative: ['Delivers about 4–10 creatives at the start of every week (more with skill), starting the week after you hire them', 'Winner chance 2.5–7% per creative, plus up to 6 points from the production budget', 'Each Marketing Artist adds 3 creative slots to every campaign', 'Can make variations of your Good and Winner creatives', 'Follows your platform, hook and format brief', 'Adds 1 organic post a week'],
@@ -3968,52 +4004,91 @@ function vSetup() { return menuStep === 'app' ? vSetupApp() : menuStep === 'mark
 
 // ---------- modals ----------
 function closeModal() { document.getElementById('modal').innerHTML = ''; document.body.classList.remove('touring'); }
+// cost lines for the report: [key, name, amount, [sub lines]]
+function costItems(r) {
+  const cats = r.cats || {}, sumC = ks => ks.reduce((a, k) => a + (cats[k] || 0), 0);
+  const plat = [['Meta', 'meta'], ['TikTok', 'tiktok'], ['Google Search', 'google']].filter(([, k]) => r.ch[k] && r.ch[k].spend).map(([n, k]) => [n, r.ch[k].spend]);
+  const crea = [['Production budget (Marketing Artists)', r.prodCost], ...CREATIVE_CATS.map(k => [CAT_NAMES[k], cats[k] || 0])].filter(([, v]) => v > 0);
+  const oneoff = Object.keys(cats).filter(k => !CREATIVE_CATS.includes(k)).map(k => [CAT_NAMES[k] || k, cats[k]]).filter(([, v]) => v > 0);
+  const team = (state.team || []).length, tools = r.fixed - (r.rent || 0), base = Math.round(FIXED * costIdx());
+  const mmp = r.mmpBill || 0, toolsSub = [['Base stack: analytics, design and ad tools', Math.min(tools - mmp, base)], [`Seats for ${team} ${team === 1 ? 'person' : 'people'}`, Math.max(0, tools - mmp - base)], ['AppsSlayer attribution', mmp]].filter(([, v]) => v > 0);
+  const store = (r.storeApple || 0) + (r.storeGoogle || 0) || r.storeFee || 0;
+  return [
+    ['ads', 'Ads', r.adSpend, plat],
+    ['sal', 'Salaries', r.payroll, team ? Object.entries(state.team.reduce((a, m) => (a[m.role] = (a[m.role] || 0) + m.salary, a), {})).map(([k, v]) => [ROLES[k].name, v]) : []],
+    ['crea', 'Creative production', r.prodCost + sumC(CREATIVE_CATS), crea],
+    ['store', 'Store commission', store, [['Apple App Store', r.storeApple || 0], ['Google Play', r.storeGoogle || 0]].filter(([, v]) => v > 0)],
+    ['tools', 'Software & tools', tools, toolsSub],
+    ['rent', 'Rent', r.rent || 0, []],
+    ['srv', 'Servers', r.servers || 0, []],
+    ['rc', 'RevenueMad (1% of tracked revenue)', r.rcFee || 0, []],
+    ['int', 'Loan interest', r.interest || 0, []],
+    ['one', 'One-off costs', r.misc - sumC(CREATIVE_CATS), oneoff],
+    ['tax', 'Corporate tax (21%)', r.tax || 0, []],
+  ].filter(x => x[2] > .5);
+}
+function repBar(label, v0, v1, tip) {
+  const d = v1 - v0, up = d >= 0;
+  return `<div class="hbar"><div class="row"><span>${label} ${infoI(tip)}</span><b class="num">${dec(v1, 1)}<span class="muted">/100</span> <span class="${Math.abs(d) < .05 ? 'muted' : up ? 'good' : 'bad'}">${Math.abs(d) < .05 ? '=' : (up ? '▲' : '▼') + ' ' + dec(Math.abs(d), 1)}</span></b></div>
+    <div class="hbtrack"><i style="width:${clamp(v1, 0, 100)}%"></i></div></div>`;
+}
+let repTab = 'sum';
 function showReport() {
   if (sfxLater) { const n = sfxLater; sfxLater = null; setTimeout(() => sfx(n), 150); }
-  const r = state.lastReport, s = state;
+  const r = state.lastReport, s = state, ads = s.brand.model === 'ads';
   const srcRows = [['Meta', 'meta'], ['TikTok', 'tiktok'], ['Google Search', 'google']].filter(([, k]) => r.ch[k]);
-  const paidRows = srcRows.map(([n, k]) => { const c = r.ch[k]; return `<tr><td>${n}</td><td>${money(c.spend)}</td><td>${fmt(c.reported)}</td><td>${dec(c.reported * r.aov * (r.bf ? .7 : 1) / c.spend)}x</td>${r.analyst ? `<td>${fmt(c.orders)}</td><td>${dec(c.orders * r.aov * (r.bf ? .7 : 1) / c.spend)}x</td>` : ''}</tr>`; }).join('');
-  const other = r.analyst ? [['Organic social', r.src.organic], ['Direct / word of mouth', r.src.direct], ['Influencers', r.src.influencer || 0]].map(([n, v]) => `<tr><td>${n}</td><td>—</td><td>—</td><td>—</td><td>${fmt(v)}</td><td>—</td></tr>`).join('') : '';
   const diff = r.reportedTotal - r.orders;
   const att = srcRows.length ? (r.analyst
-    ? `The platforms reported <b>${fmt(r.reportedTotal)}</b> purchases in total. Your analyst worked out the real split: ${fmt(r.orders - r.src.organic - r.src.direct - (r.src.influencer || 0))} from ads, the rest from organic, direct and influencers.`
-    : diff > 0 ? `The platforms reported <b>${fmt(r.reportedTotal)}</b> purchases in total, but only <b>${fmt(r.orders)}</b> orders actually came in (organic and direct included). More than one platform is claiming the same sale. Hire a Data Analyst to see real ROAS.`
-      : `The platforms reported ${fmt(r.reportedTotal)} purchases and ${fmt(r.orders)} orders came in overall. Organic and direct signups make up the gap.`) : '';
-  const notes = [...r.notes];
-  notes.push({ t: r.aw[1] >= r.aw[0] ? 'info' : 'warn', m: `Awareness ${dec(r.aw[0], 1)} → ${dec(r.aw[1], 1)}, trust ${dec(r.trust[0], 1)} → ${dec(r.trust[1], 1)}.` });
-  if (r.posts) notes.push({ t: 'info', m: `Your team published ${r.posts} organic posts for ${fmt(r.reach)} total reach.` });
+    ? `Platforms claimed <b>${fmt(r.reportedTotal)}</b> sales. Your analyst's real split: <b>${fmt(r.orders - r.src.organic - r.src.direct - (r.src.influencer || 0))}</b> from ads, the rest from organic, direct and influencers.`
+    : diff > 0 ? `Platforms claimed <b>${fmt(r.reportedTotal)}</b> sales, but only <b>${fmt(r.orders)}</b> really came in. They count the same sale twice. A Data Analyst shows real ROAS.`
+      : `Platforms claimed ${fmt(r.reportedTotal)} sales and ${fmt(r.orders)} came in overall. Organic and direct make up the gap.`) : '';
+  const notes = r.notes.filter(n => !/^Awareness /.test(n.m));
   if (!srcRows.length && !r.posts) notes.push({ t: 'warn', m: 'No channel was active. Sales came from awareness alone.' });
   const newEv = s.inbox.filter(i => i.week === s.week && !i.done).length;
-  let quote = null;
-  if (r.newWinners.length && has('creative').length) quote = [pick(has('creative')), pick(LINES.winner)];
-  else quote = teamQuote();
+  const quote = r.newWinners.length && has('creative').length ? [pick(has('creative')), pick(LINES.winner)] : teamQuote();
   const title = r.newWinners.length ? 'Winner found' : r.profit >= 0 ? 'A profitable week' : r.revenue > 0 ? (r.profit > -2000 ? 'Getting closer' : 'Burning cash') : 'A quiet week';
-  document.getElementById('modal').innerHTML = `<div class="overlay" role="dialog" aria-modal="true" aria-label="Weekly report"><div class="modal">
-    <div><span class="lbl">Week ${r.week} report · ${dateOf(r.week)}${r.bf ? ' · Black Friday' : ''}</span><h2 style="margin-top:4px">${title}</h2></div>
-    <div class="bigrow">
-      <div><span class="lbl">Revenue</span><b>${money(r.revenue)}</b><span class="muted" style="font-size:12px">${s.brand.model === 'ads' ? `${fmt(r.orders)} installs · ad revenue ${money(r.renewRev || 0)}` : `${fmt(r.orders)} new subs · renewals ${money(r.renewRev || 0)}`}</span></div>
-      <div><span class="lbl">Ad spend</span><b>${money(r.adSpend)}</b><span class="muted" style="font-size:12px">${r.adSpend ? 'ROAS ' + dec(r.revenue / r.adSpend) + 'x' : '—'}</span></div>
-      <div><span class="lbl">Net</span><b class="${r.profit >= 0 ? 'good' : 'bad'}">${money(r.profit)}</b><span class="muted" style="font-size:12px">Salaries ${money(r.payroll)}${r.prodCost ? ' · production ' + money(r.prodCost) : ''} · fixed ${money(r.fixed)}${r.misc ? ' · other ' + money(r.misc) : ''}${r.storeFee ? ' · store fees ' + money(r.storeFee) : ''}${r.rcFee ? ' · RevenueMad ' + money(r.rcFee) : ''}${r.tax ? ' · tax ' + money(r.tax) : ''}</span></div>
-      <div><span class="lbl">Cash</span><b>${money(r.cash)}</b><span class="muted" style="font-size:12px">${fmt(r.newCust)} new customers</span></div>
+  // money in / out
+  const renew = r.renewRev || 0, fresh = Math.max(0, r.revenue - renew);
+  const inItems = [[ads ? `Ad revenue from new users` : `New subscriptions`, fresh, ads ? `${fmt(r.orders)} installs` : `${fmt(r.orders)} new subscribers`], [ads ? 'Ad revenue from returning users' : 'Renewals', renew, '']].filter(x => x[1] > .5);
+  const outItems = costItems(r), totOut = outItems.reduce((a, x) => a + x[2], 0), maxOut = Math.max(1, ...outItems.map(x => x[2]));
+  const moneyRow = (n, v, sub, cls, w, kids) => { const line = `<span class="mn">${n}${sub ? `<small>${sub}</small>` : ''}</span><span class="mv ${cls}">${cls === 'bad' ? '−' : '+'}${money(v)}</span><i class="mb ${cls}" style="width:${(w * 100).toFixed(1)}%"></i>`;
+    return kids && kids.length > 1 ? `<details class="mrow"><summary>${line}</summary>${kids.map(([kn, kv]) => `<div class="msub"><span>${esc(kn)}</span><span>−${money(kv)}</span></div>`).join('')}</details>` : `<div class="mrow">${line}</div>`; };
+  const tabs = [['sum', 'Summary'], ['money', 'Money'], ['camp', 'Campaigns'], ...((r.team || []).length || r.posts ? [['team', 'Team']] : [])];
+  if (!tabs.some(t => t[0] === repTab)) repTab = 'sum';
+  const kp = (lbl, val, sub, cls = '') => `<div class="rk"><span class="lbl">${lbl}</span><b class="${cls}">${val}</b>${sub ? `<span class="muted small">${sub}</span>` : ''}</div>`;
+  let body = '';
+  if (repTab === 'sum') body = `
+    <div class="rkpis">${kp('Money in', '+' + money(r.revenue), ads ? `${fmt(r.orders)} installs` : `${fmt(r.orders)} new subs`, 'good')}${kp('Money out', '−' + money(totOut), r.adSpend ? `${money(r.adSpend)} on ads` : 'No ad spend', 'bad')}${kp('Net', money(r.profit), r.adSpend ? `ROAS ${dec(r.revenue / r.adSpend)}x` : '', r.profit >= 0 ? 'good' : 'bad')}${kp('Cash', money(r.cash), r.principal ? `after ${money(r.principal)} loan repayment` : '')}</div>
+    <div class="rsec"><h3>Brand health</h3>${repBar('Awareness', r.aw[0], r.aw[1], 'How many people in your markets know the app. Ads and organic posts raise it; it fades without them.')}${repBar('Trust', r.trust[0], r.trust[1], 'How much people believe in the app. Happy customers, social posts and a fair paywall raise it.')}</div>
+    ${notes.length ? `<div class="rsec"><h3>This week</h3><ul class="notes">${notes.map(n => `<li class="${n.t}">${n.m}</li>`).join('')}</ul></div>` : ''}
+    ${quote ? `<div class="say"><span class="avatar">${esc(initials(quote[0].name))}</span><div class="bubble"><b>${esc(quote[0].name)} · ${ROLES[quote[0].role].name}</b>${esc(quote[1])}</div></div>` : ''}`;
+  else if (repTab === 'money') body = `
+    <div class="mgrid">
+      <div class="mcol in"><div class="row"><h3>Money in</h3><b class="good num">+${money(r.revenue)}</b></div>${inItems.length ? inItems.map(([n, v, sub]) => moneyRow(n, v, sub, 'good', v / Math.max(1, r.revenue))).join('') : '<p class="muted small">No revenue this week.</p>'}</div>
+      <div class="mcol out"><div class="row"><h3>Money out</h3><b class="bad num">−${money(totOut)}</b></div>${outItems.map(([k, n, v, kids]) => moneyRow(n, v, '', 'bad', v / maxOut, kids)).join('')}<p class="muted small">Tap a line with ▸ to see the breakdown.</p></div>
     </div>
-    ${srcRows.length ? `<div class="scroll"><table class="tbl"><thead><tr><th>Channel</th><th>Spend</th><th>Platform sales</th><th>Platform ROAS</th>${r.analyst ? '<th>Real sales</th><th>Real ROAS</th>' : ''}</tr></thead><tbody>${paidRows}${other}
-      <tr class="total"><td>Total (real)</td><td>${money(r.adSpend)}</td><td>${fmt(r.reportedTotal)}</td><td>—</td>${r.analyst ? `<td>${fmt(r.orders)}</td><td>${r.adSpend ? dec(r.revenue / r.adSpend) + 'x' : '—'}</td>` : ''}</tr></tbody></table></div>
-      <div class="callout">${att}</div>` : ''}
-    ${r.ab ? `<div class="stack" style="gap:8px"><h3>Paywall test · this week ${infoI('One week is a small sample. Check the running totals in Paywall Lab before you ship.')}</h3>${abTable(r.ab)}</div>` : ''}
-    ${r.revenue ? `<div class="scroll"><table class="tbl"><tbody>
-      <tr><td>Revenue</td><td>${money(r.revenue)}</td></tr>
-      ${r.storeApple || r.storeGoogle ? `<tr><td>Store commission ${infoI(`Apple App Store: ${money(r.storeApple || 0)} (${pct(r.appleRate, 0)} of iOS sales, ${pct(r.iosShare, 0)} of your subscribers are on iOS). Google Play: ${money(r.storeGoogle || 0)} (15% of Android sales).`)}</td><td class="bad">−${money((r.storeApple || 0) + (r.storeGoogle || 0))}</td></tr>` : ''}
-      <tr><td>Servers</td><td class="bad">−${money(r.servers || 0)}</td></tr>
-      ${r.rcFee ? `<tr><td>RevenueMad (1% of tracked revenue)</td><td class="bad">−${money(r.rcFee)}</td></tr>` : ''}
-      ${costRows(r)}
-      <tr><td>Corporate tax (21%)${!r.tax && r.nol > 0 ? ` · ${money(r.nol)} of past losses still shield you` : ''}</td><td class="bad">${r.tax ? '−' + money(r.tax) : '$0'}</td></tr>
-      <tr class="total"><td>Net</td><td class="${r.profit >= 0 ? 'good' : 'bad'}">${money(r.profit)}</td></tr>
-      ${r.principal ? `<tr><td>Loan principal repaid <span class="muted small">(not a cost, but it leaves your bank)</span></td><td class="bad">−${money(r.principal)}</td></tr>` : ''}</tbody></table></div>` : ''}
-    ${best('perf') ? (() => { const top = s.creatives.filter(c => Object.values(c.stats).some(v => v.week === r.week)).map(c => ({ c, ctr: Math.max(...Object.values(c.stats).filter(v => v.week === r.week).map(v => v.ctr)) })).sort((a, b) => b.ctr - a.ctr).slice(0, 3);
-      return top.length ? `<div class="stack" style="gap:6px"><h3>Top creatives this week</h3><div class="scroll"><table class="tbl"><tbody>${top.map(t => `<tr><td>${esc(crName(t.c))} <span class="muted small">${SRC[srcOf(t.c)]}</span></td><td>${pct(t.ctr, 2)} CTR</td></tr>`).join('')}</tbody></table></div></div>` : ''; })() : ''}
-    ${(r.team || []).length ? `<div class="stack" style="gap:6px"><h3>Your team this week</h3><ul class="digest">${r.team.map(l => `<li>${avatarSVG(l.id, 26)}<span><b>${esc(l.name.split(' ')[0])}</b> ${esc(l.text)}</span></li>`).join('')}</ul></div>` : ''}
-    <ul class="notes">${notes.map(n => `<li class="${n.t}">${n.m}</li>`).join('')}</ul>
-    ${quote ? `<div class="say"><span class="avatar">${esc(initials(quote[0].name))}</span><div class="bubble"><b>${esc(quote[0].name)} · ${ROLES[quote[0].role].name}</b>${esc(quote[1])}</div></div>` : ''}
+    <div class="mnet ${r.profit >= 0 ? 'pos' : 'neg'}"><span>Net this week</span><b>${money(r.profit)}</b></div>
+    ${r.principal ? `<p class="muted small">Loan principal repaid: ${money(r.principal)}. Not a cost, but it left your bank.</p>` : ''}
+    ${!r.tax && r.nol > 0 ? `<p class="muted small">No tax: ${money(r.nol)} of past losses still shield your profits.</p>` : ''}`;
+  else if (repTab === 'camp') {
+    const card = ([n, k]) => { const c = r.ch[k], proas = c.reported * r.aov * (r.bf ? .7 : 1) / c.spend, rroas = c.orders * r.aov * (r.bf ? .7 : 1) / c.spend;
+      return `<div class="rcamp"><div class="row" style="justify-content:flex-start;gap:8px"><span class="chlogo">${PLOGO[k]}</span><b>${n}</b></div>
+        <div class="rcstats"><div><span>Spend</span><b>${money(c.spend)}</b></div><div><span>Platform sales</span><b>${fmt(c.reported)}</b></div><div><span>Platform ROAS</span><b>${dec(proas)}x</b></div>
+        ${r.analyst ? `<div><span>Real sales</span><b>${fmt(c.orders)}</b></div><div><span>Real ROAS</span><b class="${rroas >= 1.5 ? 'good' : rroas < 1 ? 'bad' : 'warn'}">${dec(rroas)}x</b></div>` : ''}</div></div>`; };
+    const other = r.analyst ? `<div class="rsec"><h3>Other sources</h3><div class="rcstats">${[['Organic social', r.src.organic], ['Direct / word of mouth', r.src.direct], ['Influencers', r.src.influencer || 0]].map(([n, v]) => `<div><span>${n}</span><b>${fmt(v)}</b></div>`).join('')}</div></div>` : '';
+    const top = best('perf') ? s.creatives.filter(c => Object.values(c.stats).some(v => v.week === r.week)).map(c => ({ c, ctr: Math.max(...Object.values(c.stats).filter(v => v.week === r.week).map(v => v.ctr)) })).sort((a, b) => b.ctr - a.ctr).slice(0, 3) : [];
+    body = srcRows.length ? `<div class="rcamps">${srcRows.map(card).join('')}</div><div class="callout">${att}</div>${other}
+      ${top.length ? `<div class="rsec"><h3>Top creatives</h3><ul class="toplist">${top.map((t, i) => `<li><span class="tn">${i + 1}</span><span>${esc(crName(t.c))} <span class="muted small">${SRC[srcOf(t.c)]}</span></span><b>${pct(t.ctr, 2)} CTR</b></li>`).join('')}</ul></div>` : ''}
+      ${r.newWinners.length ? `<div class="callout good">🏆 ${r.newWinners.length} new winner${r.newWinners.length > 1 ? 's' : ''} found in testing.</div>` : ''}`
+      : `<div class="empty">No paid campaigns ran this week.</div>`;
+    if (r.ab) body += `<div class="rsec"><h3>Paywall test · this week ${infoI('One week is a small sample. Check the running totals in Paywall Lab before you ship.')}</h3>${abTable(r.ab)}</div>`;
+  } else body = `${(r.team || []).length ? `<ul class="rteam">${r.team.map(l => { const m = s.team.find(x => x.id === l.id); return `<li>${avatarSVG(l.id, 36)}<div><b>${esc(l.name)}</b>${m ? `<span class="muted small">${ROLES[m.role].name}</span>` : ''}<p>${esc(l.text.charAt(0).toUpperCase() + l.text.slice(1))}</p></div></li>`; }).join('')}</ul>` : ''}
+    ${r.posts ? `<div class="callout">Your team published <b>${r.posts}</b> organic posts for <b>${fmt(r.reach)}</b> total reach.</div>` : ''}`;
+  const m = document.getElementById('modal'), prev = m.querySelector('.modal');
+  m.innerHTML = `<div class="overlay" role="dialog" aria-modal="true" aria-label="Weekly report"><div class="modal report">
+    <div><span class="lbl">Week ${r.week} report · ${dateOf(r.week)}${r.bf ? ' · Black Friday' : ''}</span><h2 style="margin-top:4px">${title}</h2></div>
+    <div class="rtabs" role="tablist">${tabs.map(([k, n]) => `<button role="tab" data-act="repTab" data-v="${k}" aria-selected="${repTab === k}">${n}${k === 'team' ? ` <span class="muted">${(r.team || []).length || ''}</span>` : ''}</button>`).join('')}</div>
+    <div class="rbody">${body}</div>
     <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center"><button class="btn primary big" data-act="closeReport">On to week ${s.week}<span class="kbd" aria-hidden="true">Space</span></button>${newEv ? `<span class="pill warn">${newEv} new message${newEv > 1 ? 's' : ''}</span>` : ''}</div>
   </div></div>`;
 }
@@ -4620,7 +4695,8 @@ const ACT = {
   anaMetric: d => { ui.anaMetric = d.v; render(); },
   mmpToggle: () => { const s = state; s.mmp = !s.mmp; save(); render(); toast(s.mmp ? 'AppsSlayer is installed. Real numbers show up after this week.' : 'AppsSlayer cancelled. Back to trusting the platforms. Good luck.'); },
   rowToggle: (d, el) => { el.classList.toggle('open'); el.closest('tbody').querySelectorAll('.sub-' + d.k).forEach(x => x.classList.toggle('open')); },
-  loadDone: () => { showReport(); },
+  loadDone: () => { repTab = 'sum'; showReport(); },
+  repTab: d => { repTab = d.v; showReport(); },
   closeReport: () => { const hadReport = !!document.querySelector('#modal .overlay[aria-label="Weekly report"]'); closeModal(); if (atMenu || !state) { render(); return; } if (hadReport && !state.over && unread()) setTimeout(() => sfx('inbox'), 120); if (state.over) showFinal(); else { if (pendingChoices()) { state.tab = 'inbox'; render(); } const ld = state.lastDelivery, m = ld && state.team.find(x => x.id === ld.id); if (m && Math.random() < .6) say(m, pick(LINES.creative)); } window.scrollTo(0, 0); },
   reset: () => {
     const s = state;
