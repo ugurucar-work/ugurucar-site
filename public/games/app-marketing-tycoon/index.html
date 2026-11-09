@@ -516,6 +516,10 @@ header.top{backdrop-filter:blur(10px);background:color-mix(in srgb,var(--panel) 
 #glq{width:100%}
 .sharebox{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;padding:12px 14px;border-radius:12px;border:1px dashed var(--line);background:var(--panel-2)}
 .sharebox > div:first-child{display:flex;flex-direction:column;gap:2px}
+.ugcauto{display:flex;gap:10px;align-items:center;padding:10px 12px;border-radius:12px;background:var(--panel-2);border:1px solid var(--line)}
+.ugcauto > div{display:flex;flex-direction:column;gap:2px}
+.ugcextra{display:flex;flex-direction:column;gap:8px;padding:12px;border-radius:12px;border:1px dashed var(--line)}
+.ugcextra .btn{align-self:flex-start}
 .menuhead{text-align:center}
 .gtitle{font-family:var(--f-display);font-weight:800;font-size:clamp(40px,6.4vw,84px);line-height:.86;letter-spacing:-.045em;margin:10px 0 0;display:flex;flex-direction:column;align-items:center}
 .gtitle span{font-size:1.32em;background:linear-gradient(100deg,var(--accent),#E2557A 55%,#F5A524);-webkit-background-clip:text;background-clip:text;color:transparent;padding-bottom:.06em}
@@ -980,7 +984,7 @@ const ROLES = {
   mkt: { name: 'Marketing Specialist', desc: 'Strategy: market research and fit, competitor trends, Google ad copy, brand awareness', base: 950 },
   analyst: { name: 'Data Analyst', desc: 'Reveals real ROAS, A/B tests lift conversion 3–6%', base: 1200 },
   influencer: { name: 'Influencer Marketer', desc: 'Finds creators, gets their rates the same day, spots fake followers and negotiates deals', base: 950 },
-  ugc: { name: 'UGC Marketer', desc: 'Orders UGC ads from creators, briefs them, and runs product seeding', base: 900 },
+  ugc: { name: 'UGC Marketer', desc: 'Orders a UGC video every week, boosts Talking Head ads, and runs product seeding', base: 900 },
   hr: { name: 'HR Manager', desc: 'Brings 9 stronger candidates across roles every week, and now and then a star', base: 850 },
   product: { name: 'Product Manager', desc: 'Improves the product: conversion +2–5%, retention +2–4 pts', base: 1250 },
 };
@@ -1628,13 +1632,21 @@ function makeVariation(parent, m) {
   parent.vars = (parent.vars || 0) + 1;
   return addCreative({ src: 'variation', code: `${parent.code} v${parent.vars + 1}`, parentCode: parent.code, type: parent.type, hook: parent.hook, q: pq[home], tier: pt[home], home, pq, pt, by: m.name.split(' ')[0], parent: parent.n });
 }
+// a UGC Marketer coaches the artists on talking-head videos: better odds for that format
+function talkOdds(o) {
+  const um = best('ugc'); if (!um) return o;
+  const b = .025 + .025 * sk(um), winner = o.winner + b, iyi = o.iyi + b * .6, flop = Math.max(.08, o.flop - b * 1.6);
+  return { winner, iyi, flop, vasat: Math.max(0, 1 - winner - iyi - flop) };
+}
 function staffMake(m, n) {
   const made = [], focus = state.focus || 'mix';
   for (let i = 0; i < n; i++) {
     const pid = state.varQueue[0];
     const parent = pid && crById(pid);
     if (pid) state.varQueue.shift();
-    made.push(parent ? makeVariation(parent, m) : addCreative({ src: 'team', tier: rollTier(staffOdds(m)), by: m.name.split(' ')[0], home: focus === 'mix' ? pick(PLATS) : focus }));
+    if (parent) { made.push(makeVariation(parent, m)); continue; }
+    const type = state.brief.type === 'mix' ? pick(Object.keys(TYPES)) : state.brief.type;
+    made.push(addCreative({ src: 'team', type, tier: rollTier(type === 'talking' ? talkOdds(staffOdds(m)) : staffOdds(m)), by: m.name.split(' ')[0], home: focus === 'mix' ? pick(PLATS) : focus }));
   }
   // the Creative's "pick" is only slightly better than a coin flip
   const fresh = made.filter(c => !c.parent);
@@ -1662,10 +1674,11 @@ function weeklyPeople(r) {
     U.orders = U.orders.filter(o => o.week > s.week);
     U.log.unshift({ week: s.week, n }); U.log = U.log.slice(0, 12);
     if (um) s.teamLog.push({ id: um.id, name: um.name, role: 'ugc', text: `briefed creators and got ${n} UGC video${n > 1 ? 's' : ''} delivered.` });
-    r.notes.push({ t: 'good', m: `${n} UGC video${n > 1 ? 's' : ''} arrived from creators. They're in the Creative Studio.${um ? '' : ''}` });
+    r.notes.push({ t: 'good', m: `${n} UGC video${n > 1 ? 's' : ''} arrived from creators. They're in the Creative Studio.` });
   }
 }
-const UGC_BASE = 100, SEED_EACH = 15;
+const UGC_BASE = 100, SEED_EACH = 15, UGC_CLICKS = 15;
+const UGC_STEPS = ['Scroll creator profiles', 'DM a creator', 'Wait for a reply', 'Haggle on price', 'Write the brief', 'Send the contract'];
 const seedMax = () => Math.round(20 * has('ugc').reduce((a, m) => a + roleW(rankOf(m)), 0)) || 1;
 // on your own you can only juggle so many creators; an Influencer Marketer raises every limit and unlocks ambassador deals
 // a 2nd and 3rd Influencer Marketer stretch the limits a little
@@ -2541,7 +2554,7 @@ const SLOW = {
 };
 let busy = false;
 // instant on purpose: navigation, guides, clickers and dismissals
-const INSTANT = new Set(['cardDownload', 'cardShare', 'glossary', 'repTab', 'musicToggle', 'adTab', 'menuNew', 'menuBack', 'menuNext', 'menuPrev', 'menuTalk', 'menuContinue', 'toMenu', 'draft', 'achCopy', 'achPaste', 'achImport', 'achievements', 'copySeed', 'anaMetric', 'chartReg', 'anaPlat', 'rowToggle', 'loadDone', 'questPass', 'orgFocus', 'resetYes', 'questGo', 'questSkip', 'loanAmt', 'loanTerm', 'huntFor', 'settings', 'pref', 'replayTour', 'resetGuides', 'about', 'officeBye', 'dev', 'devCash', 'devOffice', 'devTeam', 'officeTooSmall', 'officeMute', 'officeTalk', 'annexDrop', 'tab', 'draft', 'hush', 'tour', 'tourEnd', 'guide', 'guideDone', 'tips', 'manual', 'infResearch', 'libFilter', 'campOpen', 'pickOpen', 'reset', 'newGame', 'closeReport', 'endWeek', 'ack', 'infOpen', 'infType', 'start']);
+const INSTANT = new Set(['ugcChase', 'cardDownload', 'cardShare', 'glossary', 'repTab', 'musicToggle', 'adTab', 'menuNew', 'menuBack', 'menuNext', 'menuPrev', 'menuTalk', 'menuContinue', 'toMenu', 'draft', 'achCopy', 'achPaste', 'achImport', 'achievements', 'copySeed', 'anaMetric', 'chartReg', 'anaPlat', 'rowToggle', 'loadDone', 'questPass', 'orgFocus', 'resetYes', 'questGo', 'questSkip', 'loanAmt', 'loanTerm', 'huntFor', 'settings', 'pref', 'replayTour', 'resetGuides', 'about', 'officeBye', 'dev', 'devCash', 'devOffice', 'devTeam', 'officeTooSmall', 'officeMute', 'officeTalk', 'annexDrop', 'tab', 'draft', 'hush', 'tour', 'tourEnd', 'guide', 'guideDone', 'tips', 'manual', 'infResearch', 'libFilter', 'campOpen', 'pickOpen', 'reset', 'newGame', 'closeReport', 'endWeek', 'ack', 'infOpen', 'infType', 'start']);
 // what each role actually changes in the game (keep in sync with the simulation)
 const ROLE_PERKS = {
   creative: ['Delivers about 4–10 creatives at the start of every week (more with skill), starting the week after you hire them', 'Winner chance 2.5–7% per creative, plus up to 6 points from the production budget', 'Each Marketing Artist adds 3 creative slots to every campaign', 'Can make variations of your Good and Winner creatives', 'Follows your platform, hook and format brief', 'Adds 1 organic post a week'],
@@ -2550,7 +2563,7 @@ const ROLE_PERKS = {
   social: ['3–6 organic posts a week (+1 if Fast)', 'Organic reach ×1.3 (builds awareness)', 'Trust +0.5–0.9 every week, which lifts conversion on every channel', 'A small trickle of organic signups; it won\'t pay their salary on its own', 'Chance an organic post goes viral (×3 with Viral Hunter)'],
   analyst: ['Real ROAS and real sales per channel in every report, instead of what the platforms claim', 'An Organic vs paid report on the Overview: ads vs organic social, word of mouth and creators', 'Conversion 3–6% higher from A/B testing', 'Shows real influencer signups and subscriber retention', 'Adds a 12-month value column to paywall tests'],
   influencer: ['Opens the Influencers tab: find creators, get rates, sign 1, 3 or 5-post deals', 'Gets a creator\'s rate the same day you reach out', 'Finds 1–3 creators a week on their own, and you can scroll for more', 'Spots fake followers and real engagement before you pay', 'Negotiates: prices 8% lower and 12 points more yeses', 'Runs up to 5 deals and 8 DMs a week (a 2nd marketer adds a few more)'],
-  ugc: ['Opens the UGC tab: order ads filmed by creators, $100 a video', 'Up to 8 UGC videos a week (a 2nd marketer adds a few more)', 'Briefs creators on platform and hook', 'Picks better creators: 2–4 points more winner chance', 'Runs product seeding: free Pro to up to 20 small creators a week'],
+  ugc: ['Orders 1 UGC video every week on their own ($100), delivered the week after', 'Lets you chase 1 extra UGC video a week yourself (15 clicks)', 'Marketing Artists\' Talking Head videos win more often while they\'re on the team', 'Briefs creators on platform and hook', 'Runs product seeding'],
   hr: ['Brings 1–10 candidates every week across roles (more with skill)', 'Candidates are stronger than what you find on your own', 'Once your Studio reputation reaches 60, some of them are stars with 91–99 skill'],
   product: ['Opens the Paywall Lab: design the paywall, set prices and offers, run A/B tests (or ad settings for ad-funded apps)', 'Conversion 2–5% higher', 'Retention 2–4 points higher for subscribers and ad users', 'Ships one improvement every week'],
 };
@@ -2858,6 +2871,16 @@ const mkCamp = (ch) => ({ id: uid(), ch, kind: 'main', mkts: ['home'], os: camps
 let ui = { picker: null, sel: new Set(), lib: 'all', camps: {} };
 const NAV_ICON = { analysis: 'M4 20V11M10 20V5M16 20v-7M21 20H3', loan: 'M3 10l9-6 9 6M5 10v8M9.5 10v8M14.5 10v8M19 10v8M3 20h18', organic: 'M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z', office: 'M3 21h18M5 21V8l7-5 7 5v13M9 21v-5h6v5M9 11h2M13 11h2', overview: 'M3 3h7v7H3zM14 3h7v7h-7zM3 14h7v7H3zM14 14h7v7h-7z', studio: 'M12 3l1.9 5.8L20 11l-6.1 2.2L12 19l-1.9-5.8L4 11l6.1-2.2z', ads: 'M3 11v2a1 1 0 0 0 1 1h2l5 4V6L6 10H4a1 1 0 0 0-1 1zM16 8a5 5 0 0 1 0 8M19 5a9 9 0 0 1 0 14', paywall: 'M5 11h14v11H5zM8 11V7a4 4 0 0 1 8 0v4', influencers: 'M12 2l3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1L12 2z', ugc: 'M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2zM12 9a4 4 0 1 0 0 8 4 4 0 0 0 0-8z', markets: 'M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zM2 12h20M12 2a15 15 0 0 1 4 10 15 15 0 0 1-4 10 15 15 0 0 1-4-10 15 15 0 0 1 4-10z', team: 'M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM22 21v-2a4 4 0 0 0-3-3.9M16 3.1a4 4 0 0 1 0 7.8', inbox: 'M22 12h-6l-2 3h-4l-2-3H2M5.5 5h13L22 12v6a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2v-6z' };
 
+function ugcAutoOrder() {
+  const s = state, U = s.ugc;
+  // the weekly standing order: one video per UGC Marketer, filmed this week, delivered next week
+  const ums = has('ugc');
+  if (ums.length) {
+    const k = Math.min(3, ums.length), cost = k * UGC_BASE;
+    spendNow(cost, 'ugc'); U.orders.push({ week: s.week + 1, n: k, hook: U.hook !== 'mix' ? U.hook : null, home: U.home || null, auto: true });
+    s.teamLog.push({ id: ums[0].id, name: ums[0].name, role: 'ugc', text: `ordered ${k} UGC video${k > 1 ? 's' : ''} for next week (${money(cost)}).` });
+  }
+}
 // the Performance Marketer's locked creative tests: one per open platform, fed with untested creatives
 function syncTestCamps() {
   const s = state, pf = best('perf'), open = ch => !s.locked || !s.locked[ch];
@@ -2964,7 +2987,7 @@ function simulate() {
   const r = { week: w, ch: {}, src: {}, notes: [], adSpend: 0, imp: 0, aov, bf, analyst: !!analyst, newWinners: [], pixel: [pixelLabel()] };
   let flops = 0, qSum = 0, qN = 0, iosPaid = 0, paidN = 0;
 
-  syncTestCamps();
+  syncTestCamps(); ugcAutoOrder();
   const platB = { meta: 0, tiktok: 0 };
   const open = ch => !s.locked || !s.locked[ch];
   for (const cp of s.camps) if (cp.on && cp.budget > 0 && !paused(cp.ch) && open(cp.ch)) platB[cp.ch] += cp.budget;
@@ -3445,18 +3468,19 @@ function vInfluencers() {
     ` : `<p class="muted small">No creator posts yet.</p>`}</div>`;
 }
 function vUGC() {
-  const s = state, U = s.ugc, um = best('ugc'), cap = ugcCap(), used = U.wk.week === s.week ? U.wk.n : 0, left = cap - used, qty = clamp(U.qty, 1, Math.max(1, left));
+  const s = state, U = s.ugc, um = best('ugc'), extraDone = U.extraWeek === s.week;
+  if (U.clickWeek !== s.week) { U.clickWeek = s.week; U.clicks = 0; }
   const pending = U.orders.reduce((a, o) => a + o.n, 0);
   return `<div class="head"><div><h2>UGC ${infoI(`UGC creators don't post to their own audience. They film ads for you to run. Videos arrive next week and land in your Creative Studio. They tend to do better on TikTok.`)}</h2></div></div>
-  <div class="grid2"><div class="panel stack"><div class="row"><h3>Order UGC videos</h3>${pending ? `<span class="pill acc">${pending} on the way</span>` : ''}</div>
-    <div class="field"><div class="row"><label class="lbl" for="ugc-q">How many this week</label><b class="num" id="ugc-ql">${qty} × ${money(ugcPrice())} = ${money(qty * ugcPrice())}</b></div>
-      <input type="range" id="ugc-q" min="1" max="${Math.max(1, left)}" step="1" value="${qty}" data-ugcq ${left <= 0 ? 'disabled' : ''}></div>
-    ${um ? `<div class="field"><span class="lbl">Brief</span><div class="seg">${[['tiktok', 'For TikTok'], ['meta', 'For Meta']].map(([k, n]) => `<button data-act="ugcSet" data-k="home" data-v="${k}" aria-pressed="${U.home === k}">${n}</button>`).join('')}</div>
-      <div class="seg">${[['mix', { name: 'Any hook' }], ...Object.entries(HOOKS)].map(([k, h]) => `<button data-act="ugcSet" data-k="hook" data-v="${k}" aria-pressed="${U.hook === k}">${h.name}</button>`).join('')}</div></div>`
-      : `<p class="muted small">${lockI('A UGC Marketer unlocks briefing creators on platform and hook.')} Creators pick their own hook.</p>`}
+  <div class="grid2"><div class="panel stack"><div class="row"><h3>UGC videos</h3>${pending ? `<span class="pill acc">${pending} on the way</span>` : ''}</div>
+    <div class="ugcauto"><span class="avatar" style="overflow:hidden;padding:0">${um ? avatarSVG(um.id, 36) : ''}</span><div><b>${um ? esc(um.name.split(' ')[0]) : 'Your UGC Marketer'} orders ${Math.min(3, has('ugc').length)} video${has('ugc').length > 1 ? 's' : ''} every week</b><span class="muted small">${money(UGC_BASE)} each, paid when the week ends. They arrive the week after.</span></div></div>
+    <div class="field"><span class="lbl">Brief</span><div class="seg">${[['tiktok', 'For TikTok'], ['meta', 'For Meta']].map(([k, n]) => `<button data-act="ugcSet" data-k="home" data-v="${k}" aria-pressed="${U.home === k}">${n}</button>`).join('')}</div>
+      <div class="seg">${[['mix', { name: 'Any hook' }], ...Object.entries(HOOKS)].map(([k, h]) => `<button data-act="ugcSet" data-k="hook" data-v="${k}" aria-pressed="${U.hook === k}">${h.name}</button>`).join('')}</div></div>
     <div class="field"><span class="lbl">Odds per UGC video</span>${oddsBar(ugcOdds())}</div>
-    <div class="row" style="justify-content:flex-start;gap:10px;flex-wrap:wrap"><button class="btn primary" data-act="ugcOrder" ${left <= 0 ? 'disabled' : ''}>${left <= 0 ? 'Weekly limit reached' : 'Order videos'}</button>
-      <span class="muted small">${used}/${cap} ordered this week</span></div>
+    <div class="ugcextra"><div class="row"><b>One more this week ${infoI(`Chase a creator yourself: ${UGC_CLICKS} clicks for one extra video, ${money(UGC_BASE)}. Once a week.`)}</b><span class="muted small">${extraDone ? 'Done this week' : `${U.clicks || 0}/${UGC_CLICKS}`}</span></div>
+      <div class="meter sm"><i id="ugcbar" style="width:${extraDone ? 100 : (U.clicks || 0) / UGC_CLICKS * 100}%"></i></div>
+      <button class="btn" data-act="ugcChase" id="ugcchase" ${extraDone ? 'disabled' : ''}>${extraDone ? 'Extra video ordered' : `<span id="ugcstep">${esc(UGC_STEPS[Math.min(UGC_STEPS.length - 1, Math.floor((U.clicks || 0) / UGC_CLICKS * UGC_STEPS.length))])}</span>`}</button></div>
+    <span class="muted small">Bonus: while a UGC Marketer is on the team, your Marketing Artists' Talking Head videos win more often.</span>
     ${U.log.length ? `<span class="muted small">Recent deliveries: ${U.log.slice(0, 5).map(l => `week ${l.week}: ${l.n}`).join(' · ')}</span>` : ''}</div>
   <div class="panel stack"><h3>Product seeding ${infoI(`Send free Pro to small creators, ${money(SEED_EACH)} each. Some will post about you, most won't. Cheap reach, zero control.`)}</h3>
     <div class="field"><div class="row"><label class="lbl" for="seed-n">How many creators ${infoI(`Up to ${seedMax()} boxes a week. Small sends get posted more often than bulk ones.`)}</label><b class="num" id="seed-l">${clamp(s.inf.seedN || 1, 1, seedMax())} × ${money(SEED_EACH)} = ${money(clamp(s.inf.seedN || 1, 1, seedMax()) * SEED_EACH)}</b></div>
@@ -4372,7 +4396,7 @@ const TAB_GUIDE = {
   analysis: { sel: '.anatable, .panel', title: 'Analysis', points: ['Every platform and store, every week', 'See which one really pays back', 'AppsSlayer and RevenueMad add deeper reports'] },
   loan: { sel: '.grid2', title: 'Loans', points: ['Borrow when cash runs low or to scale faster', 'Paid back weekly over 12, 26 or 52 weeks', 'Pay off early any time to save interest'] },
   organic: { sel: '.kpis', title: 'Organic', points: ['Your team posts on your own accounts every week', 'Posts build awareness and trust more than sales', 'Pick what each Social Media Manager promotes'] },
-  ugc: { sel: '.grid2', title: 'UGC', points: ['Order videos that creators film for you to run as ads', 'They arrive next week in your Creative Studio', 'Or send free Pro to small creators for cheap reach'] },
+  ugc: { sel: '.grid2', title: 'UGC', points: ['Your UGC Marketer orders a creator video every week; it lands in the Creative Studio the week after', 'Chase one more yourself: 15 clicks, once a week', 'Or send free Pro to small creators for cheap reach'] },
   markets: { sel: '.mkt.on', title: 'Markets', points: ['You start selling only at home', 'Your Marketing Specialist researches one region a week', `Non-English regions need localization (${money(LOC_COST)}) to convert well`] },
   office: { sel: '.officewrap', title: 'Office', points: ['Everyone you hire sits here, one desk each', 'Click anyone to chat', 'Out of desks? Move to a bigger office (agent fee up front)'] },
   team: { sel: '.teamgrid', title: 'Hire & Team', points: ['Your team at the top, candidates below', 'Post a job to find people yourself; they arrive next week', 'An HR Manager brings stronger candidates every week'] },
@@ -4969,6 +4993,20 @@ const ACT = {
     if (best('influencer')) { c.status = 'quoted'; toast(`${best('influencer').name.split(' ')[0]} already got ${c.handle}'s rate: ${money(c.price)} per post.`); }
     else { c.status = 'waiting'; c.quoteWeek = s.week + 1; toast(`DM sent to ${c.handle}. Their rate should arrive next week.`); }
     save(); render();
+  },
+  ugcChase: () => {
+    const s = state, U = s.ugc; if (tabLocked('ugc') || U.extraWeek === s.week) return;
+    if (U.clickWeek !== s.week) { U.clickWeek = s.week; U.clicks = 0; }
+    U.clicks = (U.clicks || 0) + 1; sfx(U.clicks >= UGC_CLICKS ? 'whoosh' : 'tick');
+    if (U.clicks >= UGC_CLICKS) {
+      if (s.cash < UGC_BASE) { U.clicks = UGC_CLICKS - 1; toast('Not enough cash for the video.'); return; }
+      spendNow(UGC_BASE, 'ugc'); U.extraWeek = s.week; U.clicks = 0;
+      U.orders.push({ week: s.week + 1, n: 1, hook: U.hook !== 'mix' ? U.hook : null, home: U.home || null });
+      toast(`Deal! One extra UGC video for ${money(UGC_BASE)}. It arrives next week.`); save(); render(); return;
+    }
+    const bar = document.getElementById('ugcbar'), st = document.getElementById('ugcstep');
+    if (bar) bar.style.width = (U.clicks / UGC_CLICKS * 100) + '%'; if (st) st.textContent = UGC_STEPS[Math.min(UGC_STEPS.length - 1, Math.floor(U.clicks / UGC_CLICKS * UGC_STEPS.length))];
+    const lb = document.querySelector('.ugcextra .row .muted'); if (lb) lb.textContent = `${U.clicks}/${UGC_CLICKS}`;
   },
   ugcOrder: () => { if (tabLocked('ugc')) return;
     const s = state, U = s.ugc, cap = ugcCap(); if (U.wk.week !== s.week) U.wk = { week: s.week, n: 0 };

@@ -89,6 +89,7 @@ One `<script>` with vanilla JS, no framework or build step:
 - End screen has a shareable 1200×627 result card (`drawCard`, `shareText`): download, or Web Share / LinkedIn feed with prefilled text.
 - Glossary (`GLOSSARY`, `showGlossary`) from the sidebar and Settings. Sidebar: Glossary in place of the old Main menu slot, Main menu in place of Quit.
 - Loans: $5K step and a Max option; the limit formula is in the (i).
+- UGC Marketer: auto-orders 1 UGC video a week per marketer (max 3, $100 each, `ugcAutoOrder` at the start of `simulate`), the player can chase 1 extra a week with 15 clicks (`ugcChase`), and Marketing Artists' Talking Head videos get better odds (`talkOdds`). The bulk order slider is gone.
 - Performance Marketer runs a locked "Creative test · <name>" campaign per open platform (`syncTestCamps`, `managed: true`, kind `test`): up to 12 untested creatives, budget $60 each ($120–$720), winners graduate to normal campaigns; it does not count toward the campaign limit and the player cannot edit it (`MANAGED_LOCK`). Max 12 creatives per campaign; the picker has "Select max".
 - Ads Manager: one tab per platform (Meta, TikTok, Google), campaigns scroll sideways. No BAU/test campaign types any more (old test campaigns migrate to normal). Default names `BAU_<country>_Week<n>`, editable. Campaign cap: 5 on your own, +10 for the first Performance Marketer, +3 for each extra one. Studio reputation gates better candidates and stars.
 
