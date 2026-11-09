@@ -3414,7 +3414,7 @@ function vUGC() {
       <div class="seg">${[['mix', { name: 'Any hook' }], ...Object.entries(HOOKS)].map(([k, h]) => `<button data-act="ugcSet" data-k="hook" data-v="${k}" aria-pressed="${U.hook === k}">${h.name}</button>`).join('')}</div></div>`
       : `<p class="muted small">${lockI('A UGC Marketer unlocks briefing creators on platform and hook.')} Creators pick their own hook.</p>`}
     <div class="field"><span class="lbl">Odds per UGC video</span>${oddsBar(ugcOdds())}</div>
-    <div class="row" style="justify-content:flex-start;gap:10px;flex-wrap:wrap"><button class="btn primary" data-act="ugcOrder" ${left <= 0 ? 'disabled' : ''}>${left <= 0 ? 'Weekly limit reached' : `Order ${qty} video${qty > 1 ? 's' : ''}`}</button>
+    <div class="row" style="justify-content:flex-start;gap:10px;flex-wrap:wrap"><button class="btn primary" data-act="ugcOrder" ${left <= 0 ? 'disabled' : ''}>${left <= 0 ? 'Weekly limit reached' : 'Order videos'}</button>
       <span class="muted small">${used}/${cap} ordered this week</span></div>
     ${U.log.length ? `<span class="muted small">Recent deliveries: ${U.log.slice(0, 5).map(l => `week ${l.week}: ${l.n}`).join(' · ')}</span>` : ''}</div>
   <div class="panel stack"><h3>Product seeding ${infoI(`Send free Pro to small creators, ${money(SEED_EACH)} each. Some will post about you, most won't. Cheap reach, zero control.`)}</h3>
