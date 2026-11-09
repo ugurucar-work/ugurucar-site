@@ -4258,6 +4258,8 @@ async function drawCard() {
   x.fillStyle = '#3B4BD8'; x.font = '600 30px "IBM Plex Mono", monospace'; x.fillText(PLAY_URL, 64 + w1 + 22, 566);
   return c;
 }
+let cardCanvas = null, cardFile = null;
+function prepCard() { cardCanvas = cardFile = null; drawCard().then(c => { cardCanvas = c; c.toBlob(bl => { if (bl) cardFile = new File([bl], 'app-marketing-tycoon.png', { type: 'image/png' }); }, 'image/png'); }).catch(() => { }); }
 function shareText() {
   const R = resultStats(), b = state.brand;
   return R.bk ? `I ran ${b.name} for ${R.weeks} weeks in App Marketing Tycoon before the cash ran out. ${money(R.tot)} in revenue, best ROAS ${dec(R.bestR)}x. Can you last longer?\n\nPlay free: https://www.${PLAY_URL}/`
@@ -4306,6 +4308,7 @@ function showFinal() {
   const s = state, v = valuation(), h = s.history;
   const tot = h.reduce((a, x) => a + x.revenue, 0), bk = s.over === 'bankrupt';
   if (!bk) sfx('fanfare');
+  prepCard();
   const grade = bk ? 'Out of cash' : v.mine < 500000 ? 'Garage Startup' : v.mine < 2000000 ? 'Rising App' : v.mine < 6000000 ? 'Category Player' : 'Unicorn Material';
   const firstProfit = h.find(x => x.profit > 0);
   document.getElementById('modal').innerHTML = `<div class="overlay" role="dialog" aria-modal="true" aria-label="Game over"><div class="modal">
@@ -4613,15 +4616,17 @@ const ACT = {
   brokeLoan: () => { const s = state, P = brokeNeed(); if (loanMax() < P) return; const l = mkLoan(P, 26); loans().push(l); sfx('stamp'); s.achS = s.achS || {}; s.achS.loans = (s.achS.loans || 0) + 1; s.cash += P; spendNow(Math.round(P * LOAN_FEE), 'loanfee'); brokeResume(`Gerald approved ${money(P)}. ${money(Math.round(l.pay))} a week for 26 weeks.`); },
   brokeInvest: () => { const s = state, b = s.broke; if (!b || !b.inv || b.invDone) return; b.invDone = true; s.bailouts = (s.bailouts || 0) + 1; s.cash += b.inv; s.ownership *= .8; brokeResume(`${money(b.inv)} from Lighthouse Angels. You now own ${Math.round(s.ownership * 100)}%.`); },
   brokeQuit: () => { state.gaveUp = true; save(); showFinal(); },
-  cardDownload: async () => { const c = await drawCard(), a = document.createElement('a'); a.download = `${state.brand.name.replace(/[^a-z0-9]+/gi, '-').toLowerCase()}-app-marketing-tycoon.png`; a.href = c.toDataURL('image/png'); a.click(); toast('Card saved. Add it to your post.'); },
-  cardShare: async () => {
-    const c = await drawCard(), txt = shareText();
-    try { const blob = await new Promise(r => c.toBlob(r, 'image/png')), file = new File([blob], 'app-marketing-tycoon.png', { type: 'image/png' });
-      if (navigator.canShare && navigator.canShare({ files: [file] })) { await navigator.share({ files: [file], text: txt }); return; } } catch (e) { if (e && e.name === 'AbortError') return; }
-    const a = document.createElement('a'); a.download = 'app-marketing-tycoon.png'; a.href = c.toDataURL('image/png'); a.click();
-    try { await navigator.clipboard.writeText(txt); } catch (e) { }
-    window.open('https://www.linkedin.com/feed/?shareActive=true&text=' + encodeURIComponent(txt), '_blank', 'noopener');
-    toast('Card downloaded and post text copied. Attach the image in LinkedIn.');
+  cardDownload: async () => { const c = cardCanvas || await drawCard(), a = document.createElement('a'); document.body.appendChild(a); setTimeout(() => a.remove(), 0); a.download = `${state.brand.name.replace(/[^a-z0-9]+/gi, '-').toLowerCase()}-app-marketing-tycoon.png`; a.href = c.toDataURL('image/png'); a.click(); toast('Card saved. Add it to your post.'); },
+  // everything here runs synchronously inside the click, or browsers block the popup / share sheet
+  cardShare: () => {
+    const txt = shareText(), file = cardFile;
+    try { navigator.clipboard.writeText(txt); } catch (e) { }
+    const touch = window.matchMedia && matchMedia('(pointer:coarse)').matches;
+    if (touch && file && navigator.canShare && navigator.canShare({ files: [file] })) { navigator.share({ files: [file], text: txt }).catch(() => { }); return; }
+    window.open('https://www.linkedin.com/feed/?shareActive=true&text=' + encodeURIComponent(txt), '_blank');
+    const save = c => { const a = document.createElement('a'); a.download = 'app-marketing-tycoon.png'; a.href = c.toDataURL('image/png'); document.body.appendChild(a); a.click(); a.remove(); };
+    if (cardCanvas) save(cardCanvas); else drawCard().then(save);
+    toast('Post text copied and the card downloaded. In LinkedIn, paste the text and add the image.');
   },
   glossary: () => { showGlossary(); setTimeout(() => document.getElementById('glq')?.focus(), 30); },
   musicToggle: () => { const was = prefs.sound && prefs.music; prefs.music = !was; if (!was) prefs.sound = true; savePrefs(); MUSIC.sync(); render(); },
