@@ -952,7 +952,7 @@ const tierOfQ = q => q >= 1.6 ? 'winner' : q >= 1.0 ? 'iyi' : q >= .62 ? 'vasat'
 const MANUAL_ODDS = { winner: .008, iyi: .05, vasat: .27, flop: .672 };
 const ROLES = {
   creative: { name: 'Marketing Artist', desc: 'Produces creatives automatically, in batches', base: 1000 },
-  perf: { name: 'Performance Marketer', desc: 'Runs your campaigns: lower CPM, higher CTR, places creatives, campaign advice, +10 campaigns', base: 1150 },
+  perf: { name: 'Performance Marketer', desc: 'Runs your campaigns: lower CPM, higher CTR, tests every new creative for you, campaign advice, +10 campaigns', base: 1150 },
   social: { name: 'Social Media Manager', desc: '4 organic posts a week, reach ×1.5, builds trust', base: 850 },
   mkt: { name: 'Marketing Specialist', desc: 'Strategy: market research and fit, competitor trends, Google ad copy, brand awareness', base: 950 },
   analyst: { name: 'Data Analyst', desc: 'Reveals real ROAS, A/B tests lift conversion 3–6%', base: 1200 },
@@ -1098,7 +1098,7 @@ function ensureExtras(s) {
   if (!s.brand.model) s.brand.model = 'subs';
   if (!s.adm) s.adm = { banner: true, inter: true, rewarded: true, freq: 'low' };
   if (!s.users) s.users = { n: 0, q: 1 };
-  if (s.camps) s.camps.forEach(c => { if (c.kind === 'test') c.kind = 'main'; });
+  if (s.camps) s.camps.forEach(c => { if (c.kind === 'test' && !c.managed) c.kind = 'main'; });
   if (!s.camps) s.camps = ['meta', 'tiktok'].map(ch => { const a = s.ads[ch] || {}; return { id: uid(), ch, name: campName({ ...s, camps: [] }, ch), obj: a.obj || (s.brand.model === 'ads' ? 'install' : 'purchase'), budget: a.budget || 150, crs: a.crs || [], auto: a.auto !== false, weeks: 0, lastBudget: 0, last: null, on: !!a.on }; });
   delete s.ads.meta; delete s.ads.tiktok;
   if (!s.focus) s.focus = 'mix';
@@ -1527,7 +1527,7 @@ const eff = key => state.effects.filter(e => e.key === key && e.until >= state.w
 const paused = ch => state.effects.some(e => e.key === 'pause_' + ch && e.until >= state.week);
 const addEff = (key, mul, until) => state.effects.push({ key, mul, until });
 // each Creative on the team lets you test 3 more creatives per campaign
-const maxAds = () => Math.min(15, 6 + 3 * has('creative').length);
+const maxAds = () => 12;
 // production budget: up to $300 a week per Creative; the share of that cap you spend sets the odds bonus
 const CR_MAX_PER = 300;
 const crBudgetMax = () => CR_MAX_PER * has('creative').length;
@@ -2830,11 +2830,26 @@ function campName(st, ch) {
   const base = `BAU_${(st.brand && st.brand.country) || 'US'}_Week${st.week || 1}`, taken = new Set((st.camps || []).filter(c => c.ch === ch).map(c => c.name));
   let n = base, k = 2; while (taken.has(n)) n = `${base}_${k++}`; return n;
 }
-const campCount = () => state.camps.length + (state.ads.google.on ? 1 : 0);
+const campCount = () => state.camps.filter(c => !c.managed).length + (state.ads.google.on ? 1 : 0);
 const mkCamp = (ch) => ({ id: uid(), ch, kind: 'main', mkts: ['home'], os: campsOf(ch).some(c => (c.os || 'ios') === 'ios') ? 'android' : 'ios', name: campName(state, ch), obj: state.brand.model === 'ads' ? 'install' : 'purchase', budget: 150, crs: [], auto: true, weeks: 0, lastBudget: 0, last: null, on: false });
 let ui = { picker: null, sel: new Set(), lib: 'all', camps: {} };
 const NAV_ICON = { analysis: 'M4 20V11M10 20V5M16 20v-7M21 20H3', loan: 'M3 10l9-6 9 6M5 10v8M9.5 10v8M14.5 10v8M19 10v8M3 20h18', organic: 'M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z', office: 'M3 21h18M5 21V8l7-5 7 5v13M9 21v-5h6v5M9 11h2M13 11h2', overview: 'M3 3h7v7H3zM14 3h7v7h-7zM3 14h7v7H3zM14 14h7v7h-7z', studio: 'M12 3l1.9 5.8L20 11l-6.1 2.2L12 19l-1.9-5.8L4 11l6.1-2.2z', ads: 'M3 11v2a1 1 0 0 0 1 1h2l5 4V6L6 10H4a1 1 0 0 0-1 1zM16 8a5 5 0 0 1 0 8M19 5a9 9 0 0 1 0 14', paywall: 'M5 11h14v11H5zM8 11V7a4 4 0 0 1 8 0v4', influencers: 'M12 2l3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1L12 2z', ugc: 'M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2zM12 9a4 4 0 1 0 0 8 4 4 0 0 0 0-8z', markets: 'M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zM2 12h20M12 2a15 15 0 0 1 4 10 15 15 0 0 1-4 10 15 15 0 0 1-4-10 15 15 0 0 1 4-10z', team: 'M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM22 21v-2a4 4 0 0 0-3-3.9M16 3.1a4 4 0 0 1 0 7.8', inbox: 'M22 12h-6l-2 3h-4l-2-3H2M5.5 5h13L22 12v6a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2v-6z' };
 
+// the Performance Marketer's locked creative tests: one per open platform, fed with untested creatives
+function syncTestCamps() {
+  const s = state, pf = best('perf'), open = ch => !s.locked || !s.locked[ch];
+  if (!pf) { s.camps = s.camps.filter(c => !c.managed); return; }
+  for (const ch of ['meta', 'tiktok']) {
+    if (!open(ch)) continue;
+    let cp = s.camps.find(c => c.managed && c.ch === ch);
+    if (!cp) { cp = { ...mkCamp(ch), os: 'ios', managed: true }; s.camps.push(cp); }
+    Object.assign(cp, { kind: 'test', auto: true, mkts: ['home'], name: `Creative test · ${pf.name.split(' ')[0]}` });
+    cp.crs = cp.crs.filter(id => { const c = crById(id); return c && !testedOn(c, ch); });
+    const n = Math.min(maxAds(), s.creatives.filter(c => !testedOn(c, ch)).length);
+    cp.on = n > 0; cp.budget = n ? clamp(n * 60, 120, 720) : 0;
+  }
+}
+const MANAGED_LOCK = new Set(['toggleCamp', 'delCamp', 'setOs', 'setObj', 'campMkt', 'rmCr', 'pickOpen', 'pickAll', 'pickAdd', 'autoCamp', 'campOpen', 'setKind']);
 // ---------- simulation ----------
 // auto-rotate: each week, pull tired or flopped creatives out and fill the slots with proven and fresh ones
 function autoRefresh(cp, notes) {
@@ -2873,7 +2888,7 @@ function testRefresh(cp, notes) {
     }
     return false;
   });
-  const busy = new Set(state.camps.filter(x => x !== cp && x.kind === 'test').flatMap(x => x.crs));
+  const busy = new Set(state.camps.filter(x => x !== cp && x.kind === 'test' && x.ch === ch).flatMap(x => x.crs));
   const fresh = state.creatives.filter(c => !testedOn(c, ch) && !cp.crs.includes(c.id) && !busy.has(c.id));
   let added = 0; for (const c of fresh) { if (cp.crs.length >= cap) break; cp.crs.push(c.id); added++; }
   if (out || added) notes.push({ t: grad ? 'good' : 'info', m: `${cp.name}: ${out} finished testing${grad ? `, ${grad} graduated to your main campaign` : ''}, ${added} new in.` });
@@ -2926,6 +2941,7 @@ function simulate() {
   const r = { week: w, ch: {}, src: {}, notes: [], adSpend: 0, imp: 0, aov, bf, analyst: !!analyst, newWinners: [], pixel: [pixelLabel()] };
   let flops = 0, qSum = 0, qN = 0, iosPaid = 0, paidN = 0;
 
+  syncTestCamps();
   const platB = { meta: 0, tiktok: 0 };
   const open = ch => !s.locked || !s.locked[ch];
   for (const cp of s.camps) if (cp.on && cp.budget > 0 && !paused(cp.ch) && open(cp.ch)) platB[cp.ch] += cp.budget;
@@ -3146,7 +3162,7 @@ function simulate() {
     let placed = 0, opened = 0;
     for (const c of fresh) {
       let cp = s.camps.find(x => x.ch === c.home && x.on && x.kind === 'test' && x.crs.length < capOf(x)) || s.camps.find(x => x.ch === c.home && x.on && x.kind !== 'test' && x.crs.length < maxAds());
-      if (!cp && open(c.home) && campsOf(c.home).length < platCap() && campCount() < campCap() && !s.camps.some(x => x.ch === c.home && x.on)) { cp = mkCamp(c.home, campsOf(c.home).length + 1); cp.on = true; cp.budget = 500; s.camps.push(cp); opened++; }
+      if (!cp && open(c.home) && campsOf(c.home).length < platCap() && campCount() < campCap() && !s.camps.some(x => x.ch === c.home && x.on && !x.managed)) { cp = mkCamp(c.home, campsOf(c.home).length + 1); cp.on = true; cp.budget = 500; s.camps.push(cp); opened++; }
       if (cp && cp.crs.length < capOf(cp)) { cp.crs.push(c.id); placed++; }
     }
     s.suggestions = mktSuggestions('perf');
@@ -3723,7 +3739,7 @@ function budgetMap() {
 }
 function vAds() {
   const s = state, pm = pixelM();
-  return `<div class="head"><div><h2>Ads Manager ${infoI(`Run up to ${campCap()} paid campaigns in total (5 on your own; the first Performance Marketer adds 10, every extra one 3), each with up to ${maxAds()} creatives (6, plus 3 for every Marketing Artist, up to 15). Campaigns on the same platform share an audience, so returns diminish. Changing a budget by more than 50% restarts that campaign's learning phase.`)}</h2></div></div>
+  return `<div class="head"><div><h2>Ads Manager ${infoI(`Run up to ${campCap()} paid campaigns in total (5 on your own; the first Performance Marketer adds 10, every extra one 3), each with up to ${maxAds()} creatives. Campaigns on the same platform share an audience, so returns diminish. Changing a budget by more than 50% restarts that campaign's learning phase.`)}</h2></div></div>
   <div class="panel row" style="flex-wrap:wrap;align-items:center">
     <div class="stack" style="gap:6px;flex:1;min-width:220px"><div class="row" style="justify-content:flex-start"><b>Pixel: ${pixelLabel()} ${infoI(pm < 1 ? 'A cold pixel doesn\'t know who buys yet: impressions cost more and fewer clicks convert. Every purchase from ads teaches it. Exact value hidden.' : 'Your pixel is fully trained. Ads now run at their real efficiency.')}</b></div>
       <div class="pixel">${[0, 1, 2, 3, 4].map(i => `<i class="${pm > i / 5 + .01 ? 'on' : ''}"></i>`).join('')}</div></div>
@@ -3743,7 +3759,7 @@ function freshNames() {
   }
 }
 function adTabs() {
-  freshNames();
+  freshNames(); syncTestCamps();
   const s = state, tab = ui.adsTab = AD_TABS.includes(ui.adsTab) ? ui.adsTab : 'meta';
   const locked = ch => s.locked && s.locked[ch];
   const sub = ch => locked(ch) ? '🔒 Locked' : ch === 'google' ? (s.ads.google.on ? `Live · ${money(s.ads.google.budget)}/wk` : 'Off') : `${campsOf(ch).filter(c => c.on).length} live · ${money(platBudget(ch))}/wk${(s.adCredit || {})[ch] > 0 ? ` · 🎁 ${money(s.adCredit[ch])} credit` : ''}`;
@@ -3752,7 +3768,7 @@ function adTabs() {
   if (locked(tab)) body = `<div class="lockcard"><span class="chlogo">${PLOGO[tab]}</span><div><b style="color:var(--ink)">${tab === 'google' ? 'Google Search' : CH[tab].name}</b><br>${tab === 'google' ? 'Opens after your first week.' : 'Focus on Meta for your first week. More channels open soon.'}</div></div>`;
   else if (tab === 'google') body = `${seasonPill('google') ? `<div class="ph">${seasonPill('google')}</div>` : ''}<div class="camprow">${googleCard()}</div>`;
   else {
-    const cs = campsOf(tab), can = campCount() < campCap(), lim = `<span class="camplim" data-tip="Campaigns across all platforms. ${has('perf').length ? 'Each extra Performance Marketer adds 3.' : 'A Performance Marketer adds 10.'}">${campCount()}/${campCap()} campaigns</span>`;
+    const cs = campsOf(tab).sort((a, b) => (a.managed ? 1 : 0) - (b.managed ? 1 : 0)), can = campCount() < campCap(), lim = `<span class="camplim" data-tip="Campaigns across all platforms. ${has('perf').length ? 'Each extra Performance Marketer adds 3.' : 'A Performance Marketer adds 10.'}">${campCount()}/${campCap()} campaigns</span>`;
     body = `<div class="ph"><div class="row" style="gap:10px;justify-content:flex-start">${can ? `<button class="btn primary xs" data-act="newCamp" data-ch="${tab}">Create campaign</button>` : `<button class="btn xs" disabled>🔒 Create campaign</button>`}${lim}</div>${seasonPill(tab)}</div>
       ${cs.length ? `<div class="camprow">${cs.map(campCard).join('')}</div>` : `<div class="panel muted small">No ${CH[tab].name} campaigns yet.</div>`}`;
   }
@@ -3772,7 +3788,7 @@ function mktChips(sel, id) {
   const s = state, opts = ['home', ...(freeMkt('t1en') && !s.researched.includes('t1en') ? ['t1en'] : []), ...s.researched];
   return `<div class="field"><span class="lbl">Markets${Object.keys(MARKETS).some(k => !s.researched.includes(k)) ? warnI('Research more regions in Markets') : ''}</span><div class="seg">${opts.map(k => { const m = mktOf(k), needLoc = m.loc && !s.localized.includes(k); return `<button data-act="campMkt" data-id="${id}" data-v="${k}" aria-pressed="${sel.includes(k)}" ${needLoc ? 'title="Not localized: converts at 60%"' : ''}>${esc(mktName(k))}${needLoc ? ' (not localized)' : ''}</button>`; }).join('')}</div></div>`;
 }
-const capOf = cp => cp.kind === 'test' ? clamp(Math.floor(cp.budget / 60), 2, 5) : maxAds();
+const capOf = cp => maxAds();
 // tiny weekly ROAS line for a campaign: what the platform says, and (with a Data Analyst) what really happened
 function campSpark(cp) {
   const H = (cp.hist || []).slice(-8), aov = state.lastReport ? state.lastReport.aov : 0, an = best('analyst');
@@ -3798,6 +3814,13 @@ function seasonPill(ch) {
   return `<span class="pill ${good ? 'good' : 'bad'}" data-tip="${esc(`${z.body} Until week ${z.to}.`)}">${good ? '☀' : '⛈'} ${esc(z.title)}</span>`;
 }
 function campCard(cp) {
+  if (cp.managed) {
+    const pf = best('perf'), L2 = cp.last;
+    return `<div class="panel adcard managed"><div class="hd"><div style="min-width:0"><h3 style="font-size:16px">${esc(cp.name)}</h3><div class="row" style="justify-content:flex-start;gap:6px;flex-wrap:wrap"><span class="pill acc">🔒 Managed by ${esc(pf ? pf.name.split(' ')[0] : 'your Performance Marketer')}</span>${cp.on ? '<span class="pill good">Testing</span>' : '<span class="pill">Waiting for new creatives</span>'}</div></div></div>
+      <p class="muted small" style="margin:0">Gives every untested creative an equal share of a small budget. Good and Winner ones move into your campaigns. You can't edit this campaign.</p>
+      <div class="campmini"><div><span>Budget</span><b>${money(cp.budget)}</b></div><div><span>In test</span><b>${cp.crs.length}/${capOf(cp)}</b></div>${L2 && !L2.paused ? `<div><span>Spend</span><b>${money(L2.spend)}</b></div><div><span>CTR</span><b>${pct(L2.ctr, 2)}</b></div>` : ''}</div>
+      ${cp.crs.length ? `<div class="crchips">${cp.crs.map(id => { const c = crById(id); if (!c) return ''; return `<div class="crchip" data-tip="${esc(crName(c))}">${adThumb(c)}<b>${esc(crName(c))}</b><span class="cm">${tierPill(c, cp.ch)}</span></div>`; }).join('')}</div>` : `<p class="muted small" style="margin:0">Fills with untested creatives when the week ends.</p>`}</div>`;
+  }
   const s = state, C = CH[cp.ch], L = cp.last, ads = s.brand.model === 'ads', full = cp.crs.length >= capOf(cp);
   let status = !cp.on ? '<span class="pill">Off</span>' : paused(cp.ch) ? '<span class="pill bad">Paused</span>' : cp.weeks === 0 ? '<span class="pill warn">Learning phase ahead</span>' : '<span class="pill good">Live</span>';
   if (cp.on && !cp.crs.length && !cp.auto) status = '<span class="pill warn">Add creatives</span>';
@@ -3830,7 +3853,7 @@ function campCard(cp) {
         : `<p class="muted small">${cp.auto ? 'Auto-rotate will fill this when the week ends.' : 'No creatives yet.'}</p>`}
       ${picking ? `<div class="picker"><div class="row"><b class="small">Pick creatives for ${C.name}</b><span class="muted small">${maxAds() - cp.crs.length} slots free</span></div>
         <div class="list">${avail.slice(0, 80).map(c => `<label><input type="checkbox" data-pickcr="${c.id}" ${ui.sel.has(c.id) ? 'checked' : ''}><span>${esc(crName(c))}</span>${tierPill(c, cp.ch)}</label>`).join('') || '<span class="muted small">No creatives available.</span>'}</div>
-        <div class="row" style="justify-content:flex-start;gap:6px;flex-wrap:wrap"><button class="btn xs" data-act="pickAll" data-id="${cp.id}">Select all</button><button class="btn xs primary" data-act="pickAdd" data-id="${cp.id}" id="pick-n">Add selected (${ui.sel.size})</button><button class="btn xs ghost" data-act="pickOpen" data-id="">Cancel</button></div></div>`
+        <div class="row" style="justify-content:flex-start;gap:6px;flex-wrap:wrap"><button class="btn xs" data-act="pickAll" data-id="${cp.id}">Select max</button><button class="btn xs primary" data-act="pickAdd" data-id="${cp.id}" id="pick-n">Add selected (${ui.sel.size}/${Math.max(0, capOf(cp) - cp.crs.length)})</button><button class="btn xs ghost" data-act="pickOpen" data-id="">Cancel</button></div></div>`
         : `<div><button class="btn xs" data-act="pickOpen" data-id="${cp.id}" ${full || !avail.length ? 'disabled' : ''}>+ Add creatives</button></div>`}</div>
     ${funnel(L, ads)}
     <div class="stats">${stats}</div>
@@ -4686,8 +4709,8 @@ const ACT = {
   autoCamp: d => { const cp = state.camps.find(x => x.id === d.id); if (cp) cp.auto = !cp.auto; save(); render(); },
   rmCr: d => { const cp = state.camps.find(x => x.id === d.id); if (cp) cp.crs = cp.crs.filter(x => x !== d.cr); save(); render(); },
   pickOpen: d => { ui.picker = d.id || null; ui.sel = new Set(); render(); },
-  pickAll: d => { const cp = state.camps.find(x => x.id === d.id); if (!cp) return; const avail = state.creatives.filter(c => !cp.crs.includes(c.id) && !(testedOn(c, cp.ch) && tierOf(c, cp.ch) === 'flop')).slice(0, 80);
-    ui.sel = ui.sel.size === avail.length ? new Set() : new Set(avail.map(c => c.id)); render(); },
+  pickAll: d => { const cp = state.camps.find(x => x.id === d.id); if (!cp) return; const free = Math.max(0, capOf(cp) - cp.crs.length), avail = state.creatives.filter(c => !cp.crs.includes(c.id) && !(testedOn(c, cp.ch) && tierOf(c, cp.ch) === 'flop')).slice(0, free);
+    ui.sel = ui.sel.size && ui.sel.size >= avail.length ? new Set() : new Set(avail.map(c => c.id)); render(); },
   pickAdd: d => { const cp = state.camps.find(x => x.id === d.id); if (!cp) return; const free = capOf(cp) - cp.crs.length, ids = [...ui.sel];
     cp.crs.push(...ids.slice(0, free)); if (ids.length > free) toast(`Only ${free} slot${free === 1 ? '' : 's'} free. Added the first ${free}.`); ui.picker = null; ui.sel = new Set(); save(); render(); },
   libFilter: d => { ui.lib = d.v; render(); },
@@ -5013,6 +5036,7 @@ document.addEventListener('keydown', e => {
 document.addEventListener('keyup', e => { if ((e.code === 'Space' || e.key === ' ') && spaceHit) { spaceHit = false; e.preventDefault(); } });
 document.addEventListener('click', e => {
   const el = e.target.closest('[data-act]'); if (!el || el.disabled) return;
+  if (MANAGED_LOCK.has(el.dataset.act) && el.dataset.id && state && state.camps && state.camps.some(c => c.id === el.dataset.id && c.managed)) return;
   const act = el.dataset.act, slow = SLOW[act] || (INSTANT.has(act) || el.tagName !== 'BUTTON' ? null : [[null], 260]);
   if (slow && el.tagName === 'BUTTON') {
     if (busy) return;
@@ -5081,7 +5105,10 @@ document.addEventListener('change', e => {
   else if ('draftcountry' in t.dataset) { draft.country = t.value; }
   else if ('draftseed' in t.dataset) { draft.seed = t.value.replace(/[^a-z0-9]/gi, '').toUpperCase(); }
   else if ('huntrole' in t.dataset) { state.huntRole = t.value; save(); }
-  else if (t.dataset.pickcr) { if (t.checked) ui.sel.add(t.dataset.pickcr); else ui.sel.delete(t.dataset.pickcr); const b = document.getElementById('pick-n'); if (b) b.textContent = `Add selected (${ui.sel.size})`; }
+  else if (t.dataset.pickcr) {
+    const cp = state.camps.find(x => x.id === ui.picker), free = cp ? Math.max(0, capOf(cp) - cp.crs.length) : 0;
+    if (t.checked && ui.sel.size >= free) { t.checked = false; toast(`This campaign has room for ${free} more. ${maxAds()} creatives max per campaign.`); return; }
+    if (t.checked) ui.sel.add(t.dataset.pickcr); else ui.sel.delete(t.dataset.pickcr); const b = document.getElementById('pick-n'); if (b) b.textContent = `Add selected (${ui.sel.size}/${free})`; }
   else if (t.dataset.pwsel) { const c = state.pw.vars[state.pw.edit]; c[t.dataset.pwsel] = t.dataset.pwsel === 'badgeIdx' ? +t.value : t.value; pwEdited(); save(); t.blur(); render(); pwFlash(); }
 });
 
