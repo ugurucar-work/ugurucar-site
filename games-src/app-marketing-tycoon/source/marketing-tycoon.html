@@ -4549,6 +4549,8 @@ const ACT = {
   achPaste: () => { const b = document.querySelector('.achin'); if (b) { b.hidden = false; document.getElementById('achcode').focus(); } },
   achImport: () => { const got = achDecode(document.getElementById('achcode').value); if (!got) { toast('That code doesn\'t look right. Copy it again, all of it.'); return; } const before = Object.keys(achLoad()).length, m = achMerge(achLoad(), got); achSaveLocal(m); const add = Object.keys(m).length - before; showAch(); render(); toast(add ? `Added ${add} achievement${add > 1 ? 's' : ''}.` : 'Nothing new in that code. You already had them all.'); },
   endWeek: () => {
+    // the last checklist step ("hold steady") only needs to be shown once: one press of End week finishes it
+    { const qi = state.quest && questStep(); if (qi === QUEST.length - 1) { const q = state.quest; q.passed = [...(q.passed || []), qi]; } }
     if (pendingChoices()) { state.tab = 'inbox'; render(); toast('Answer the decision in your inbox first.'); return; }
     state.inbox.forEach(i => { if (!EVENTS[i.eid].choices) i.done = true; });
     document.getElementById('dialog').innerHTML = '';
