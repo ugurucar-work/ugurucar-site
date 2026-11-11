@@ -556,6 +556,11 @@ details.more .notes{margin-top:8px}
 .handlebox.on{background:var(--accent-soft);border:1px solid color-mix(in srgb,var(--accent) 25%,transparent)}
 .autobox{border:1px solid color-mix(in srgb,var(--accent) 25%,transparent);background:color-mix(in srgb,var(--accent-soft) 60%,var(--panel))}
 .pwlock{pointer-events:none;opacity:.55;filter:saturate(.6)}
+.rfoot .rstep{font-variant-numeric:tabular-nums}
+.repbtn{background:linear-gradient(110deg,#3B4BD8,#E2557A 60%,#F5A524);border:0;color:#fff;font-weight:700;box-shadow:0 6px 18px rgba(226,85,122,.25)}.repbtn span{background:rgba(255,255,255,.25);border-radius:99px;padding:0 8px;margin-left:4px;font-size:12px}
+.replist{display:flex;flex-direction:column;gap:6px}
+.repitem{display:grid;grid-template-columns:1.2fr 1fr 1fr 24px;gap:12px;align-items:center;padding:10px 14px;border:1px solid var(--line);border-radius:12px;background:var(--panel-2);color:var(--ink);font:inherit;text-align:left;cursor:pointer}
+.repitem:hover{border-color:var(--accent)}.repitem span{display:flex;flex-direction:column;gap:1px;min-width:0}.repitem small{font-size:11px;color:var(--muted)}.repitem b{font-variant-numeric:tabular-nums}.repitem .rw{font-weight:700}.repitem .ra{color:var(--accent);font-weight:700}
 .menuhead{text-align:center}
 .gtitle{font-family:var(--f-display);font-weight:800;font-size:clamp(40px,6.4vw,84px);line-height:.86;letter-spacing:-.045em;margin:10px 0 0;display:flex;flex-direction:column;align-items:center}
 .gtitle span{font-size:1.32em;background:linear-gradient(100deg,var(--accent),#E2557A 55%,#F5A524);-webkit-background-clip:text;background-clip:text;color:transparent;padding-bottom:.06em}
@@ -2624,7 +2629,7 @@ const SLOW = {
 };
 let busy = false;
 // instant on purpose: navigation, guides, clickers and dismissals
-const INSTANT = new Set(['pmHandle', 'infAuto', 'gHandle', 'campHandle', 'campOrder', 'delCamp', 'pickOpen', 'campOpen', 'pickOne', 'pickUntested', 'latestSize', 'seeAll', 'ugcChase', 'cardDownload', 'cardShare', 'glossary', 'repTab', 'musicToggle', 'adTab', 'menuNew', 'menuBack', 'menuNext', 'menuPrev', 'menuTalk', 'menuContinue', 'toMenu', 'draft', 'achCopy', 'achPaste', 'achImport', 'achievements', 'copySeed', 'anaMetric', 'chartReg', 'anaPlat', 'rowToggle', 'loadDone', 'questPass', 'orgFocus', 'resetYes', 'questGo', 'questSkip', 'loanAmt', 'loanTerm', 'huntFor', 'settings', 'pref', 'replayTour', 'resetGuides', 'about', 'officeBye', 'dev', 'devCash', 'devOffice', 'devTeam', 'officeTooSmall', 'officeMute', 'officeTalk', 'annexDrop', 'tab', 'draft', 'hush', 'tour', 'tourEnd', 'guide', 'guideDone', 'tips', 'manual', 'infResearch', 'libFilter', 'campOpen', 'pickOpen', 'reset', 'newGame', 'closeReport', 'endWeek', 'ack', 'infOpen', 'infType', 'start']);
+const INSTANT = new Set(['repNext', 'reportsOpen', 'repOpen', 'pmHandle', 'infAuto', 'gHandle', 'campHandle', 'campOrder', 'delCamp', 'pickOpen', 'campOpen', 'pickOne', 'pickUntested', 'latestSize', 'seeAll', 'ugcChase', 'cardDownload', 'cardShare', 'glossary', 'repTab', 'musicToggle', 'adTab', 'menuNew', 'menuBack', 'menuNext', 'menuPrev', 'menuTalk', 'menuContinue', 'toMenu', 'draft', 'achCopy', 'achPaste', 'achImport', 'achievements', 'copySeed', 'anaMetric', 'chartReg', 'anaPlat', 'rowToggle', 'loadDone', 'questPass', 'orgFocus', 'resetYes', 'questGo', 'questSkip', 'loanAmt', 'loanTerm', 'huntFor', 'settings', 'pref', 'replayTour', 'resetGuides', 'about', 'officeBye', 'dev', 'devCash', 'devOffice', 'devTeam', 'officeTooSmall', 'officeMute', 'officeTalk', 'annexDrop', 'tab', 'draft', 'hush', 'tour', 'tourEnd', 'guide', 'guideDone', 'tips', 'manual', 'infResearch', 'libFilter', 'campOpen', 'pickOpen', 'reset', 'newGame', 'closeReport', 'endWeek', 'ack', 'infOpen', 'infType', 'start']);
 // what each role actually changes in the game (keep in sync with the simulation)
 const ROLE_PERKS = {
   creative: ['Delivers about 4–10 creatives at the start of every week (more with skill), starting the week after you hire them', 'Winner chance 2.5–7% per creative, plus up to 6 points from the production budget', 'Makes a variation of your best Good or Winner creative in every batch on their own (Winner variations win a bit more often)', 'Archives flops that aren\'t running anywhere', 'Follows your platform, hook and format brief', 'Adds 1 organic post a week'],
@@ -3343,6 +3348,7 @@ function simulate() {
     s.chHist = [...(s.chHist || []), { w, aov: r.aov, ltvx, ch, seg: JSON.parse(JSON.stringify(r.seg || {})) }].slice(-52);
     if (s.mmp) r.mmpPaid = Object.values(ch).reduce((a, c) => a + c.orders, 0); }
   s.lastReport = r; s.weekMisc = 0; s.weekCats = {}; s.prod = {};
+  try { s.reports = (s.reports || []).filter(x => x.week !== r.week); s.reports.push(JSON.parse(JSON.stringify(r))); if (s.reports.length > 52) s.reports.shift(); } catch (e) { }
   s.week++;
   rotateTrend();
   weeklyPeople(r);
@@ -3692,7 +3698,7 @@ function vOverview() {
     [h.length > 0, 'End the week and see which creative worked'],
   ];
   return `
-  <div class="head"><div><h2>Overview ${infoI(`Revenue, cash, the creative funnel and brand health. Make your calls, then end the week from the top right.`)}</h2></div></div>
+  <div class="head"><div><h2>Overview ${infoI(`Revenue, cash, the creative funnel and brand health. Make your calls, then end the week from the top right.`)}</h2></div>${(s.reports || []).length ? `<button class="btn repbtn" data-act="reportsOpen">📚 Weekly reports <span>${s.reports.length}</span></button>` : ''}</div>
   <div class="kpis">
     ${kpi('Cash', money(s.cash), 'Runway: ' + runway, s.cash < 15000 ? 'bad' : '')}
     ${kpi('Weekly revenue', last ? money(last.revenue) : '—', dRev == null ? (last ? last.orders + ' orders' : 'No sales yet') : `<span class="${dRev >= 0 ? 'good' : 'bad'}">${dRev >= 0 ? '▲' : '▼'} ${pct(Math.abs(dRev), 0)}</span> vs last week`)}
@@ -4374,9 +4380,10 @@ function repBar(label, v0, v1, tip) {
     <div class="hbtrack"><i style="width:${clamp(v1, 0, 100)}%"></i></div></div>`;
 }
 let repTab = 'sum';
-function showReport() {
-  if (sfxLater) { const n = sfxLater; sfxLater = null; setTimeout(() => sfx(n), 150); }
-  const r = state.lastReport, s = state, ads = s.brand.model === 'ads';
+function showReport(arch) {
+  if (!arch && sfxLater) { const n = sfxLater; sfxLater = null; setTimeout(() => sfx(n), 150); }
+  ui.repArch = arch || null;
+  const r = arch || state.lastReport, s = state, ads = s.brand.model === 'ads';
   const srcRows = [['Meta', 'meta'], ['TikTok', 'tiktok'], ['Google Search', 'google']].filter(([, k]) => r.ch[k]);
   const diff = r.reportedTotal - r.orders;
   const att = srcRows.length ? (r.analyst
@@ -4386,8 +4393,8 @@ function showReport() {
   const HOUSE = /auto-rotate|is wearing out|finished testing|learning phase\. Budget was split/;
   const notes = r.notes.filter(n => !/^Awareness /.test(n.m) && !HOUSE.test(n.m)), house = r.notes.filter(n => HOUSE.test(n.m));
   if (!srcRows.length && !r.posts) notes.push({ t: 'warn', m: 'No channel was active. Sales came from awareness alone.' });
-  const newEv = s.inbox.filter(i => i.week === s.week && !i.done).length;
-  const quote = r.newWinners.length && has('creative').length ? [pick(has('creative')), pick(LINES.winner)] : teamQuote();
+  const newEv = arch ? 0 : s.inbox.filter(i => i.week === s.week && !i.done).length;
+  const quote = arch ? null : r.newWinners.length && has('creative').length ? [pick(has('creative')), pick(LINES.winner)] : teamQuote();
   const title = r.newWinners.length ? 'Winner found' : r.profit >= 0 ? 'A profitable week' : r.revenue > 0 ? (r.profit > -2000 ? 'Getting closer' : 'Burning cash') : 'A quiet week';
   // money in / out
   const renew = r.renewRev || 0, fresh = Math.max(0, r.revenue - renew);
@@ -4396,7 +4403,7 @@ function showReport() {
   const outItems = costItems(r), totOut = outItems.reduce((a, x) => a + x[2], 0), maxOut = Math.max(1, ...outItems.map(x => x[2]));
   const moneyRow = (n, v, sub, cls, w, kids) => { const line = `<span class="mn">${n}${sub ? `<small>${sub}</small>` : ''}</span><span class="mv ${cls}">${cls === 'bad' ? '−' : '+'}${money(v)}</span><i class="mb ${cls}" style="width:${(w * 100).toFixed(1)}%"></i>`;
     return kids && kids.length > 1 ? `<details class="mrow"><summary>${line}</summary>${kids.map(([kn, kv]) => `<div class="msub"><span>${esc(kn)}</span><span>−${money(kv)}</span></div>`).join('')}</details>` : `<div class="mrow">${line}</div>`; };
-  const tabs = [['sum', 'Summary'], ['money', 'Money'], ['camp', 'Campaigns'], ...((r.team || []).length || r.posts ? [['team', 'Team']] : [])];
+  const tabs = [['sum', 'Summary'], ['money', 'Money'], ['camp', 'Campaigns'], ...((r.team || []).length || r.posts ? [['team', 'Team updates']] : [])];
   if (!tabs.some(t => t[0] === repTab)) repTab = 'sum';
   const kp = (lbl, val, sub, cls = '') => `<div class="rk"><span class="lbl">${lbl}</span><b class="${cls}">${val}</b>${sub ? `<span class="muted small">${sub}</span>` : ''}</div>`;
   let body = '';
@@ -4433,10 +4440,13 @@ function showReport() {
   const m = document.getElementById('modal'), prev = m.querySelector('.modal');
   m.innerHTML = `<div class="overlay" role="dialog" aria-modal="true" aria-label="Weekly report"><div class="modal report">
     <div><span class="lbl">Week ${r.week} report · ${dateOf(r.week)}${r.bf ? ' · Black Friday' : ''}</span><h2 style="margin-top:4px">${title}</h2></div>
-    <div class="rtabs" role="tablist">${tabs.map(([k, n]) => `<button role="tab" data-act="repTab" data-v="${k}" aria-selected="${repTab === k}" class="${['money', 'camp'].includes(k) && !s.flags['rt_' + k] && repTab !== k ? 'rtnew' : ''}">${n}${k === 'team' ? ` <span class="muted">${new Set((r.team || []).map(l => l.id)).size || ''}</span>` : ''}</button>`).join('')}</div>
-    ${['money', 'camp'].some(k => !s.flags['rt_' + k]) && repTab === 'sum' ? `<div class="rthint">👆 Where did the money go, and which ad worked? Open <b>Money</b> and <b>Campaigns</b>.</div>` : ''}
+    <div class="rtabs" role="tablist">${tabs.map(([k, n]) => `<button role="tab" data-act="repTab" data-v="${k}" aria-selected="${repTab === k}">${n}</button>`).join('')}</div>
     <div class="rbody">${body}</div>
-    <div class="rfoot"><button class="btn primary big" data-act="closeReport">On to week ${s.week}<span class="kbd" aria-hidden="true">Space</span></button>${newEv ? `<span class="pill warn">${newEv} new message${newEv > 1 ? 's' : ''}</span>` : ''}</div>
+    <div class="rfoot">${arch ? `<button class="btn ghost" data-act="reportsOpen">← All reports</button>` : `<button class="btn ghost" data-act="closeReport" aria-label="Skip the rest of the report">Skip</button>`}
+      <span class="rstep muted small">${tabs.findIndex(t => t[0] === repTab) + 1} / ${tabs.length}</span>
+      <span class="row" style="gap:10px;margin-left:auto">${newEv ? `<span class="pill warn">${newEv} new message${newEv > 1 ? 's' : ''}</span>` : ''}${(() => { const i = tabs.findIndex(t => t[0] === repTab), nx = tabs[i + 1];
+        return nx ? `<button class="btn primary big" data-act="repNext" data-v="${nx[0]}">Next: ${nx[1]} →<span class="kbd" aria-hidden="true">Space</span></button>`
+          : arch ? `<button class="btn primary big" data-act="closeReport">Close<span class="kbd" aria-hidden="true">Space</span></button>` : `<button class="btn primary big" data-act="closeReport">On to week ${s.week}<span class="kbd" aria-hidden="true">Space</span></button>`; })()}</span></div>
   </div></div>`;
 }
 // 0 bankrupt · 1 garage · 2 office · 3 tower · 4 unicorn
@@ -4452,6 +4462,14 @@ function finalArt(t) {
   const rainbow = t === 4 ? `<g opacity=".9" fill="none" stroke-width="7">${['#E2557A', '#F5A524', '#F5C548', '#1E9C74', '#3B4BD8', '#7A47D6'].map((c, i) => `<path d="M90 150 A160 120 0 0 1 410 150" stroke="${c}" transform="translate(0 ${i * 7}) scale(1 1)"/>`).join('')}</g><g transform="translate(330 98)"><ellipse cx="30" cy="22" rx="26" ry="14" fill="#fff" stroke="#E2D9F7" stroke-width="2"/><circle cx="56" cy="8" r="10" fill="#fff" stroke="#E2D9F7" stroke-width="2"/><path d="M60 -2 l10 -16 -2 18z" fill="#F5C548"/><path d="M48 0 q-8 -8 -2 -14 q2 8 10 6" fill="#B58CF0"/>${[10, 22, 38, 50].map(x => `<rect x="${x}" y="32" width="5" height="14" rx="2" fill="#fff" stroke="#E2D9F7"/>`).join('')}<circle cx="59" cy="7" r="1.6" fill="#3A2530"/></g>` : '';
   const conf = t >= 3 ? Array.from({ length: 16 }, (_, i) => `<g class="cf" style="animation-delay:-${(i * .27) % 2}s"><rect x="${30 + (i * 61) % 440}" y="${8 + (i * 23) % 50}" width="6" height="3" rx="1" fill="${['#F5C548', '#E2557A', '#3B4BD8', '#1E9C74'][i % 4]}" transform="rotate(${(i * 53) % 180} ${30 + (i * 61) % 440} ${8 + (i * 23) % 50})"/></g>`).join('') : '';
   return `<svg viewBox="0 0 500 160" role="img" aria-label="How your company ended up">${rainbow}${bg}<rect x="0" y="150" width="500" height="10" fill="var(--line)"/>${main}${conf}</svg>`;
+}
+// ---------- report archive ----------
+function showReports() {
+  const s = state, R = (s.reports || []).slice().reverse(); ui.repArch = null;
+  document.getElementById('modal').innerHTML = `<div class="overlay" role="dialog" aria-modal="true" aria-label="Weekly reports"><div class="modal" style="max-width:640px"><div class="stack">
+    <div class="row"><div><span class="lbl">Every week so far</span><h2 style="margin:2px 0 0">Weekly reports</h2></div><button class="xbtn" data-act="closeReport" aria-label="Close">×</button></div>
+    ${R.length ? `<div class="replist">${R.map(r => `<button class="repitem" data-act="repOpen" data-w="${r.week}"><span class="rw">Week ${r.week}<small>${dateOf(r.week)}</small></span><span><small>Revenue</small><b>${money(r.revenue)}</b></span><span><small>Net</small><b class="${r.profit >= 0 ? 'good' : 'bad'}">${money(r.profit)}</b></span><span class="ra">→</span></button>`).join('')}</div>` : '<p class="muted">No reports yet. End your first week.</p>'}
+  </div></div></div>`;
 }
 // ---------- shareable result card (1200×627, LinkedIn size) ----------
 const PLAY_URL = 'ugurucar.work/play';
@@ -5124,8 +5142,11 @@ const ACT = {
   mmpToggle: () => { const s = state; s.mmp = !s.mmp; save(); render(); toast(s.mmp ? 'AppsSlayer is installed. Real numbers show up after this week.' : 'AppsSlayer cancelled. Back to trusting the platforms. Good luck.'); },
   rowToggle: (d, el) => { el.classList.toggle('open'); el.closest('tbody').querySelectorAll('.sub-' + d.k).forEach(x => x.classList.toggle('open')); },
   loadDone: () => { repTab = 'sum'; showReport(); },
-  repTab: d => { repTab = d.v; if (state.flags) { state.flags['rt_' + d.v] = 1; save(); } showReport(); },
-  closeReport: () => { const hadReport = !!document.querySelector('#modal .overlay[aria-label="Weekly report"]'); closeModal(); if (atMenu || !state) { render(); return; } if (hadReport && !state.over && unread()) setTimeout(() => sfx('inbox'), 120); if (state.over) showFinal(); else { if (pendingChoices()) { state.tab = 'inbox'; render(); } const ld = state.lastDelivery, m = ld && state.team.find(x => x.id === ld.id); if (m && Math.random() < .6) say(m, pick(LINES.creative)); } window.scrollTo(0, 0); },
+  repTab: d => { repTab = d.v; showReport(ui.repArch); document.querySelector('#modal .modal')?.scrollTo(0, 0); },
+  repNext: d => { repTab = d.v; showReport(ui.repArch); document.querySelector('#modal .modal')?.scrollTo(0, 0); },
+  reportsOpen: () => showReports(),
+  repOpen: d => { const r = (state.reports || []).find(x => x.week === +d.w); if (!r) return; repTab = 'sum'; showReport(r); },
+  closeReport: () => { if (ui.repArch) { ui.repArch = null; closeModal(); return; } const hadReport = !!document.querySelector('#modal .overlay[aria-label="Weekly report"]'); closeModal(); if (atMenu || !state) { render(); return; } if (hadReport && !state.over && unread()) setTimeout(() => sfx('inbox'), 120); if (state.over) showFinal(); else { if (pendingChoices()) { state.tab = 'inbox'; render(); } const ld = state.lastDelivery, m = ld && state.team.find(x => x.id === ld.id); if (m && Math.random() < .6) say(m, pick(LINES.creative)); } window.scrollTo(0, 0); },
   reset: () => {
     const s = state;
     document.getElementById('modal').innerHTML = `<div class="overlay" role="alertdialog" aria-modal="true" aria-labelledby="rst-t" aria-describedby="rst-d"><div class="modal confirm" style="max-width:420px">
@@ -5304,7 +5325,7 @@ document.addEventListener('keydown', e => {
   // tutorial and guide popups first, then the report flow, then End week
   const pop = document.querySelector('button.primary[data-act="tour"], button.primary[data-act="tourEnd"], button[data-act="guideDone"]');
   const ov = document.querySelector('#modal .overlay');
-  const el = pop || (ov ? ov.querySelector('[data-act="loadDone"], button[data-act="closeReport"]:not([aria-label]):not(#rst-no)') : document.querySelector('button[data-act="endWeek"]'));
+  const el = pop || (ov ? ov.querySelector('[data-act="repNext"]') || ov.querySelector('[data-act="loadDone"], button[data-act="closeReport"]:not([aria-label]):not(#rst-no)') : document.querySelector('button[data-act="endWeek"]'));
   if (el && !el.disabled) { spaceHit = true; el.click(); }
 });
 document.addEventListener('keyup', e => { if ((e.code === 'Space' || e.key === ' ') && spaceHit) { spaceHit = false; e.preventDefault(); } });
