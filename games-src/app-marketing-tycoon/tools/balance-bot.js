@@ -36,6 +36,15 @@
           if (!s.camps.some(c => c.ch === ch && c.os === os) && campCount() < campCap() && campsOf(ch).length < platCap()) { const cp = mkCamp(ch, campsOf(ch).length + 1); cp.os = os; cp.budget = o.budget || 150; cp.on = true; s.camps.push(cp); }
         }
         if (plats.includes('google')) { s.ads.google.on = true; s.ads.google.budget = o.budget || 150; }
+        // play the creative loop like a person: keep every own campaign full, proven ads first, then untested ones; flops and tired ads out
+        for (const cp of s.camps) { if (cp.pm) continue; const ch = cp.ch;
+          cp.crs = cp.crs.filter(id => { const c = crById(id); return c && !(testedOn(c, ch) && (tierOf(c, ch) === 'flop' || c.fatigue > .55)); });
+          const pool = s.creatives.filter(c => !cp.crs.includes(c.id) && !(testedOn(c, ch) && tierOf(c, ch) === 'flop')).sort((a, b) => (testedOn(b, ch) ? qOf(b, ch) : .95) - (testedOn(a, ch) ? qOf(a, ch) : .95));
+          for (const c of pool) { if (cp.crs.length >= maxAds()) break; cp.crs.push(c.id); } }
+        // hand each free Performance Marketer a campaign on their platform: test if there's a backlog, otherwise rotate winners
+        for (const m of s.team.filter(x => x.role === 'perf')) { if (handledBy(m)) continue;
+          if (m.spec === 'google') { s.ads.google.pm = m.id; s.ads.google.on = true; continue; }
+          const cp = s.camps.find(c => c.ch === m.spec && !c.pm); if (cp) { cp.pm = m.id; cp.order = s.creatives.filter(c => !testedOn(c, m.spec)).length > 8 ? 'test' : 'rotate'; } }
         // scale like a player: once a platform's campaigns are maxed out and paying back, open another one (US region included)
         if (!o.fixed) for (const ch of plats) { if (ch === 'google') continue; const cs = s.camps.filter(c => c.ch === ch && !c.managed);
           const maxed = cs.length && cs.every(c => c.budget >= campMax(c) * .9), good = cs.some(c => c.last && c.last.spend && (c.last.orders || 0) * (s.lastReport ? s.lastReport.aov : 0) / c.last.spend > .3);

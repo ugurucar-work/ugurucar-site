@@ -552,6 +552,10 @@ details.more .notes{margin-top:8px}
 .crs > .adp{width:58px;aspect-ratio:1.4/1;border-radius:6px;outline:2px solid transparent}.crs .adp > :not(.face):not(.play){display:none}
 .crs b{font-weight:600;white-space:nowrap}
 .crs.win > .adp{outline-color:#C99A2E}.crs.win b{color:#9A7420}.crs.good > .adp{outline-color:#1E9C74}.crs.good b{color:#14785A}.crs.bad > .adp{outline-color:#D6455D;opacity:.7}.crs.bad b{color:#B23248}
+.handlebox{display:flex;flex-direction:column;gap:8px;padding:10px 12px;border-radius:12px;border:1px dashed var(--line)}
+.handlebox.on{background:var(--accent-soft);border:1px solid color-mix(in srgb,var(--accent) 25%,transparent)}
+.autobox{border:1px solid color-mix(in srgb,var(--accent) 25%,transparent);background:color-mix(in srgb,var(--accent-soft) 60%,var(--panel))}
+.pwlock{pointer-events:none;opacity:.55;filter:saturate(.6)}
 .menuhead{text-align:center}
 .gtitle{font-family:var(--f-display);font-weight:800;font-size:clamp(40px,6.4vw,84px);line-height:.86;letter-spacing:-.045em;margin:10px 0 0;display:flex;flex-direction:column;align-items:center}
 .gtitle span{font-size:1.32em;background:linear-gradient(100deg,var(--accent),#E2557A 55%,#F5A524);-webkit-background-clip:text;background-clip:text;color:transparent;padding-bottom:.06em}
@@ -1012,7 +1016,7 @@ const tierOfQ = q => q >= 1.6 ? 'winner' : q >= 1.0 ? 'iyi' : q >= .62 ? 'vasat'
 const MANUAL_ODDS = { winner: .008, iyi: .05, vasat: .27, flop: .672 };
 const ROLES = {
   creative: { name: 'Marketing Artist', desc: 'Produces creatives automatically, in batches', base: 1000 },
-  perf: { name: 'Performance Marketer', desc: 'Runs your campaigns: lower CPM, higher CTR, tests every new creative for you, campaign advice, +10 campaigns', base: 1150 },
+  perf: { name: 'Performance Marketer', desc: 'Platform specialist: cheaper, better ads on Meta, TikTok or Google, handles one campaign for you, +5 campaigns', base: 1150 },
   social: { name: 'Social Media Manager', desc: 'Organic posts, builds trust, and lifts the whole team\'s morale (+6–10%)', base: 850 },
   mkt: { name: 'Marketing Specialist', desc: 'Strategy: market research and fit, competitor trends, Google ad copy, brand awareness', base: 950 },
   analyst: { name: 'Data Analyst', desc: 'Reveals real ROAS, A/B tests lift conversion 3–6%', base: 1200 },
@@ -1142,6 +1146,7 @@ function applyTemplate(c, t, brand) {
   c.feats = featPool(brand).slice(0, Math.max(3, T.nfeat));
 }
 function ensureExtras(s) {
+  if (s) { for (const m of [...(s.team || []), ...(s.candidates || [])]) if (m.role === 'perf' && !m.spec) m.spec = pick(['meta', 'tiktok', 'google']); if (s.camps) s.camps = s.camps.filter(c => !c.managed); }
   if (!s) return;
   if (s.office === CAMPUS) s.ownCampus = true;
   if (!s.prof) { s.seed = s.seed || (s.brand.seed && String(s.brand.seed).trim().toUpperCase()) || newSeed(); s.prof = mkProfile(s.seed); }
@@ -1194,8 +1199,27 @@ function adEcon() {
   for (const k in AD_FORMATS) if (a[k]) { const F = AD_FORMATS[k], always = k === 'rewarded'; arpu += F.rev * (always ? 1 : f.m); retAdj += F.ret * (always ? 1 : f.r); }
   return { arpu, retAdj };
 }
-function genCreator(s) {
-  const tier = pick(['nano', 'micro', 'micro', 'mid', 'mid', 'macro']), rg = { nano: [5e3, 2e4], micro: [2e4, 1e5], mid: [1e5, 5e5], macro: [5e5, 2e6] }[tier];
+const INF_AUTO_MAX = 3, INF_BUDGET_MAX = 30000;
+// signs single-post deals with the best creators the budget allows; a bigger budget reaches bigger creators
+function infAutoRun() {
+  const s = state, I = s.inf, im = best('influencer'), A = I.auto; if (!im || !A || !A.on || !A.budget) return;
+  // with a big budget the marketer goes looking for bigger names too
+  if (A.budget >= 20000) I.found.unshift({ ...genCreator(s, 'macro'), status: 'quoted', foundBy: im.name.split(' ')[0] });
+  else if (A.budget >= 6000) I.found.unshift({ ...genCreator(s, 'mid'), status: 'quoted', foundBy: im.name.split(' ')[0] });
+  let left = Math.min(A.budget, s.cash - 2000), signed = 0, spent = 0;
+  const room = () => Math.min(INF_AUTO_MAX - signed, infLimits().deals - infActive());
+  const pool = I.found.filter(c => c.status === 'quoted' && !(c.annoyed > s.week) && c.fake < .3).sort((a, b) => b.followers * (1 - b.fake) * b.fit * b.eng - a.followers * (1 - a.fake) * a.fit * a.eng);
+  for (const c of pool) {
+    if (room() <= 0) break;
+    if (c.price > left) continue;
+    spendNow(c.price, 'influencer'); left -= c.price; spent += c.price; signed++;
+    I.deals.push({ id: uid(), c: { ...c }, type: 'single', cost: c.price, posts: INF_DEALS.single.posts.map((m, k) => ({ week: s.week + k, m, done: false })), code: (c.handle.slice(1).replace(/[^a-z]/g, '').slice(0, 5) || 'CODE').toUpperCase() + '10', auto: true });
+    I.found = I.found.filter(x => x.id !== c.id);
+  }
+  s.teamLog.push({ id: im.id, name: im.name, role: 'influencer', text: signed ? `signed ${signed} creator deal${signed > 1 ? 's' : ''} for ${money(spent)} (budget ${money(A.budget)}).` : `found nobody worth the money within your ${money(A.budget)} budget this week.` });
+}
+function genCreator(s, force) {
+  const tier = force || pick(['nano', 'micro', 'micro', 'mid', 'mid', 'macro']), rg = { nano: [5e3, 2e4], micro: [2e4, 1e5], mid: [1e5, 5e5], macro: [5e5, 2e6] }[tier];
   const followers = Math.round(Math.exp(rand(Math.log(rg[0]), Math.log(rg[1]))) / 100) * 100;
   const plat = pick(Object.keys(INF_PLAT)), niche = pick(INF_NICHES), fr = Math.random();
   const fake = fr < .6 ? rand(.02, .12) : fr < .9 ? rand(.15, .35) : rand(.4, .7);
@@ -1542,8 +1566,10 @@ function genCandidate(role, src = 'hr') {
   const skill = star ? Math.round(rand(91, 99)) : src === 'self' ? Math.round(rp >= 20 ? clamp(rand(lv.lo, lv.hi) - 5, 25, rp >= 40 ? 84 : 72) : clamp(rand(lv.lo, lv.hi) - 12, 22, 58)) : Math.min(rp >= 40 ? 90 : 87, Math.round(rand(lv.lo, lv.hi)));
   const trait = star || Math.random() < (src === 'self' ? .2 : .45) ? pick(Object.keys(TRAITS)) : null;
   const salary = Math.round(ROLES[role].base * lv.mul * (0.9 + skill / 500) * costIdx() * (rp >= 80 ? .95 : 1) / 10) * 10;
-  return { id: uid(), name: pick(FN) + ' ' + pick(LN), role, lv: lvk, skill, trait, salary };
+  return { id: uid(), name: pick(FN) + ' ' + pick(LN), role, lv: lvk, skill, trait, salary, ...(role === 'perf' ? { spec: pick(['meta', 'tiktok', 'google']) } : {}) };
 }
+const SPEC = { meta: 'Meta', tiktok: 'TikTok', google: 'Google Search' };
+const specTag = m => m && m.role === 'perf' && m.spec ? ` · ${SPEC[m.spec]} specialist` : '';
 const genCandidates = (role = 'creative') => [0, 1, 2].map(() => genCandidate(role, 'self'));
 // HR brings 9 people across different roles each week
 const hrCandidates = () => { const roles = Object.keys(ROLES).filter(r => r !== 'hr').sort(() => Math.random() - .5); while (roles.length < 10) roles.push(pick(roles)); return roles.slice(0, 10).map(r => genCandidate(r, 'hr')); };
@@ -1663,7 +1689,9 @@ function addCreative(o) {
 // variations keep the parent's hook, format and home platform; most land a bit below the parent, a few beat it
 function makeVariation(parent, m) {
   const pq = {}, pt = {};
-  for (const ch of PLATS) { pq[ch] = clamp(qOf(parent, ch) * rand(.45, .95) * (1 + sk(m) * .06), .35, 2.2); pt[ch] = tierOfQ(pq[ch]); }
+  // a Winner's variations keep a little more of what made it work
+  const lo = isWinner(parent) ? .52 : .45;
+  for (const ch of PLATS) { pq[ch] = clamp(qOf(parent, ch) * rand(lo, .95) * (1 + sk(m) * .06), .35, 2.2); pt[ch] = tierOfQ(pq[ch]); }
   const home = parent.home || 'meta';
   parent.vars = (parent.vars || 0) + 1;
   return addCreative({ src: 'variation', code: `${parent.code} v${parent.vars + 1}`, parentCode: parent.code, type: parent.type, hook: parent.hook, q: pq[home], tier: pt[home], home, pq, pt, by: m.name.split(' ')[0], parent: parent.n });
@@ -1676,6 +1704,11 @@ function talkOdds(o) {
 }
 function staffMake(m, n) {
   const made = [], focus = state.focus || 'mix';
+  // on their own initiative: a variation of the best proven creative that hasn't been varied much yet
+  if (!state.varQueue.length && n > 1) {
+    const best1 = state.creatives.filter(c => (isWinner(c) || isGood(c)) && (c.vars || 0) < 3 && !c.parent).sort((a, b) => Math.max(...PLATS.map(ch => qOf(b, ch))) - Math.max(...PLATS.map(ch => qOf(a, ch))))[0];
+    if (best1) { made.push(makeVariation(best1, m)); n--; }
+  }
   for (let i = 0; i < n; i++) {
     const pid = state.varQueue[0];
     const parent = pid && crById(pid);
@@ -1700,6 +1733,7 @@ function weeklyPeople(r) {
   if (fresh.length) s.candidates = fresh;
   const I = s.inf;
   for (const c of I.found) if (c.status === 'waiting' && c.quoteWeek <= s.week) { c.status = 'quoted'; r.notes.push({ t: 'info', m: `${c.handle} replied to your DM with a rate. Check the Influencers tab.` }); }
+  infAutoRun();
   const im = best('influencer');
   if (im) { const k = clamp(Math.round((1 + 2 * sk(im)) * rand(.6, 1.3)), 1, 3); for (let j = 0; j < k; j++) I.found.unshift({ ...genCreator(s), status: 'quoted', foundBy: im.name.split(' ')[0] }); s.teamLog.push({ id: im.id, name: im.name, role: 'influencer', text: `found ${k} new creator${k > 1 ? 's' : ''} and already has their rates.` }); }
   I.found = I.found.slice(0, 16);
@@ -2590,18 +2624,18 @@ const SLOW = {
 };
 let busy = false;
 // instant on purpose: navigation, guides, clickers and dismissals
-const INSTANT = new Set(['delCamp', 'pickOpen', 'campOpen', 'pickOne', 'pickUntested', 'latestSize', 'seeAll', 'ugcChase', 'cardDownload', 'cardShare', 'glossary', 'repTab', 'musicToggle', 'adTab', 'menuNew', 'menuBack', 'menuNext', 'menuPrev', 'menuTalk', 'menuContinue', 'toMenu', 'draft', 'achCopy', 'achPaste', 'achImport', 'achievements', 'copySeed', 'anaMetric', 'chartReg', 'anaPlat', 'rowToggle', 'loadDone', 'questPass', 'orgFocus', 'resetYes', 'questGo', 'questSkip', 'loanAmt', 'loanTerm', 'huntFor', 'settings', 'pref', 'replayTour', 'resetGuides', 'about', 'officeBye', 'dev', 'devCash', 'devOffice', 'devTeam', 'officeTooSmall', 'officeMute', 'officeTalk', 'annexDrop', 'tab', 'draft', 'hush', 'tour', 'tourEnd', 'guide', 'guideDone', 'tips', 'manual', 'infResearch', 'libFilter', 'campOpen', 'pickOpen', 'reset', 'newGame', 'closeReport', 'endWeek', 'ack', 'infOpen', 'infType', 'start']);
+const INSTANT = new Set(['pmHandle', 'infAuto', 'gHandle', 'campHandle', 'campOrder', 'delCamp', 'pickOpen', 'campOpen', 'pickOne', 'pickUntested', 'latestSize', 'seeAll', 'ugcChase', 'cardDownload', 'cardShare', 'glossary', 'repTab', 'musicToggle', 'adTab', 'menuNew', 'menuBack', 'menuNext', 'menuPrev', 'menuTalk', 'menuContinue', 'toMenu', 'draft', 'achCopy', 'achPaste', 'achImport', 'achievements', 'copySeed', 'anaMetric', 'chartReg', 'anaPlat', 'rowToggle', 'loadDone', 'questPass', 'orgFocus', 'resetYes', 'questGo', 'questSkip', 'loanAmt', 'loanTerm', 'huntFor', 'settings', 'pref', 'replayTour', 'resetGuides', 'about', 'officeBye', 'dev', 'devCash', 'devOffice', 'devTeam', 'officeTooSmall', 'officeMute', 'officeTalk', 'annexDrop', 'tab', 'draft', 'hush', 'tour', 'tourEnd', 'guide', 'guideDone', 'tips', 'manual', 'infResearch', 'libFilter', 'campOpen', 'pickOpen', 'reset', 'newGame', 'closeReport', 'endWeek', 'ack', 'infOpen', 'infType', 'start']);
 // what each role actually changes in the game (keep in sync with the simulation)
 const ROLE_PERKS = {
-  creative: ['Delivers about 4–10 creatives at the start of every week (more with skill), starting the week after you hire them', 'Winner chance 2.5–7% per creative, plus up to 6 points from the production budget', 'Can make variations of your Good and Winner creatives', 'Follows your platform, hook and format brief', 'Adds 1 organic post a week'],
-  perf: ['CPM on Meta, TikTok and Google 5–10% lower, up to about 14% with a 2nd and 3rd marketer', 'CTR 4–10% higher through better targeting, more with a bigger team', 'Learning phases hurt less: 88% of normal conversions instead of 75%', 'Runs a locked creative-test campaign on each platform for your untested creatives', 'Puts every new creative into a campaign on its platform; opens a $500/week campaign if a platform has none live', 'Weekly campaign suggestions at the top of the Ads Manager', 'Adds cost per purchase or install to every campaign and a Top creatives table to reports', 'More paid campaigns: +10 for the first, +3 for every extra one (without one you can run 5 in total)'],
+  creative: ['Delivers about 4–10 creatives at the start of every week (more with skill), starting the week after you hire them', 'Winner chance 2.5–7% per creative, plus up to 6 points from the production budget', 'Makes a variation of your best Good or Winner creative in every batch on their own (Winner variations win a bit more often)', 'Archives flops that aren\'t running anywhere', 'Follows your platform, hook and format brief', 'Adds 1 organic post a week'],
+  perf: ['Has one platform specialty (Meta, TikTok or Google), shown when you hire', 'On that platform: CPM 5–10% lower and CTR 4–10% higher (more with a 2nd and 3rd specialist)', 'Handles one campaign you hand over: sets its budget every week and tests new creatives or rotates winners, as you order', 'Learning phases hurt less: 88% of normal conversions instead of 75%', 'Weekly campaign suggestions at the top of the Ads Manager', 'Adds cost per purchase or install to every campaign and a Top creatives table to reports', '+5 paid campaigns each (without one you can run 5 in total)'],
   mkt: ['Researches one new region a week ($500) so you can sell there', 'Shows how well each market fits your app', 'Tracks competitor ads and shows the trending hook every week (+30% CTR for that hook)', 'Google ad quality +15% (better search copy)', 'Brand awareness grows 30% faster and trust +0.2 a week', 'Market ideas and localization warnings in the Markets tab'],
-  social: ['Team morale: everyone else works 6–10% better (by their skill), and Marketing Artists deliver a bit more', '3–6 organic posts a week (+1 if Fast)', 'Organic reach ×1.3 (builds awareness)', 'Trust +0.5–0.9 every week, which lifts conversion on every channel', 'A small trickle of organic signups; it won\'t pay their salary on its own', 'Chance an organic post goes viral (×3 with Viral Hunter)'],
+  social: ['Team morale: everyone else works 6–10% better (by their skill), and Marketing Artists deliver a bit more', 'Handles creator messages, fan videos, complaint videos and creator scandals in your inbox', '3–6 organic posts a week (+1 if Fast)', 'Organic reach ×1.3 (builds awareness)', 'Trust +0.5–0.9 every week, which lifts conversion on every channel', 'A small trickle of organic signups; it won\'t pay their salary on its own', 'Chance an organic post goes viral (×3 with Viral Hunter)'],
   analyst: ['Real ROAS and real sales per channel in every report, instead of what the platforms claim', 'An Organic vs paid report on the Overview: ads vs organic social, word of mouth and creators', 'Conversion 3–6% higher from A/B testing', 'Shows real influencer signups and subscriber retention', 'Adds a 12-month value column to paywall tests'],
-  influencer: ['Opens the Influencers tab: find creators, get rates, sign 1, 3 or 5-post deals', 'Gets a creator\'s rate the same day you reach out', 'Finds 1–3 creators a week on their own, and you can scroll for more', 'Spots fake followers and real engagement before you pay', 'Negotiates: prices 8% lower and 12 points more yeses', 'Runs up to 5 deals and 8 DMs a week (a 2nd marketer adds a few more)'],
-  ugc: ['Orders 1 UGC video every week on their own ($100), delivered the week after', 'Lets you chase 1 extra UGC video a week yourself (15 clicks)', 'Marketing Artists\' Talking Head videos win more often while they\'re on the team', 'Briefs creators on platform and hook', 'Runs product seeding'],
-  hr: ['Brings 1–10 candidates every week across roles (more with skill)', 'Candidates are stronger than what you find on your own', 'Once your Studio reputation reaches 60, some of them are stars with 91–99 skill'],
-  product: ['Opens the Paywall Lab: design the paywall, set prices and offers, run A/B tests (or ad settings for ad-funded apps)', 'Conversion 2–4% higher, a bit more with a 2nd and 3rd Product Manager', 'Retention 1.5–3 points higher for subscribers and ad users, more with a bigger team', 'Ships one improvement every week'],
+  influencer: ['Opens the Influencers tab: find creators, get rates, sign 1, 3 or 5-post deals', 'Gets a creator\'s rate the same day you reach out', 'Finds 1–3 creators a week on their own, and you can scroll for more', 'Can run deals for you: signs up to 3 a week within the weekly budget you set (bigger budget, bigger creators)', 'Spots fake followers and real engagement before you pay', 'Negotiates: prices 8% lower and 12 points more yeses', 'Runs up to 5 deals and 8 DMs a week (a 2nd marketer adds a few more)'],
+  ugc: ['Orders UGC videos every week within the budget you set ($100 each, up to 4 a week; 8 with two)', 'Lets you chase 1 extra UGC video a week yourself (15 clicks)', 'Marketing Artists\' Talking Head videos win more often while they\'re on the team', 'Briefs creators on platform and hook', 'Runs product seeding'],
+  hr: ['Handles poaching offers: keeps people for a 10% raise instead of 20%', 'Brings 1–10 candidates every week across roles (more with skill)', 'Candidates are stronger than what you find on your own', 'Once your Studio reputation reaches 60, some of them are stars with 91–99 skill'],
+  product: ['Opens the Paywall Lab: design the paywall, set prices and offers, run A/B tests (or ad settings for ad-funded apps)', 'Conversion 2–4% higher, a bit more with a 2nd and 3rd Product Manager', 'Retention 1.5–3 points higher for subscribers and ad users, more with a bigger team', 'Ships one improvement every week', 'Can handle the paywall for you: tests one change at a time for at least 3 weeks and only ships clear winners'],
 };
 const MANUAL_LIMIT_LINES = [
   'Your wrist has filed a formal complaint. Three handmade ads a week, or it unionizes.',
@@ -2634,6 +2668,9 @@ function deliverWeek(r) {
     s.teamLog.push({ id: m.id, name: m.name, role: 'creative', text: `made ${n} creative${n > 1 ? 's' : ''} (${onM} for Meta, ${n - onM} for TikTok)${made.some(c => c.parent) ? ', including variations' : ''}.` });
   }
   if (total) { r.notes.push({ t: 'info', m: `Your Creative team delivered ${total} new creatives for week ${s.week}. They're in the Creative Studio.` }); s.lastDelivery = { id: who.id, n: total }; }
+  // the team keeps the library tidy: flops that aren't running anywhere get archived
+  if (who) { const keep = liveIds(), n0 = s.creatives.length; s.creatives = s.creatives.filter(c => !isFlop(c) || keep.has(c.id)); const gone = n0 - s.creatives.length;
+    if (gone) s.teamLog.push({ id: who.id, name: who.name, role: 'creative', text: `archived ${gone} flop${gone > 1 ? 's' : ''} to keep the library tidy.` }); }
 }
 function softRender() {
   const a = document.activeElement;
@@ -2877,11 +2914,22 @@ function offerSize(f, equity, months) {
 function avgRev(n) { const a = state.history.slice(-n); return a.length ? a.reduce((x, y) => x + y.revenue, 0) / a.length : 0; }
 // one-off spending is tagged so the weekly report can break it down
 function spendNow(amount, cat = 'other') { const s = state; s.cash -= amount; s.weekMisc += amount; s.weekCats = s.weekCats || {}; s.weekCats[cat] = (s.weekCats[cat] || 0) + amount; }
+// some inbox events are handled by the teammate whose job it is, so the founder only sees the outcome
+const AUTO_EVENTS = {
+  influencer: { role: 'social', pick: (s, d) => s.cash > d.price * 6 && d.f / d.price >= 18 ? 0 : 1 },
+  fanvideo: { role: 'social', pick: s => s.cash > 3000 ? 0 : 1 },
+  complaint: { role: 'social', pick: () => 0 },
+  scandal: { role: 'social', pick: () => 0 },
+  poach: { role: 'hr', run: (s, d, h) => { const m = s.team.find(x => x.id === d.id); if (!m) return 'They had already left.'; if (m.id === h.id) { m.salary = Math.round(m.salary * 1.2 / 10) * 10; return `Gave themselves a 20% raise. Bold. New salary ${money(m.salary)}/week.`; } m.salary = Math.round(m.salary * 1.1 / 10) * 10; return `Talked ${esc(m.name.split(' ')[0])} into staying for a 10% raise instead of 20%. New salary ${money(m.salary)}/week.`; } },
+};
 function pushEvent(eid, data = {}) {
   if (eid === 'team' || eid === 'creators') state.inbox = state.inbox.filter(i => i.eid !== eid);
   state.seen.push(eid);
-  state.inbox.unshift({ id: uid(), eid, week: state.week, data, done: false, result: null });
+  const item = { id: uid(), eid, week: state.week, data, done: false, result: null };
+  state.inbox.unshift(item);
   const ev = EVENTS[eid]; if (ev.on) ev.on(state, data);
+  const A = AUTO_EVENTS[eid], h = A && best(A.role);
+  if (h) { try { item.result = A.run ? A.run(state, data, h) : ev.choices[A.pick(state, data)].run(state, data); item.done = true; item.by = h.name; } catch (e) { } }
 }
 function rollEvents() {
   const s = state, w = s.week;
@@ -2915,7 +2963,7 @@ const pendingChoices = () => state.inbox.filter(i => !i.done && EVENTS[i.eid].ch
 const unread = () => state.inbox.filter(i => !i.done).length;
 const campsOf = ch => state.camps.filter(cp => cp.ch === ch);
 // 5 paid campaigns on your own; the first Performance Marketer adds 10, every extra one 3 more
-const campCap = () => 5 + has('perf').reduce((a, m, i) => a + (i === 0 ? 10 : 3), 0);
+const campCap = () => 5 + 5 * has('perf').length;
 const platCap = () => campCap();
 // default names look like a real ad account: BAU_US_Week3 (with _2, _3 when taken)
 function campName(st, ch) {
@@ -2925,34 +2973,68 @@ function campName(st, ch) {
 // each extra region a campaign targets lifts its weekly budget cap by $1,000
 const campMax = cp => CH[cp.ch].max + (cp.ch === 'google' ? 0 : 1000 * Math.max(0, (cp.mkts || ['home']).length - 1));
 const campCount = () => state.camps.filter(c => !c.managed).length + (state.ads.google.on ? 1 : 0);
-const mkCamp = (ch) => ({ id: uid(), ch, kind: 'main', mkts: ['home'], os: campsOf(ch).some(c => (c.os || 'ios') === 'ios') ? 'android' : 'ios', name: campName(state, ch), obj: state.brand.model === 'ads' ? 'install' : 'purchase', budget: 150, crs: [], auto: true, weeks: 0, lastBudget: 0, last: null, on: false });
+const mkCamp = (ch) => ({ id: uid(), ch, kind: 'main', pm: null, order: null, mkts: ['home'], os: campsOf(ch).some(c => (c.os || 'ios') === 'ios') ? 'android' : 'ios', name: campName(state, ch), obj: state.brand.model === 'ads' ? 'install' : 'purchase', budget: 150, crs: [], auto: false, weeks: 0, lastBudget: 0, last: null, on: false });
 let ui = { picker: null, sel: new Set(), lib: 'all', camps: {} };
 const NAV_ICON = { analysis: 'M4 20V11M10 20V5M16 20v-7M21 20H3', loan: 'M3 10l9-6 9 6M5 10v8M9.5 10v8M14.5 10v8M19 10v8M3 20h18', organic: 'M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z', office: 'M3 21h18M5 21V8l7-5 7 5v13M9 21v-5h6v5M9 11h2M13 11h2', overview: 'M3 3h7v7H3zM14 3h7v7h-7zM3 14h7v7H3zM14 14h7v7h-7z', studio: 'M12 3l1.9 5.8L20 11l-6.1 2.2L12 19l-1.9-5.8L4 11l6.1-2.2z', ads: 'M3 11v2a1 1 0 0 0 1 1h2l5 4V6L6 10H4a1 1 0 0 0-1 1zM16 8a5 5 0 0 1 0 8M19 5a9 9 0 0 1 0 14', paywall: 'M5 11h14v11H5zM8 11V7a4 4 0 0 1 8 0v4', influencers: 'M12 2l3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1L12 2z', ugc: 'M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2zM12 9a4 4 0 1 0 0 8 4 4 0 0 0 0-8z', markets: 'M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zM2 12h20M12 2a15 15 0 0 1 4 10 15 15 0 0 1-4 10 15 15 0 0 1-4-10 15 15 0 0 1 4-10z', team: 'M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM22 21v-2a4 4 0 0 0-3-3.9M16 3.1a4 4 0 0 1 0 7.8', inbox: 'M22 12h-6l-2 3h-4l-2-3H2M5.5 5h13L22 12v6a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2v-6z' };
 
+const ugcAutoCap = () => Math.min(8, 4 * has('ugc').length);
 function ugcAutoOrder() {
   const s = state, U = s.ugc;
   // the weekly standing order: one video per UGC Marketer, filmed this week, delivered next week
   const ums = has('ugc');
   if (ums.length) {
-    const k = Math.min(3, ums.length), cost = k * UGC_BASE;
+    const k = Math.min(ugcAutoCap(), Math.floor((U.budget == null ? UGC_BASE : U.budget) / UGC_BASE)), cost = k * UGC_BASE;
+    if (!k) { s.teamLog.push({ id: ums[0].id, name: ums[0].name, role: 'ugc', text: 'ordered nothing: the UGC budget is $0.' }); return; }
     spendNow(cost, 'ugc'); U.orders.push({ week: s.week + 1, n: k, hook: U.hook !== 'mix' ? U.hook : null, home: U.home || null, auto: true });
     s.teamLog.push({ id: ums[0].id, name: ums[0].name, role: 'ugc', text: `ordered ${k} UGC video${k > 1 ? 's' : ''} for next week (${money(cost)}).` });
   }
 }
-// the Performance Marketer's locked creative tests: one per open platform, fed with untested creatives
-function syncTestCamps() {
-  const s = state, pf = best('perf'), open = ch => !s.locked || !s.locked[ch];
-  if (!pf) { s.camps = s.camps.filter(c => !c.managed); return; }
-  for (const ch of ['meta', 'tiktok']) {
-    if (!open(ch)) continue;
-    let cp = s.camps.find(c => c.managed && c.ch === ch);
-    if (!cp) { cp = { ...mkCamp(ch), os: 'ios', managed: true }; s.camps.push(cp); }
-    Object.assign(cp, { kind: 'test', auto: true, mkts: ['home'], name: `Creative test · ${pf.name.split(' ')[0]}` });
-    cp.crs = cp.crs.filter(id => { const c = crById(id); return c && !testedOn(c, ch); });
-    const n = Math.min(maxAds(), s.creatives.filter(c => !testedOn(c, ch)).length);
-    cp.on = n > 0; cp.budget = n ? clamp(n * 60, 120, 720) : 0;
+// ---------- the Product Manager can run the paywall: one idea at a time, a few weeks each, only confident winners ship ----------
+const PM_IDEAS = [
+  ['a new headline', v => { v.headline = randCopy('headline', state.brand, v.headline); }],
+  ['a new subtitle', v => { v.sub = randCopy('sub', state.brand, v.sub); }],
+  ['a new button text', v => { v.cta = randCopy('cta', state.brand, v.cta); }],
+  ['social proof on the paywall', v => { v.proof = !v.proof; }],
+  ['a price breakdown per week', v => { v.breakdown = !v.breakdown; }],
+  ['a free trial', v => { v.offer = v.offer === 'trial' ? 'none' : 'trial'; }],
+  ['a different default plan', v => { v.def = (v.def + 1) % 3; }],
+  ['a "Best value" badge', v => { v.badgeIdx = v.badgeIdx === -1 ? 2 : -1; }],
+];
+function pmRun() {
+  const s = state, P = s.pw, pmg = best('product'), H = P.pmh; if (!H || !H.on) return;
+  if (!pmg || s.brand.model === 'ads') { H.on = false; return; }
+  const name = pmg.name.split(' ')[0], log = t => s.teamLog.push({ id: pmg.id, name: pmg.name, role: 'product', text: t });
+  if (H.phase === 'testing') {
+    const wk = s.week - H.start, v = P.tot && P.tot.length > 1 ? vsControl(P.tot[0], P.tot[1]) : null;
+    if (wk >= 3 && v && v.conf >= .9 && v.lift > 0) { P.vars = [P.vars[1]]; P.live = 0; P.edit = 0; P.ab = false; P.tot = null; P.hist = []; H.phase = 'rest'; H.until = s.week + 1; H.shipped = (H.shipped || 0) + 1; log(`shipped ${H.idea} on the paywall: conversion ${pct(v.lift, 0)} better, ${pct(v.conf, 0)} sure.`); return; }
+    if (wk >= 6 || (wk >= 3 && v && v.conf < .25)) { P.vars = [P.vars[0]]; P.live = 0; P.edit = 0; P.ab = false; P.tot = null; P.hist = []; H.phase = 'rest'; H.until = s.week + 1; log(`dropped ${H.idea}: it didn't beat the current paywall.`); return; }
+    log(`is testing ${H.idea} on the paywall (week ${wk + 1} of at least 3${v ? `, ${pct(v.conf, 0)} sure so far` : ''}).`); return;
   }
+  if (H.phase === 'rest' && s.week < H.until) { log('is planning the next paywall test.'); return; }
+  // start a new test: the live paywall against a copy with one change
+  const live = JSON.parse(JSON.stringify(P.vars[P.live || 0])), idea = pick(PM_IDEAS.filter(i => i[0] !== H.idea)), b = JSON.parse(JSON.stringify(live));
+  idea[1](b); P.vars = [live, b]; P.live = 0; P.edit = 1; P.ab = true; P.split = 'even'; P.tot = null; P.hist = [];
+  Object.assign(H, { phase: 'testing', start: s.week, idea: idea[0] }); log(`started an A/B test on the paywall: ${idea[0]}.`);
 }
+// a Performance Marketer handles one campaign on their platform: they set its budget and run the order you give
+const handledBy = m => m.spec === 'google' ? (state.ads.google.pm === m.id ? { name: 'Google Search', order: 'budget', budget: state.ads.google.budget } : null) : state.camps.find(c => c.pm === m.id);
+const handlerOf = cp => cp && cp.pm ? state.team.find(m => m.id === cp.pm) : null;
+const freeSpecialists = ch => has('perf').filter(m => m.spec === ch && !handledBy(m));
+function runHandled() {
+  const s = state, aov = s.lastReport ? s.lastReport.aov : 0;
+  const tune = (t, max) => { const L = t.last; if (!L || !L.spend || !aov) return; const roas = (L.reported || 0) * aov / L.spend;
+    if (roas > 1.3) t.budget = Math.min(max, Math.round(t.budget * 1.25 / 50) * 50); else if (roas < .7 && (t.weeks || 0) >= 2) t.budget = Math.max(100, Math.round(t.budget * .75 / 50) * 50); };
+  for (const cp of s.camps) {
+    if (cp.pm && !handlerOf(cp)) { cp.pm = null; cp.order = null; }
+    if (cp.pm) { cp.kind = cp.order === 'test' ? 'test' : 'main'; cp.auto = true; tune(cp, campMax(cp));
+      const left = cp.order === 'test' ? s.creatives.filter(c => !testedOn(c, cp.ch)).length : s.creatives.filter(c => testedOn(c, cp.ch) && ['winner', 'iyi'].includes(tierOf(c, cp.ch))).length + cp.crs.length;
+      cp.on = left > 0; cp.idle = !left; }
+    else { cp.kind = 'main'; cp.auto = false; }
+  }
+  const g = s.ads.google; if (g.pm && !s.team.some(m => m.id === g.pm)) g.pm = null; if (g.pm) tune(g, CH.google.max);
+}
+// the Performance Marketer's locked creative tests: one per open platform, fed with untested creatives
+function syncTestCamps() { state.camps = state.camps.filter(c => !c.managed); }
 const MANAGED_LOCK = new Set(['pickOne', 'pickUntested', 'toggleCamp', 'delCamp', 'setOs', 'setObj', 'campMkt', 'rmCr', 'pickOpen', 'pickAll', 'pickAdd', 'autoCamp', 'campOpen', 'setKind']);
 // ---------- simulation ----------
 // auto-rotate: each week, pull tired or flopped creatives out and fill the slots with proven and fresh ones
@@ -2969,6 +3051,7 @@ function autoRefresh(cp, notes) {
   const fresh = state.creatives.filter(c => !testedOn(c, ch) && !cp.crs.includes(c.id));
   // a live test campaign does most of the testing, but main campaigns still try a couple of new ones
   const freshCap = testing ? Math.min(cap, cp.crs.filter(id => { const c = crById(id); return c && !testedOn(c, ch); }).length + 2) : cap;
+  if (cp.order === 'rotate') { if (removed || added) notes.push({ t: 'info', m: `${cp.name}: ${handlerOf(cp) ? handlerOf(cp).name.split(' ')[0] : 'Your marketer'} swapped out ${removed} tired or flopped and put in ${added} proven ad${added === 1 ? '' : 's'}.` }); return; }
   for (const c of fresh) { if (cp.crs.length >= cap || cp.crs.filter(id => { const x = crById(id); return x && !testedOn(x, ch); }).length >= (testing ? 2 : cap)) break; cp.crs.push(c.id); added++; }
   if (removed || added) notes.push({ t: 'info', m: `${cp.name} auto-rotate: took out ${removed} tired or flopped, added ${added}.` });
 }
@@ -2983,7 +3066,7 @@ function testRefresh(cp, notes) {
     if (t === 'winner' || t === 'iyi') {
       // every live campaign on this platform gets the chance: an empty slot first, otherwise it pushes out a weaker ad
       const score = x => testedOn(x, ch) ? qOf(x, ch) * (1 - x.fatigue) : .9;
-      const mains = state.camps.filter(x => x.ch === ch && x.kind !== 'test' && !x.managed && x.on && !x.crs.includes(c.id)).sort((a, b) => a.crs.length - b.crs.length);
+      const mains = state.camps.filter(x => x.ch === ch && x.pm && x.order === 'rotate' && x.on && !x.crs.includes(c.id)).sort((a, b) => a.crs.length - b.crs.length);
       for (const main of mains.slice(0, t === 'winner' ? 2 : 1)) {
         if (main.crs.length >= maxAds()) {
           const worst = main.crs.map(crById).filter(Boolean).sort((a, b) => score(a) - score(b))[0];
@@ -3030,12 +3113,15 @@ function rotateTrend() {
 function simulate() {
   const s = state, w = s.week, cat = CATS[s.brand.cat], pr = PRICE[s.brand.price], tone = TONE[s.brand.tone];
   const sea = season(w), perf = best('perf'), analyst = best('analyst'), pm = pixelM();
-  const perfCpm = perf ? Math.max(.78, 1 - .1 * (.5 + sk(perf) / 2) * rand(.7, 1.2) * teamScale('perf')) : 1;
+  // each Performance Marketer only helps on their own platform
+  const perfMul = ch => { const L = has('perf').filter(m => m.spec === ch).sort((a, b) => b.skill - a.skill); if (!L.length) return { cpm: 1, ctr: 1, learn: .75 };
+    const k = Math.pow(L.reduce((a, m, i) => a + roleW(i), 0), .55), b = sk(L[0]); return { cpm: Math.max(.8, 1 - .1 * (.5 + b / 2) * k), ctr: 1 + (.03 + .07 * b) * k, learn: .88 }; };
+  const perfCpm = 1;
   s.teamLog = [];
   const tl = (m, text) => s.teamLog.push({ id: m.id, name: m.name, role: m.role, text });
-  if (perf) tl(perf, `tuned bids and placements. CPM about ${pct(1 - perfCpm, 0)} lower this week.`);
+  for (const m of has('perf')) { const hc = handledBy(m); tl(m, hc ? (hc.idle ? `paused ${hc.name}: ${hc.order === 'test' ? 'nothing new to test' : 'no proven creatives to rotate yet'}.` : `ran ${hc.name} (${hc.order === 'rotate' ? 'rotating winners' : 'testing new creatives'}) and tuned its budget to ${money(hc.budget)}.`) : `optimized ${SPEC[m.spec]} bids. Give me a campaign to handle in the Ads Manager.`); }
   const mk = mktMix(usedMkts());
-  const perfCtr = perf ? 1 + (.03 + .07 * sk(perf)) * teamScale('perf') : 1;
+  const perfCtr = 1;
   const pixCpm = 1.2 - .2 * pm, pixCvr = .7 + .3 * pm;
   const pwE = pwLive(), isAds = s.brand.model === 'ads', ae = isAds ? adEcon() : null;
   if (isAds) ae.arpu *= mk.ecpm * 1.35;
@@ -3048,13 +3134,13 @@ function simulate() {
   const r = { week: w, ch: {}, src: {}, notes: [], adSpend: 0, imp: 0, aov, bf, analyst: !!analyst, newWinners: [], pixel: [pixelLabel()] };
   let flops = 0, qSum = 0, qN = 0, iosPaid = 0, paidN = 0;
 
-  syncTestCamps(); ugcAutoOrder();
+  syncTestCamps(); runHandled(); pmRun(); ugcAutoOrder();
   const platB = { meta: 0, tiktok: 0 };
   const open = ch => !s.locked || !s.locked[ch];
   for (const cp of s.camps) if (cp.on && cp.budget > 0 && !paused(cp.ch) && open(cp.ch)) platB[cp.ch] += cp.budget;
   for (const ch of PLATS) if (paused(ch) && campsOf(ch).some(cp => cp.on)) r.notes.push({ t: 'bad', m: `${CH[ch].name} ads were paused this week.` });
   for (const cp of s.camps) {
-    const ch = cp.ch, C = CH[ch];
+    const ch = cp.ch, C = CH[ch], PM = perfMul(ch);
     if (!cp.on || cp.budget <= 0 || !open(ch)) { cp.weeks = 0; cp.last = null; continue; }
     if (paused(ch)) { cp.weeks = 0; cp.last = { paused: true }; continue; }
     if (cp.auto) autoRefresh(cp, r.notes);
@@ -3067,7 +3153,7 @@ function simulate() {
     // the more of your market you've already reached, the pricier the next customer gets
     const mc = mktMix(cp.mkts);
     const satur = 1 + (isAds ? s.customers / 8 : s.customers) / (250000 * mk.size);
-    const cpm = C.cpm * sea.cpm * eff('cpm') * perfCpm * (inst ? Math.sqrt(pixCpm) : pixCpm) * O.cpm * OS.cpm * mc.cpm * satur * (cp.kind === 'test' ? 1.25 : 1) * PR.cpm * SZ.cpm * rand(.92, 1.1);
+    const cpm = C.cpm * sea.cpm * eff('cpm') * PM.cpm * (inst ? Math.sqrt(pixCpm) : pixCpm) * O.cpm * OS.cpm * mc.cpm * satur * (cp.kind === 'test' ? 1.25 : 1) * PR.cpm * SZ.cpm * rand(.92, 1.1);
     // campaigns on the same platform compete for the same audience, so returns diminish on the platform total
     const imp = 1000 * b / cpm * Math.pow(3000 * mc.size * PR.size / (3000 * mc.size * PR.size + platB[ch]), .5);
     const wts = crs.map(c => learning || cp.kind === 'test' ? 1 : Math.pow(testedOn(c, ch) ? qOf(c, ch) : 1, 2.5) * (1 - c.fatigue) + .02);
@@ -3077,7 +3163,7 @@ function simulate() {
       const share = wts[i] / wsum, bi = b * share, ii = imp * share;
       const hookP = c.hook === 'price' ? { butce: 1.2, orta: 1, premium: .75 }[s.brand.price] : 1;
       const trendP = c.hook === s.trend.hook ? 1.3 : 1;
-      const ctr = C.ctr * Math.pow(qOf(c, ch), 1.35) * .9 * C.typeFit[c.type] * C.hookFit[c.hook] * hookP * trendP * (tone[ch] || 1) * cat.fit[ch] * (1 - c.fatigue) * perfCtr * O.ctr * eff('ctr_' + ch) * (learning ? .9 : 1) * (s.prof && s.prof.sweet.seg === seg && s.prof.sweet.hook === c.hook ? 1.25 : 1) * rand(.9, 1.1);
+      const ctr = C.ctr * Math.pow(qOf(c, ch), 1.35) * .9 * C.typeFit[c.type] * C.hookFit[c.hook] * hookP * trendP * (tone[ch] || 1) * cat.fit[ch] * (1 - c.fatigue) * PM.ctr * O.ctr * eff('ctr_' + ch) * (learning ? .9 : 1) * (s.prof && s.prof.sweet.seg === seg && s.prof.sweet.hook === c.hook ? 1.25 : 1) * rand(.9, 1.1);
       clicks += ii * ctr;
       const before = c.fatigue;
       c.stats[ch] = { ctr, share, spend: bi, week: w }; c.usedWeek = w;
@@ -3101,7 +3187,7 @@ function simulate() {
     });
     const perConv = (isAds ? O.inst * (inst ? 1 : pixCvr) * (.8 + .4 * trustF) : cvr0 * (inst ? .62 : pixCvr)) * (isAds ? OS.inst * mc.inst : OS.purch * mc.conv);
     // test campaigns spread money across unproven creatives, so they always run at learning-phase efficiency
-    const cvr = perConv * (learning || cp.kind === 'test' ? (perf ? .88 : .75) : 1) * (1 + s.aw / 250);
+    const cvr = perConv * (learning || cp.kind === 'test' ? PM.learn : 1) * (1 + s.aw / 250);
     const orders = clicks * cvr * PR.cvr * SZ.cvr * rand(.85, 1.15) * ordMul;
     qSum += orders * O.q; qN += orders;
     const reported = orders * s.bias[ch] * PR.bias * rand(.9, 1.12);
@@ -3123,7 +3209,7 @@ function simulate() {
     const vol = (400 + s.aw * 110 + Math.sqrt(s.customers) * 6) * mgm.size * (sea.cvr > 1 ? 1.2 : 1);
     const gq = .8 + .4 * gStrength(s.gcopy, s.brand) + (best('mkt') ? .15 : 0);
     const GP = profOf('google'), GS = seasonOf('google');
-    const cpc = CH.google.cpc * Math.sqrt(sea.cpm) * eff('cpm') * perfCpm * mgm.cpm / gq * GP.cpm * GS.cpm * rand(.92, 1.08);
+    const cpc = CH.google.cpc * Math.sqrt(sea.cpm) * eff('cpm') * perfMul('google').cpm * mgm.cpm / gq * GP.cpm * GS.cpm * rand(.92, 1.08);
     const spend = Math.min(g.budget, vol * gq * cpc);
     const clicks = spend / cpc;
     const orders = clicks * (isAds ? .5 * mgm.inst : cvr0 * 1.5 * mgm.conv) * (1 + s.aw / 250) * GP.cvr * GS.cvr * rand(.88, 1.12) * ordMul;
@@ -3264,18 +3350,10 @@ function simulate() {
   const before = new Set(s.creatives.map(c => c.id));
   if (s.week <= WEEKS) deliverWeek(r);
   if (analyst) tl(analyst, `matched ${fmt(orders)} real ${isAds ? 'installs' : 'signups'} against ${fmt(r.reportedTotal)} the platforms claimed.`);
-  const pmgr = best('product'); if (pmgr) tl(pmgr, `${pick(PRODUCT_SHIPS)}.`);
+  const pmgr = best('product'); if (pmgr && !(s.pw.pmh && s.pw.pmh.on)) tl(pmgr, `${pick(PRODUCT_SHIPS)}.`);
   const pf = best('perf');
   if (pf) {
-    const fresh = s.creatives.filter(c => !before.has(c.id) || c.made === s.week - 1).filter(c => !s.camps.some(cp => cp.crs.includes(c.id)));
-    let placed = 0, opened = 0;
-    for (const c of fresh) {
-      let cp = s.camps.find(x => x.ch === c.home && x.on && x.kind === 'test' && x.crs.length < capOf(x)) || s.camps.find(x => x.ch === c.home && x.on && x.kind !== 'test' && x.crs.length < maxAds());
-      if (!cp && open(c.home) && campsOf(c.home).length < platCap() && campCount() < campCap() && !s.camps.some(x => x.ch === c.home && x.on && !x.managed)) { cp = mkCamp(c.home, campsOf(c.home).length + 1); cp.on = true; cp.budget = 500; s.camps.push(cp); opened++; }
-      if (cp && cp.crs.length < capOf(cp)) { cp.crs.push(c.id); placed++; }
-    }
     s.suggestions = mktSuggestions('perf');
-    tl(pf, `also placed ${placed} new creative${placed === 1 ? '' : 's'} into campaigns${opened ? `, opened ${opened} campaign${opened > 1 ? 's' : ''} at $500/week` : ''} and left ${s.suggestions.length} campaign suggestion${s.suggestions.length === 1 ? '' : 's'}.`);
   } else s.suggestions = [];
   const ms = best('mkt');
   if (ms) {
@@ -3413,7 +3491,10 @@ function vPaywall() {
   const testing = pwTesting();
   const best = tot && tot.length > 1 ? tot.slice(1).map(x => vsControl(tot[0], x)).filter(Boolean) : [];
   const need = best.length ? Math.min(...best.map(b => b.need)) : 0, curVis = tot ? Math.min(...tot.map(t => t.vis)) : 0;
-  return `<div class="head"><div><h2>Paywall Lab ${infoI(`Design the screen people see right before they subscribe. Prices are the biggest lever: weekly plans bring fast cash but churn, yearly plans build value. Test up to four variants, prices included.`)}</h2></div></div>
+  const pmg = ranked('product')[0], H = P.pmh || {}, lockOn = !!(H.on && pmg);
+  const pmBox = pmg ? `<div class="panel stack autobox"><div class="row"><h3>${lockOn ? `🤝 ${esc(pmg.name)} handles the paywall` : `Let ${esc(pmg.name.split(' ')[0])} handle the paywall`}</h3><button class="btn xs ${lockOn ? 'ghost' : 'primary'}" data-act="pmHandle">${lockOn ? 'Take it back' : `🤝 Let ${esc(pmg.name.split(' ')[0])} handle it`}</button></div>
+    <span class="muted small">${lockOn ? (H.phase === 'testing' ? `Testing ${esc(H.idea)} against your current paywall since week ${H.start}. Ships it only if it wins clearly after at least 3 weeks.` : 'Planning the next test.') + (H.shipped ? ` Shipped ${H.shipped} improvement${H.shipped > 1 ? 's' : ''} so far.` : '') + ' The editor is locked while they work, so tests stay clean.' : 'They test one change at a time for at least 3 weeks and only ship clear winners. You can\'t edit the paywall while they handle it.'}</span></div>` : '';
+  return `<div class="head"><div><h2>Paywall Lab ${infoI(`Design the screen people see right before they subscribe. Prices are the biggest lever: weekly plans bring fast cash but churn, yearly plans build value. Test up to four variants, prices included.`)}</h2></div></div>${pmBox}<div class="${lockOn ? 'pwlock' : ''}">
   <div class="panel stack">
     <div class="row" style="flex-wrap:wrap">
       <div class="vtabs"><span class="lbl" style="margin-right:4px">Variants</span>${P.vars.map((v, i) => `<button class="vt" data-act="pwSet" data-k="edit" data-v="${i}" aria-pressed="${P.edit === i}"><span class="vdot v${i}"></span>${VAR_NAMES[i]}</button>`).join('')}
@@ -3472,7 +3553,7 @@ function vPaywall() {
         </div>
     </div>
     <div class="pwprev" id="pwprev">${pwPreview(c)}<span class="muted small"><span class="vdot v${P.edit}"></span>Variant ${VAR_NAMES[P.edit]} · live preview</span></div>
-  </div>`;
+  </div></div>`;
 }
 function usersPanel() {
   const s = state, st = s.subStat, e = adEcon();
@@ -3499,6 +3580,10 @@ function vInfluencers() {
   const live = I.deals.filter(d => !d.dropped && d.posts.some(x => !x.done));
   const grade = f => f > 1.1 ? '<span class="good">Strong</span>' : f > .75 ? 'OK' : '<span class="bad">Weak</span>';
   return `<div class="head"><div><h2>Influencers ${infoI(`First you have to find creators, and that means scrolling. Once you reach out, your Influencer Marketer gets their rate the same day. Followers are public; fake followers, audience fit and scandal risk are not. Promo codes only catch part of the ${unit}.`)}</h2></div></div>
+  ${mgr ? `<div class="panel stack autobox"><div class="row"><h3>Let ${esc(mgr.name.split(' ')[0])} run deals</h3><button class="switch" data-act="infAuto" aria-pressed="${!!(I.auto && I.auto.on)}" aria-label="Let your Influencer Marketer sign deals"></button></div>
+    <span class="muted small">Every week ${esc(mgr.name.split(' ')[0])} signs up to ${INF_AUTO_MAX} single-post deals with the best creators your budget allows, skipping fake followers. A bigger budget reaches bigger creators.</span>
+    <div class="field"><div class="row"><label class="lbl" for="inf-b">Weekly budget</label><b class="num" id="inf-bl">${money((I.auto && I.auto.budget) || 2000)}</b></div>
+      <input type="range" id="inf-b" min="500" max="${INF_BUDGET_MAX}" step="500" value="${(I.auto && I.auto.budget) || 2000}" data-infb></div></div>` : ''}
   <div class="grid2"><div class="panel stack"><div class="row"><h3>Research creators</h3><span class="pill">${infWeekStat().found}/${infLimits().research} found by scrolling · ${infWeekStat().reach}/${infLimits().reach} DMs · ${infActive()}/${infLimits().deals} deals</span></div>
     <button class="clicker" data-act="infResearch" id="infclick" ${infWeekStat().found >= infLimits().research ? 'disabled style="opacity:.55"' : ''}><span class="big">${infWeekStat().found >= infLimits().research ? 'Done scrolling for this week' : 'Click to scroll for creators'}</span>
       <span class="step" id="infstep">${I.clicks ? INF_STEPS[I.clicks - 1] + '…' : RESEARCH_CLICKS + ' clicks to find one creator'}</span>
@@ -3534,7 +3619,9 @@ function vUGC() {
   const pending = U.orders.reduce((a, o) => a + o.n, 0);
   return `<div class="head"><div><h2>UGC ${infoI(`UGC creators don't post to their own audience. They film ads for you to run. Videos arrive next week and land in your Creative Studio. They tend to do better on TikTok.`)}</h2></div></div>
   <div class="grid2"><div class="panel stack"><div class="row"><h3>UGC videos</h3>${pending ? `<span class="pill acc">${pending} on the way</span>` : ''}</div>
-    <div class="ugcauto"><span class="avatar" style="overflow:hidden;padding:0">${um ? avatarSVG(um.id, 36) : ''}</span><div><b>${um ? esc(um.name.split(' ')[0]) : 'Your UGC Marketer'} orders ${Math.min(3, has('ugc').length)} video${has('ugc').length > 1 ? 's' : ''} every week</b><span class="muted small">${money(UGC_BASE)} each, paid when the week ends. They arrive the week after.</span></div></div>
+    <div class="ugcauto"><span class="avatar" style="overflow:hidden;padding:0">${um ? avatarSVG(um.id, 36) : ''}</span><div style="flex:1;min-width:0"><b>${um ? esc(um.name.split(' ')[0]) : 'Your UGC Marketer'} orders videos every week</b><span class="muted small">${money(UGC_BASE)} each, up to ${ugcAutoCap()} a week. They arrive the week after.</span>
+      <div class="field" style="margin-top:6px"><div class="row"><label class="lbl" for="ugc-b">Weekly UGC budget</label><b class="num" id="ugc-bl">${money(U.budget == null ? UGC_BASE : U.budget)} · ${Math.floor((U.budget == null ? UGC_BASE : U.budget) / UGC_BASE)} video${Math.floor((U.budget == null ? UGC_BASE : U.budget) / UGC_BASE) === 1 ? '' : 's'}</b></div>
+      <input type="range" id="ugc-b" min="0" max="${ugcAutoCap() * UGC_BASE}" step="${UGC_BASE}" value="${Math.min(ugcAutoCap() * UGC_BASE, U.budget == null ? UGC_BASE : U.budget)}" data-ugcb></div></div></div>
     <div class="field"><span class="lbl">Brief</span><div class="seg">${[['tiktok', 'For TikTok'], ['meta', 'For Meta']].map(([k, n]) => `<button data-act="ugcSet" data-k="home" data-v="${k}" aria-pressed="${U.home === k}">${n}</button>`).join('')}</div>
       <div class="seg">${[['mix', { name: 'Any hook' }], ...Object.entries(HOOKS)].map(([k, h]) => `<button data-act="ugcSet" data-k="hook" data-v="${k}" aria-pressed="${U.hook === k}">${h.name}</button>`).join('')}</div></div>
     <div class="field"><span class="lbl">Odds per UGC video</span>${oddsBar(ugcOdds())}</div>
@@ -3854,7 +3941,7 @@ function budgetMap() {
 }
 function vAds() {
   const s = state, pm = pixelM();
-  return `<div class="head"><div><h2>Ads Manager ${infoI(`Run up to ${campCap()} paid campaigns in total (5 on your own; the first Performance Marketer adds 10, every extra one 3), each with up to ${maxAds()} creatives. Campaigns on the same platform share an audience, so returns diminish. Changing a budget by more than 50% restarts that campaign's learning phase.`)}</h2></div></div>
+  return `<div class="head"><div><h2>Ads Manager ${infoI(`Run up to ${campCap()} paid campaigns in total (5 on your own, plus 5 for every Performance Marketer), each with up to ${maxAds()} creatives. Campaigns on the same platform share an audience, so returns diminish. Changing a budget by more than 50% restarts that campaign's learning phase.`)}</h2></div></div>
   <div class="panel row" style="flex-wrap:wrap;align-items:center">
     <div class="stack" style="gap:6px;flex:1;min-width:220px"><div class="row" style="justify-content:flex-start"><b>Pixel: ${pixelLabel()} ${infoI(pm < 1 ? 'A cold pixel doesn\'t know who buys yet: impressions cost more and fewer clicks convert. Every purchase from ads teaches it. Exact value hidden.' : 'Your pixel is fully trained. Ads now run at their real efficiency.')}</b></div>
       <div class="pixel">${[0, 1, 2, 3, 4].map(i => `<i class="${pm > i / 5 + .01 ? 'on' : ''}"></i>`).join('')}</div></div>
@@ -3883,7 +3970,7 @@ function adTabs() {
   if (locked(tab)) body = `<div class="lockcard"><span class="chlogo">${PLOGO[tab]}</span><div><b style="color:var(--ink)">${tab === 'google' ? 'Google Search' : CH[tab].name}</b><br>${tab === 'google' ? 'Opens after your first week.' : 'Focus on Meta for your first week. More channels open soon.'}</div></div>`;
   else if (tab === 'google') body = `${seasonPill('google') ? `<div class="ph">${seasonPill('google')}</div>` : ''}<div class="camprow">${googleCard()}</div>`;
   else {
-    const cs = campsOf(tab).sort((a, b) => (a.managed ? 1 : 0) - (b.managed ? 1 : 0)), can = campCount() < campCap(), lim = `<span class="camplim" data-tip="Campaigns across all platforms. ${has('perf').length ? 'Each extra Performance Marketer adds 3.' : 'A Performance Marketer adds 10.'}">${campCount()}/${campCap()} campaigns</span>`;
+    const cs = campsOf(tab).sort((a, b) => (a.managed ? 1 : 0) - (b.managed ? 1 : 0)), can = campCount() < campCap(), lim = `<span class="camplim" data-tip="Campaigns across all platforms. Each Performance Marketer adds 5.">${campCount()}/${campCap()} campaigns</span>`;
     body = `<div class="ph"><div class="row" style="gap:10px;justify-content:flex-start">${can ? `<button class="btn primary xs" data-act="newCamp" data-ch="${tab}">Create campaign</button>` : `<button class="btn xs" disabled>🔒 Create campaign</button>`}${lim}</div>${seasonPill(tab)}</div>
       ${cs.length ? `<div class="camprow">${cs.map(campCard).join('')}</div>` : `<div class="panel muted small">No ${CH[tab].name} campaigns yet.</div>`}`;
   }
@@ -3928,6 +4015,15 @@ function seasonPill(ch) {
   const good = z.key === 'cvr' ? z.mul > 1 : z.mul < 1;
   return `<span class="pill ${good ? 'good' : 'bad'}" data-tip="${esc(`${z.body} Until week ${z.to}.`)}">${good ? '☀' : '⛈'} ${esc(z.title)}</span>`;
 }
+function handleBox(cp) {
+  const hm = handlerOf(cp), free = freeSpecialists(cp.ch);
+  if (hm) return `<div class="handlebox on"><div class="row"><b>🤝 ${esc(hm.name)} handles this campaign</b><button class="btn xs ghost" data-act="campHandle" data-id="${cp.id}" data-v="">Take it back</button></div>
+    <span class="muted small">${SPEC[hm.spec]} specialist. Sets the budget every week and picks the creatives. Your order:</span>
+    <div class="seg">${[['test', 'Test new creatives', 'Gives every untested creative an equal share. Good and Winner ones move into the campaigns your marketers rotate.'], ['rotate', 'Rotate winners', 'Keeps only proven creatives running and swaps out tired or flopped ones.']].map(([k, n, t]) => `<button data-act="campOrder" data-id="${cp.id}" data-v="${k}" aria-pressed="${cp.order === k}" data-tip="${esc(t)}">${n}</button>`).join('')}</div></div>`;
+  if (free.length) return `<div class="handlebox"><div class="row"><span class="small">${esc(free[0].name.split(' ')[0])} (${SPEC[cp.ch]} specialist) is free.</span><button class="btn xs primary" data-act="campHandle" data-id="${cp.id}" data-v="${free[0].id}">🤝 Let ${esc(free[0].name.split(' ')[0])} handle it</button></div></div>`;
+  const busy = has('perf').filter(m => m.spec === cp.ch);
+  return busy.length ? `<p class="muted small" style="margin:0">Your ${SPEC[cp.ch]} specialist${busy.length > 1 ? 's are' : ' is'} already handling another campaign.</p>` : '';
+}
 function campCard(cp) {
   if (cp.managed) {
     const pf = best('perf'), L2 = cp.last;
@@ -3942,13 +4038,14 @@ function campCard(cp) {
   const stats = statGrid(L, false) || `<div class="empty">${cp.on ? 'Results show up here after you end the week.' : 'Campaign is off.'}</div>`;
   const shareOf = id => L && L.rows ? (L.rows.find(x => x.id === id) || {}).share : null;
   const avail = s.creatives.filter(c => !cp.crs.includes(c.id) && !(testedOn(c, cp.ch) && tierOf(c, cp.ch) === 'flop'));
-  const picking = ui.picker === cp.id;
+  const picking = ui.picker === cp.id && !cp.pm, hm = handlerOf(cp);
   // campaigns that have run collapse to a summary; Edit opens the full settings
   const qs = questStep(), questCard = qs >= 1 && qs <= 3 && cp.ch === 'meta' && campsOf('meta').filter(c => !c.managed)[0] === cp;
   const openCard = ui.camps[cp.id] != null ? ui.camps[cp.id] : questCard;
   if (!openCard) {
     const roas = L && L.spend && s.lastReport ? L.orders * s.lastReport.aov / L.spend : null;
-    return `<div class="panel adcard"><div class="hd"><div style="min-width:0"><h3 style="font-size:16px">${esc(cp.name)}</h3><div>${status}</div></div>
+    const hc = handlerOf(cp);
+    return `<div class="panel adcard"><div class="hd"><div style="min-width:0"><h3 style="font-size:16px">${esc(cp.name)}</h3><div class="row" style="justify-content:flex-start;gap:6px;flex-wrap:wrap">${status}${hc ? `<span class="pill acc">🤝 ${esc(hc.name.split(' ')[0])} · ${cp.order === 'rotate' ? 'rotating winners' : 'testing new'}</span>` : ''}</div></div>
       <div class="row" style="gap:6px"><button class="switch" data-act="toggleCamp" data-id="${cp.id}" aria-pressed="${cp.on}" aria-label="Turn ${esc(cp.name)} on or off"></button></div></div>
       <div class="row" style="justify-content:flex-start;gap:6px;flex-wrap:wrap"><span class="muted small">${OSX[cp.os || 'ios'].name} · ${ads ? OBJ[cp.obj || 'purchase'].adsName : OBJ[cp.obj || 'purchase'].name} · ${(cp.mkts || ['home']).map(mktName).join(', ')}</span>${segVerdict(cp.ch + '_' + (cp.os || 'ios'))}${campSpark(cp)}</div>
       <div class="campmini"><div><span>Budget</span><b>${money(cp.budget)}</b></div><div><span>Creatives</span><b>${cp.crs.length}/${capOf(cp)}</b></div>
@@ -3960,21 +4057,22 @@ function campCard(cp) {
   return `<div class="panel adcard open">
     <div class="hd"><div style="min-width:0"><h3 style="font-size:16px">${esc(cp.name)}</h3><div class="row" style="justify-content:flex-start;gap:6px;flex-wrap:wrap">${status}${segVerdict(cp.ch + '_' + (cp.os || 'ios'))}${campSpark(cp)}</div></div>
       <div class="row" style="gap:6px"><button class="switch" data-act="toggleCamp" data-id="${cp.id}" aria-pressed="${cp.on}" aria-label="Turn ${esc(cp.name)} on or off"></button></div></div>
+    ${handleBox(cp)}
     <div class="field"><label class="lbl" for="cn-${cp.id}">Campaign name</label><input type="text" id="cn-${cp.id}" class="campname" maxlength="40" value="${esc(cp.name)}" data-campname="${cp.id}" spellcheck="false"></div>
     ${mktChips(cp.mkts || ['home'], cp.id)}
     <div class="field"><span class="lbl">Store</span><div class="seg">${Object.entries(OSX).map(([k, o]) => `<button data-act="setOs" data-id="${cp.id}" data-v="${k}" aria-pressed="${(cp.os || 'ios') === k}" data-tip="${esc(o.desc)}">${k === 'both' ? PLOGO.ios + PLOGO.android : PLOGO[k]}${o.name}</button>`).join('')}</div></div>
     <div class="field"><span class="lbl">Objective</span><div class="seg">${Object.entries(OBJ).map(([k, o]) => `<button data-act="setObj" data-id="${cp.id}" data-v="${k}" aria-pressed="${(cp.obj || 'purchase') === k}" data-tip="${esc((ads ? o.adsDesc : o.desc) + ' Switching restarts the learning phase.')}">${ads ? o.adsName : o.name}</button>`).join('')}</div></div>
     <div class="field"><div class="row"><label class="lbl" for="cb-${cp.id}">Weekly budget ${infoI(`Up to ${money(CH[cp.ch].max)} for one region, plus ${money(1000)} for every extra region you add. Cap now: ${money(campMax(cp))}.`)}</label><b class="num" id="cbl-${cp.id}">${money(cp.budget)}</b></div>
-      <input type="range" id="cb-${cp.id}" min="0" max="${campMax(cp)}" step="50" value="${cp.budget}" data-cbudget="${cp.id}"></div>
+      <input type="range" id="cb-${cp.id}" min="0" max="${campMax(cp)}" step="50" value="${cp.budget}" data-cbudget="${cp.id}" ${hm ? 'disabled' : ''}>${hm ? `<span class="muted small">${esc(hm.name.split(' ')[0])} sets the budget each week.</span>` : ''}</div>
     <div class="field"><div class="row"><span class="lbl">Creatives (${cp.crs.length}/${capOf(cp)}) ${infoI(`The percentage is each creative's share of last week's budget. Tiers are for ${C.name}.`)}</span>
-        <span class="row" style="gap:6px" data-tip="When the week ends, proven and fresh creatives are added for you."><span class="muted small">Auto-rotate</span><button class="switch sm" data-act="autoCamp" data-id="${cp.id}" aria-pressed="${cp.auto}" aria-label="Auto-rotate creatives"></button></span></div>
-      ${cp.crs.length ? `<div class="crchips">${cp.crs.map(id => { const c = crById(id); if (!c) return ''; const sh = shareOf(id); return `<div class="crchip" data-tip="${esc(crName(c))} · fatigue ${pct(c.fatigue, 0)}">${adThumb(c)}<b>${esc(crName(c))}</b><span class="cm">${tierPill(c, cp.ch)}<span class="sh">${sh != null ? pct(sh, 0) : '—'}</span></span><i class="fat" style="width:${Math.min(100, c.fatigue / .8 * 100)}%"></i><button class="xbtn" data-act="rmCr" data-id="${cp.id}" data-cr="${id}" aria-label="Remove">×</button></div>`; }).join('')}</div>`
-        : `<p class="muted small">${cp.auto ? 'Auto-rotate will fill this when the week ends.' : 'No creatives yet.'}</p>`}
+</div>
+      ${cp.crs.length ? `<div class="crchips">${cp.crs.map(id => { const c = crById(id); if (!c) return ''; const sh = shareOf(id); return `<div class="crchip" data-tip="${esc(crName(c))} · fatigue ${pct(c.fatigue, 0)}">${adThumb(c)}<b>${esc(crName(c))}</b><span class="cm">${tierPill(c, cp.ch)}<span class="sh">${sh != null ? pct(sh, 0) : '—'}</span></span><i class="fat" style="width:${Math.min(100, c.fatigue / .8 * 100)}%"></i>${hm ? '' : `<button class="xbtn" data-act="rmCr" data-id="${cp.id}" data-cr="${id}" aria-label="Remove">×</button>`}</div>`; }).join('')}</div>`
+        : `<p class="muted small">${hm ? `${esc(hm.name.split(' ')[0])} fills this when the week ends.` : 'No creatives yet.'}</p>`}
       ${picking ? (() => { const free = Math.max(0, capOf(cp) - cp.crs.length), unt = avail.filter(c => !testedOn(c, cp.ch));
         return `<div class="picker"><div class="row"><b class="small">Click a creative to add it</b><span class="muted small">${free} slot${free === 1 ? '' : 's'} free</span></div>
         <div class="list pklist">${avail.slice(0, 80).map(c => `<button class="pkrow" data-act="pickOne" data-id="${cp.id}" data-cr="${c.id}" ${free ? '' : 'disabled'}>${adThumb(c)}<span>${esc(crName(c))}</span>${tierPill(c, cp.ch)}<span class="pkadd">+</span></button>`).join('') || '<span class="muted small">No more creatives to add.</span>'}</div>
         <div class="row" style="justify-content:flex-start;gap:6px;flex-wrap:wrap"><button class="btn xs" data-act="pickUntested" data-id="${cp.id}" ${free && unt.length ? '' : 'disabled'}>Add all untested (${Math.min(free, unt.length)})</button><button class="btn xs primary" data-act="pickOpen" data-id="">Done</button></div></div>`; })()
-        : `<div><button class="btn xs" data-act="pickOpen" data-id="${cp.id}" ${full || !avail.length ? 'disabled' : ''}>+ Add creatives</button></div>`}</div>
+        : hm ? `<span class="muted small">${esc(hm.name.split(' ')[0])} picks the creatives here (${cp.order === 'rotate' ? 'proven winners' : 'new, untested ones'}).</span>` : `<div><button class="btn xs" data-act="pickOpen" data-id="${cp.id}" ${full || !avail.length ? 'disabled' : ''}>+ Add creatives</button></div>`}</div>
     ${funnel(L, ads)}
     <div class="stats">${stats}</div>
     <div class="cardacts"><button class="btn xs primary" data-act="campOpen" data-id="${cp.id}" data-v="0">✓ Done</button><button class="btn xs delbtn" data-act="delCamp" data-id="${cp.id}">Delete</button></div>
@@ -3989,8 +4087,11 @@ function googleCard() {
   const status = !ad.on ? '<span class="pill">Off</span>' : p ? '<span class="pill bad">Paused</span>' : '<span class="pill good">Live</span>';
   return `<div class="panel adcard">
     <div class="hd"><div><h3 style="font-size:16px">Search campaign</h3><div>${status}</div></div><button class="switch" data-act="toggleAd" data-ch="google" aria-pressed="${ad.on}" aria-label="Turn Google Search on or off"></button></div>
+    ${(() => { const gm = ad.pm && s.team.find(m => m.id === ad.pm), fr = freeSpecialists('google');
+      return gm ? `<div class="handlebox on"><div class="row"><b>🤝 ${esc(gm.name)} handles Google Search</b><button class="btn xs ghost" data-act="gHandle" data-v="">Take it back</button></div><span class="muted small">Google Search specialist. Sets the weekly cap every week.</span></div>`
+        : fr.length ? `<div class="handlebox"><div class="row"><span class="small">${esc(fr[0].name.split(' ')[0])} (Google Search specialist) is free.</span><button class="btn xs primary" data-act="gHandle" data-v="${fr[0].id}">🤝 Let ${esc(fr[0].name.split(' ')[0])} handle it</button></div></div>` : ''; })()}
     <div class="field"><div class="row"><label class="lbl" for="b-google">Weekly cap</label><b class="num" id="bl-google">${money(ad.budget)}</b></div>
-      <input type="range" id="b-google" min="0" max="${CH.google.max}" step="50" value="${ad.budget}" data-budget="google"></div>
+      <input type="range" id="b-google" min="0" max="${CH.google.max}" step="50" value="${ad.budget}" data-budget="google" ${ad.pm ? 'disabled' : ''}></div>
     ${mktChips(ad.mkts || ['home'], 'google')}
     <p class="muted small">No creative needed ${infoI('Spend is limited by how many people search for your brand and category. Better ad copy wins more of those searches at a lower cost.')}</p>
     ${(() => { const g = s.gcopy, st = gStrength(g, s.brand), ms = best('mkt'); return `<div class="field"><div class="row"><span class="lbl">Ad copy</span><button class="btn xs" data-act="gRandAll">${DICE}Randomize all</button></div>
@@ -4005,7 +4106,7 @@ function googleCard() {
 function personCard(m, hired) {
   const s = state, fresh = hired && m.role === 'creative' && (m.hired || 0) >= s.week;
   return `<div class="pc ${m.skill >= 90 ? 'starp' : ''}" title="${esc((ROLE_PERKS[m.role] || []).join(' · '))}">
-    <div class="pc-top">${avatarSVG(m.id, 44)}<div class="pc-id"><b>${esc(m.name)}</b><span>${LEVELS[m.lv].name} ${ROLES[m.role].name}</span></div>${m.skill >= 90 ? '<span class="pill win">Star</span>' : ''}</div>
+    <div class="pc-top">${avatarSVG(m.id, 44)}<div class="pc-id"><b>${esc(m.name)}</b><span>${LEVELS[m.lv].name} ${ROLES[m.role].name}${specTag(m)}</span></div>${m.skill >= 90 ? '<span class="pill win">Star</span>' : ''}</div>
     <div class="pc-row"><span>Skill</span><div class="meter sm"><i style="width:${m.skill}%"></i></div><b class="num">${m.skill}</b></div>
     <div class="pc-row"><span>Salary</span><b class="num">${money(m.salary)}<small>/week</small></b></div>
     <div class="pc-foot">${m.trait ? `<span class="pill acc" title="${esc(TRAITS[m.trait].desc)}">${TRAITS[m.trait].name}</span>` : fresh ? '<span class="pill warn">Starts next week</span>' : '<span></span>'}
@@ -4054,7 +4155,7 @@ function vInbox() {
     const ev = EVENTS[i.eid];
     return `<div class="msg ${!i.done ? 'open' : ''}"><div class="meta">${senderAv(ev, i)}<b style="color:var(--ink)">${ev.from}</b><span>· Week ${i.week}</span>${!i.done ? (ev.choices ? '<span class="pill warn">Needs a decision</span>' : '<span class="pill acc">New</span>') : ''}</div>
       <h3>${ev.title}</h3><p>${ev.body(s, i.data)}</p>
-      ${i.done ? (i.result ? `<div class="result">${i.result}</div>` : '') :
+      ${i.done ? (i.result ? `<div class="result">${i.by ? `<b>Handled by ${esc(i.by.split(' ')[0])} ✓</b> ` : ''}${i.result}</div>` : '') :
         ev.choices ? `<div class="choices">${ev.choices.map((c, k) => `<button class="btn" data-act="choose" data-id="${i.id}" data-k="${k}">${c.label}${c.sub ? `<small>${c.sub}</small>` : ''}</button>`).join('')}</div>`
           : `<div><button class="btn" data-act="ack" data-id="${i.id}">Got it</button></div>`}</div>`;
   }).join('')}`;
@@ -4786,9 +4887,9 @@ const ACT = {
     save(); render(); window.scrollTo(0, 0); showTour(0);
   },
   hush: () => { document.getElementById('dialog').innerHTML = ''; },
-  toggleAd: d => { const ad = state.ads[d.ch]; if (!ad.on && campCount() >= campCap()) { toast('Campaign limit reached. Delete one, or hire a Performance Marketer for 10 more.'); return; } ad.on = !ad.on; save(); render(); },
+  toggleAd: d => { const ad = state.ads[d.ch]; if (!ad.on && campCount() >= campCap()) { toast('Campaign limit reached. Delete one, or hire a Performance Marketer for 5 more.'); return; } ad.on = !ad.on; save(); render(); },
   adTab: d => { ui.adsTab = d.v; render(); },
-  newCamp: d => {  if (campCount() >= campCap()) { toast(has('perf').length ? `You're at your campaign limit (${campCap()}). Another Performance Marketer adds 3 more.` : `You can run ${campCap()} campaigns on your own. A Performance Marketer adds 10 more.`); return; } const cp = mkCamp(d.ch); state.camps.push(cp); ui.adsTab = d.ch; ui.camps[cp.id] = true; toast(`${cp.name} created. Pick creatives and switch it on.`); save(); render(); setTimeout(() => { document.querySelector(`[data-campname="${cp.id}"]`)?.closest('.adcard')?.scrollIntoView({ behavior: 'smooth', block: 'center' }); }, 0); },
+  newCamp: d => {  if (campCount() >= campCap()) { toast(has('perf').length ? `You're at your campaign limit (${campCap()}). Another Performance Marketer adds 5 more.` : `You can run ${campCap()} campaigns on your own. A Performance Marketer adds 5 more.`); return; } const cp = mkCamp(d.ch); state.camps.push(cp); ui.adsTab = d.ch; ui.camps[cp.id] = true; toast(`${cp.name} created. Pick creatives and switch it on.`); save(); render(); setTimeout(() => { document.querySelector(`[data-campname="${cp.id}"]`)?.closest('.adcard')?.scrollIntoView({ behavior: 'smooth', block: 'center' }); }, 0); },
   loanAmt: d => { ui.loanAmt = +d.v; render(); },
   loanTerm: d => { ui.loanTerm = +d.v; render(); },
   loanTake: () => {
@@ -4836,6 +4937,14 @@ const ACT = {
   toggleCamp: d => { const cp = state.camps.find(x => x.id === d.id); if (!cp) return; cp.on = !cp.on; sfx('click'); save(); render(); },
   autoCamp: d => { const cp = state.camps.find(x => x.id === d.id); if (cp) cp.auto = !cp.auto; save(); render(); },
   rmCr: d => { const cp = state.camps.find(x => x.id === d.id); if (cp) cp.crs = cp.crs.filter(x => x !== d.cr); save(); render(); },
+  campHandle: d => {
+    const cp = state.camps.find(x => x.id === d.id); if (!cp) return;
+    if (!d.v) { const m = handlerOf(cp); cp.pm = null; cp.order = null; cp.kind = 'main'; cp.auto = false; toast(`You took ${cp.name} back${m ? ` from ${m.name.split(' ')[0]}` : ''}.`); save(); render(); return; }
+    const m = state.team.find(x => x.id === d.v); if (!m || handledBy(m)) return;
+    cp.pm = m.id; cp.order = cp.order || 'test'; ui.picker = null; toast(`${m.name.split(' ')[0]} now handles ${cp.name}. Pick an order: test new creatives or rotate winners.`); save(); render();
+  },
+  gHandle: d => { const g = state.ads.google; g.pm = d.v || null; if (d.v) g.on = true; toast(d.v ? 'Google Search is in good hands now.' : 'You took Google Search back.'); save(); render(); },
+  campOrder: d => { const cp = state.camps.find(x => x.id === d.id); if (!cp || !cp.pm) return; cp.order = d.v; cp.weeks = 0; save(); render(); },
   pickOne: d => {
     const cp = state.camps.find(x => x.id === d.id); if (!cp || cp.crs.includes(d.cr)) return;
     if (cp.crs.length >= capOf(cp)) { toast(`${maxAds()} creatives max per campaign.`); return; }
@@ -5039,6 +5148,7 @@ const ACT = {
   rcOn: () => { state.rcOn = true; toast('RevenueMad connected. Free until you track $2,500 a month, then 1%.'); save(); render(); },
   setObj: d => { const cp = state.camps.find(x => x.id === d.id); if (cp && cp.obj !== d.v) { cp.obj = d.v; cp.weeks = 0; } save(); render(); },
   admSet: d => { const a = state.adm; if (d.k === 'freq') a.freq = d.v; else a[d.k] = !a[d.k]; save(); render(); },
+  infAuto: () => { const I = state.inf; I.auto = I.auto || { on: false, budget: 2000 }; I.auto.on = !I.auto.on; toast(I.auto.on ? `${best('influencer').name.split(' ')[0]} will sign deals within your ${money(I.auto.budget)} weekly budget.` : 'Back to doing deals yourself.'); save(); render(); },
   infOpen: d => { state.inf.open = d.id || null; render(); },
   infType: d => { state.inf.type = d.v; render(); },
   infOffer: d => {
@@ -5159,6 +5269,11 @@ const ACT = {
     if (P.ab && t && t.length > 1 && i > 0) { const v = vsControl(t[0], t[i]); if (v && v.conf < .8) say(best('analyst') || 'founder', pick(PEEK_LINES).replace('{c}', pct(v.conf, 0))); }
     P.live = i; P.ab = false; toast(`Variant ${VAR_NAMES[i]} is now live for everyone.`); save(); render();
   },
+  pmHandle: () => {
+    const P = state.pw, pmg = best('product'); if (!pmg) return; P.pmh = P.pmh || {};
+    P.pmh.on = !P.pmh.on; if (P.pmh.on) { P.pmh.phase = 'rest'; P.pmh.until = state.week; } else { P.pmh.phase = null; }
+    toast(P.pmh.on ? `${pmg.name.split(' ')[0]} takes over the paywall. Their first test starts when this week ends.` : 'The paywall is yours again.'); save(); render();
+  },
   pwResetAB: () => { state.pw.tot = null; state.pw.hist = []; save(); render(); },
   newGame: () => { closeModal(); state = null; atMenu = true; menuStep = 'app'; menuArm = false; draft = { country: 'TR', name: '', cat: 'fitness', price: 'orta', tone: 'samimi', color: 0, model: 'subs', icon: 'letter', letter: '', fg: 0 }; try { localStorage.removeItem(SAVE_KEY); } catch (e) { } render(); window.scrollTo(0, 0); },
 };
@@ -5195,6 +5310,7 @@ document.addEventListener('keydown', e => {
 document.addEventListener('keyup', e => { if ((e.code === 'Space' || e.key === ' ') && spaceHit) { spaceHit = false; e.preventDefault(); } });
 document.addEventListener('click', e => {
   const el = e.target.closest('[data-act]'); if (!el || el.disabled) return;
+  if (/^pw/.test(el.dataset.act) && state && state.pw && state.pw.pmh && state.pw.pmh.on && best('product')) { toast(`${best('product').name.split(' ')[0]} is handling the paywall. Take it back first.`); return; }
   if (MANAGED_LOCK.has(el.dataset.act) && el.dataset.id && state && state.camps && state.camps.some(c => c.id === el.dataset.id && c.managed)) return;
   const act = el.dataset.act, slow = SLOW[act] || (INSTANT.has(act) || el.tagName !== 'BUTTON' ? null : [[null], 260]);
   if (slow && el.tagName === 'BUTTON') {
@@ -5214,6 +5330,8 @@ document.addEventListener('click', e => {
 document.addEventListener('input', e => {
   const t = e.target;
   if ('glq' in t.dataset) { showGlossary(t.value); return; }
+  if ('infb' in t.dataset) { const I = state.inf; I.auto = I.auto || { on: false, budget: 2000 }; I.auto.budget = +t.value; const el = document.getElementById('inf-bl'); if (el) el.textContent = money(+t.value); save(); return; }
+  if ('ugcb' in t.dataset) { state.ugc.budget = +t.value; const el = document.getElementById('ugc-bl'); if (el) el.textContent = `${money(+t.value)} · ${Math.floor(+t.value / UGC_BASE)} video${Math.floor(+t.value / UGC_BASE) === 1 ? '' : 's'}`; save(); return; }
   if (t.dataset.campname) { const cp = state.camps.find(x => x.id === t.dataset.campname); if (cp && t.value.trim()) { cp.name = t.value.trim(); cp.named = !AUTO_NAME.test(cp.name); save(); } }
   else if (t.dataset.budget) {
     const ch = t.dataset.budget; state.ads[ch].budget = +t.value;
