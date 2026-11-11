@@ -1013,7 +1013,7 @@ const MANUAL_ODDS = { winner: .008, iyi: .05, vasat: .27, flop: .672 };
 const ROLES = {
   creative: { name: 'Marketing Artist', desc: 'Produces creatives automatically, in batches', base: 1000 },
   perf: { name: 'Performance Marketer', desc: 'Runs your campaigns: lower CPM, higher CTR, tests every new creative for you, campaign advice, +10 campaigns', base: 1150 },
-  social: { name: 'Social Media Manager', desc: '4 organic posts a week, reach ×1.5, builds trust', base: 850 },
+  social: { name: 'Social Media Manager', desc: 'Organic posts, builds trust, and lifts the whole team\'s morale (+6–10%)', base: 850 },
   mkt: { name: 'Marketing Specialist', desc: 'Strategy: market research and fit, competitor trends, Google ad copy, brand awareness', base: 950 },
   analyst: { name: 'Data Analyst', desc: 'Reveals real ROAS, A/B tests lift conversion 3–6%', base: 1200 },
   influencer: { name: 'Influencer Marketer', desc: 'Finds creators, gets their rates the same day, spots fake followers and negotiates deals', base: 950 },
@@ -1579,7 +1579,9 @@ const ranked = r => has(r).slice().sort((a, b) => b.skill - a.skill);
 const rankOf = m => ranked(m.role).indexOf(m);
 // teammates in the same role back up the lead: up to about +0.2 skill for the best one
 const backup = r => ranked(r).slice(1).reduce((a, m, i) => a + m.skill / 100 * roleW(i + 1) * .3, 0);
-const sk = m => !m ? 0 : m === best(m.role) ? Math.min(1.2, m.skill / 100 + backup(m.role)) : m.skill / 100;
+// a Social Media Manager keeps the team's spirits up: everyone else works about 6–10% better (by their skill)
+const morale = () => { const sm = best('social'); return sm ? 1 + .06 + .04 * Math.min(1, sm.skill / 100 + backup('social')) : 1; };
+const sk = m => { if (!m) return 0; const base = m === best(m.role) ? Math.min(1.2, m.skill / 100 + backup(m.role)) : m.skill / 100; return m.role === 'social' ? base : Math.min(1.3, base * morale()); };
 // different roles feed each other: every role you've filled adds 1.5% to sales across the board
 const SYNERGY_ROLES = ['creative', 'perf', 'analyst', 'social', 'mkt', 'influencer', 'ugc', 'product'];
 const teamSync = () => 1 + .015 * SYNERGY_ROLES.filter(r => has(r).length).length;
@@ -1609,7 +1611,7 @@ function plannedOut() {
 // ---------- creative production ----------
 const batchSize = m => BATCH + (m.trait === 'fast' ? 1 : 0);
 const crewEff = m => m.role === 'creative' ? [1, 1, 1, .7, .5][rankOf(m)] || .35 : 1;
-const weeklyCap = m => Math.max(1, Math.round(LEVELS[m.lv].batches * batchSize(m) * crewEff(m)));
+const weeklyCap = m => Math.max(1, Math.round(LEVELS[m.lv].batches * batchSize(m) * crewEff(m) * morale()));
 const totalCap = () => has('creative').reduce((a, m) => a + weeklyCap(m), 0);
 const PLATS = ['meta', 'tiktok'];
 const qOf = (c, ch) => c.pq ? c.pq[ch] : c.q;
@@ -2594,7 +2596,7 @@ const ROLE_PERKS = {
   creative: ['Delivers about 4–10 creatives at the start of every week (more with skill), starting the week after you hire them', 'Winner chance 2.5–7% per creative, plus up to 6 points from the production budget', 'Can make variations of your Good and Winner creatives', 'Follows your platform, hook and format brief', 'Adds 1 organic post a week'],
   perf: ['CPM on Meta, TikTok and Google 5–10% lower, up to about 14% with a 2nd and 3rd marketer', 'CTR 4–10% higher through better targeting, more with a bigger team', 'Learning phases hurt less: 88% of normal conversions instead of 75%', 'Runs a locked creative-test campaign on each platform for your untested creatives', 'Puts every new creative into a campaign on its platform; opens a $500/week campaign if a platform has none live', 'Weekly campaign suggestions at the top of the Ads Manager', 'Adds cost per purchase or install to every campaign and a Top creatives table to reports', 'More paid campaigns: +10 for the first, +3 for every extra one (without one you can run 5 in total)'],
   mkt: ['Researches one new region a week ($500) so you can sell there', 'Shows how well each market fits your app', 'Tracks competitor ads and shows the trending hook every week (+30% CTR for that hook)', 'Google ad quality +15% (better search copy)', 'Brand awareness grows 30% faster and trust +0.2 a week', 'Market ideas and localization warnings in the Markets tab'],
-  social: ['3–6 organic posts a week (+1 if Fast)', 'Organic reach ×1.3 (builds awareness)', 'Trust +0.5–0.9 every week, which lifts conversion on every channel', 'A small trickle of organic signups; it won\'t pay their salary on its own', 'Chance an organic post goes viral (×3 with Viral Hunter)'],
+  social: ['Team morale: everyone else works 6–10% better (by their skill), and Marketing Artists deliver a bit more', '3–6 organic posts a week (+1 if Fast)', 'Organic reach ×1.3 (builds awareness)', 'Trust +0.5–0.9 every week, which lifts conversion on every channel', 'A small trickle of organic signups; it won\'t pay their salary on its own', 'Chance an organic post goes viral (×3 with Viral Hunter)'],
   analyst: ['Real ROAS and real sales per channel in every report, instead of what the platforms claim', 'An Organic vs paid report on the Overview: ads vs organic social, word of mouth and creators', 'Conversion 3–6% higher from A/B testing', 'Shows real influencer signups and subscriber retention', 'Adds a 12-month value column to paywall tests'],
   influencer: ['Opens the Influencers tab: find creators, get rates, sign 1, 3 or 5-post deals', 'Gets a creator\'s rate the same day you reach out', 'Finds 1–3 creators a week on their own, and you can scroll for more', 'Spots fake followers and real engagement before you pay', 'Negotiates: prices 8% lower and 12 points more yeses', 'Runs up to 5 deals and 8 DMs a week (a 2nd marketer adds a few more)'],
   ugc: ['Orders 1 UGC video every week on their own ($100), delivered the week after', 'Lets you chase 1 extra UGC video a week yourself (15 clicks)', 'Marketing Artists\' Talking Head videos win more often while they\'re on the team', 'Briefs creators on platform and hook', 'Runs product seeding'],

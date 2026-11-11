@@ -86,6 +86,7 @@ One `<script>` with vanilla JS, no framework or build step:
 - Team: diminishing returns per extra person in the same role (`ROLE_W`).
 - Home country defaults to Türkiye. The US & English-speaking region (`t1en`) is always open in campaigns (`freeMkt`/`openMkt`), so players can compare it with home before they can research; research still reveals its fit.
 - Investors (`fundamentals`, `investScore`, `offerSize`): offers only from week 30, and only when the last 8 weeks were clearly profitable and growing (score ≥ .7; chance rises with the score). The cheque is priced off valuation but capped at ~3 months of current profit (Series A: 6 months, also needs score ≥ .6 at week 40). No more fixed $120K / $750K floors.
+- Social Media Manager morale: `morale()` = 1.06–1.10 (by their skill); every non-social teammate's `sk()` and Marketing Artists' `weeklyCap` are multiplied by it.
 - Team strength: `teamScale(role)` = (sum of `ROLE_W` over that role)^0.55 → 1 / 1.27 / 1.40 for 1/2/3 people. Performance Marketer CPM/CTR and Product Manager conversion/retention scale with it, so a 2nd and 3rd hire add value (sweet spot 2–3). Single Performance Marketer was trimmed (CPM −5–10% instead of −11–15%).
 - Bot (`tools/balance-bot.js`) now scales like a player: opens extra campaigns with the US region when its campaigns are maxed and paying back; `comp` can be an object like `{ creative: 2, perf: 1 }`.
 - Campaign budget cap: `campMax(cp)` = platform max + $1,000 per extra region.
