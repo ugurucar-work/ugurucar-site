@@ -547,6 +547,11 @@ details.more .notes{margin-top:8px}
 .pkrow:hover:not(:disabled){border-color:var(--accent);background:var(--accent-soft)}.pkrow:disabled{opacity:.5;cursor:not-allowed}
 
 .pkadd{width:24px;height:24px;border-radius:50%;display:grid;place-items:center;background:var(--accent);color:var(--accent-ink);font-weight:700}
+.crstrip{display:flex;flex-wrap:wrap;gap:6px}
+.crs{display:flex;flex-direction:column;align-items:center;gap:2px;width:58px;font-size:10px;color:var(--muted)}
+.crs > .adp{width:58px;aspect-ratio:1.4/1;border-radius:6px;outline:2px solid transparent}.crs .adp > :not(.face):not(.play){display:none}
+.crs b{font-weight:600;white-space:nowrap}
+.crs.win > .adp{outline-color:#C99A2E}.crs.win b{color:#9A7420}.crs.good > .adp{outline-color:#1E9C74}.crs.good b{color:#14785A}.crs.bad > .adp{outline-color:#D6455D;opacity:.7}.crs.bad b{color:#B23248}
 .menuhead{text-align:center}
 .gtitle{font-family:var(--f-display);font-weight:800;font-size:clamp(40px,6.4vw,84px);line-height:.86;letter-spacing:-.045em;margin:10px 0 0;display:flex;flex-direction:column;align-items:center}
 .gtitle span{font-size:1.32em;background:linear-gradient(100deg,var(--accent),#E2557A 55%,#F5A524);-webkit-background-clip:text;background-clip:text;color:transparent;padding-bottom:.06em}
@@ -3946,6 +3951,8 @@ function campCard(cp) {
       <div class="row" style="justify-content:flex-start;gap:6px;flex-wrap:wrap"><span class="muted small">${OSX[cp.os || 'ios'].name} · ${ads ? OBJ[cp.obj || 'purchase'].adsName : OBJ[cp.obj || 'purchase'].name} · ${(cp.mkts || ['home']).map(mktName).join(', ')}</span>${segVerdict(cp.ch + '_' + (cp.os || 'ios'))}${campSpark(cp)}</div>
       <div class="campmini"><div><span>Budget</span><b>${money(cp.budget)}</b></div><div><span>Creatives</span><b>${cp.crs.length}/${capOf(cp)}</b></div>
         ${L && !L.paused ? `<div><span>Spend</span><b>${money(L.spend)}</b></div><div><span>CTR</span><b>${pct(L.ctr, 2)}</b></div><div><span>${ads ? 'Installs' : 'Purchases'}</span><b>${fmt(L.reported)}</b></div><div><span>ROAS</span><b>${roas != null ? dec(roas) + 'x' : '—'}</b></div>` : ''}</div>
+      ${cp.crs.length ? `<div class="crstrip">${cp.crs.map(crById).filter(Boolean).map(c => { const t = testedOn(c, cp.ch) ? tierOf(c, cp.ch) : null, sh = shareOf(c.id);
+        return `<span class="crs ${t ? TIERS[t].cls : 'unt'}" data-tip="${esc(`${crName(c)} · ${t ? TIERS[t].name : 'Untested'}${sh != null ? ` · ${pct(sh, 0)} of last week's budget` : ''}`)}">${adThumb(c)}<b>${t ? TIERS[t].name : 'Untested'}</b></span>`; }).join('')}</div>` : ''}
       <div class="cardacts"><button class="btn xs primary" data-act="campOpen" data-id="${cp.id}">✎ Edit campaign</button><button class="btn xs delbtn" data-act="delCamp" data-id="${cp.id}">Delete</button></div></div>`;
   }
   return `<div class="panel adcard open">
