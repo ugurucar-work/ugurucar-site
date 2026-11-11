@@ -3817,12 +3817,12 @@ function vStudio() {
   <div class="grid2">
     <div class="panel stack">
       <div class="row"><h3>Creative team</h3>${crew.length ? `<span class="pill good">${cap} creatives every week</span>` : ''}</div>
-      <div class="briefbox top"><div class="row"><h3 style="font-size:15px">Creative focus ${infoI('Tell your Marketing Artists what to make in their next batch. "Mixed" lets them pick at random. Handmade creatives always come out random. Audience Insights shows which hooks and formats worked best.')}</h3></div>
+      ${crew.length ? `      <div class="briefbox top"><div class="row"><h3 style="font-size:15px">Creative focus ${infoI('Tell your Marketing Artists what to make in their next batch. "Mixed" lets them pick at random. Handmade creatives always come out random. Audience Insights shows which hooks and formats worked best.')}</h3></div>
       <div class="field"><span class="lbl">Build for which platform</span><div class="seg">${[['mix', 'Mixed'], ['meta', 'Meta'], ['tiktok', 'TikTok']].map(([k, n]) => `<button data-act="focus" data-v="${k}" aria-pressed="${(s.focus || 'mix') === k}">${n === 'Mixed' ? n : PLOGO[k] + n}</button>`).join('')}</div></div>
       <div class="field"><span class="lbl">Opening hook</span><div class="seg">${seg('hook', HOOKS)}</div></div>
       <div class="field"><span class="lbl">Format</span><div class="seg">${seg('type', TYPES)}</div></div>
       <div class="callout ${crew.length ? '' : 'hot'}">${crew.length ? `Next delivery: <b>${cap} creatives</b>, built for <b>${(s.focus || 'mix') === 'mix' ? 'a random platform' : CH[s.focus].name}</b>, with <b>${s.brief.hook === 'mix' ? 'any hook' : HOOKS[s.brief.hook].name + ' hooks'}</b>, as <b>${s.brief.type === 'mix' ? 'any format' : TYPES[s.brief.type].name}</b>.` : `<span>✨ <b>Hire a Marketing Artist</b> and this brief decides what they make every week.</span><button class="btn primary xs" data-act="huntFor" data-k="creative">Find a Marketing Artist</button>`}</div>
-      </div>
+      </div>` : ''}
       ${crew.length ? `
         ${crew.map(m => { const fresh = (m.hired || 0) >= s.week; return `<div class="worker"><div class="row"><span><b>${esc(m.name)}</b> <span class="muted small">${LEVELS[m.lv].name}${m.trait ? ' · ' + TRAITS[m.trait].name : ''}</span></span><span class="pill ${fresh ? 'warn' : 'good'}">${fresh ? 'Starts next week' : weeklyCap(m) + ' / week'}</span></div>
           <span class="muted small">${fresh ? `Settling in this week. Delivers ${weeklyCap(m)} creatives at the start of next week.` : `Delivers ${weeklyCap(m)} creatives at the start of every week.`}</span></div>`; }).join('')}
