@@ -539,7 +539,7 @@ details.more .notes{margin-top:8px}
 .pkrow > .adp{width:64px;aspect-ratio:1.6/1}.pkrow .adp > :not(.face):not(.play){display:none}
 .studiotop{align-items:start}
 .lci{display:flex;flex-direction:column;gap:3px;min-width:0}.lci b{font-family:var(--f-display);font-size:14px}
-.briefbox{display:flex;flex-direction:column;gap:10px;padding-top:12px;margin-top:4px;border-top:1px dashed var(--line)}
+.briefbox{display:flex;flex-direction:column;gap:10px;padding:12px 14px;border-radius:12px;background:var(--accent-soft);border:1px solid color-mix(in srgb,var(--accent) 25%,transparent)}
 .cardacts{display:flex;gap:8px;flex-wrap:wrap;padding-top:4px}
 .btn.delbtn{background:#D6455D;border-color:#D6455D;color:#fff;box-shadow:0 3px 0 #A8324A}.btn.delbtn:hover{background:#C23B52}
 .pklist{display:flex;flex-direction:column;gap:6px;max-height:320px;overflow:auto}
@@ -3740,6 +3740,12 @@ function vStudio() {
   <div class="grid2">
     <div class="panel stack">
       <div class="row"><h3>Creative team</h3>${crew.length ? `<span class="pill good">${cap} creatives every week</span>` : ''}</div>
+      <div class="briefbox top"><div class="row"><h3 style="font-size:15px">Creative focus ${infoI('Tell your Marketing Artists what to make in their next batch. "Mixed" lets them pick at random. Handmade creatives always come out random. Audience Insights shows which hooks and formats worked best.')}</h3></div>
+      <div class="field"><span class="lbl">Build for which platform</span><div class="seg">${[['mix', 'Mixed'], ['meta', 'Meta'], ['tiktok', 'TikTok']].map(([k, n]) => `<button data-act="focus" data-v="${k}" aria-pressed="${(s.focus || 'mix') === k}">${n === 'Mixed' ? n : PLOGO[k] + n}</button>`).join('')}</div></div>
+      <div class="field"><span class="lbl">Opening hook</span><div class="seg">${seg('hook', HOOKS)}</div></div>
+      <div class="field"><span class="lbl">Format</span><div class="seg">${seg('type', TYPES)}</div></div>
+      <div class="callout ${crew.length ? '' : 'hot'}">${crew.length ? `Next delivery: <b>${cap} creatives</b>, built for <b>${(s.focus || 'mix') === 'mix' ? 'a random platform' : CH[s.focus].name}</b>, with <b>${s.brief.hook === 'mix' ? 'any hook' : HOOKS[s.brief.hook].name + ' hooks'}</b>, as <b>${s.brief.type === 'mix' ? 'any format' : TYPES[s.brief.type].name}</b>.` : `<span>✨ <b>Hire a Marketing Artist</b> and this brief decides what they make every week.</span><button class="btn primary xs" data-act="huntFor" data-k="creative">Find a Marketing Artist</button>`}</div>
+      </div>
       ${crew.length ? `
         ${crew.map(m => { const fresh = (m.hired || 0) >= s.week; return `<div class="worker"><div class="row"><span><b>${esc(m.name)}</b> <span class="muted small">${LEVELS[m.lv].name}${m.trait ? ' · ' + TRAITS[m.trait].name : ''}</span></span><span class="pill ${fresh ? 'warn' : 'good'}">${fresh ? 'Starts next week' : weeklyCap(m) + ' / week'}</span></div>
           <span class="muted small">${fresh ? `Settling in this week. Delivers ${weeklyCap(m)} creatives at the start of next week.` : `Delivers ${weeklyCap(m)} creatives at the start of every week.`}</span></div>`; }).join('')}
@@ -3753,13 +3759,7 @@ function vStudio() {
       ` : `<div class="say"><span class="avatar">?</span><div class="bubble"><b>Empty desk</b>Nobody sits here yet. Hire a Marketing Artist: after a week of settling in, they deliver a full batch at the start of every week.</div></div>
         <div><button class="btn primary" data-act="tab" data-k="team">Hire a Marketing Artist</button></div>
         <div class="field"><span class="lbl">For comparison: a Mid Marketing Artist's odds</span>${oddsBar(staffOdds({ skill: 68, trait: null }))}</div>`}
-          <div class="briefbox"><div class="row"><h3 style="font-size:15px">Brief for the next batch ${infoI('Tell your Marketing Artists what to make in their next batch. "Mixed" lets them pick at random. Handmade creatives always come out random. Audience Insights shows which hooks and formats worked best.')}</h3></div>
-      <div class="field"><span class="lbl">Build for which platform</span><div class="seg">${[['mix', 'Mixed'], ['meta', 'Meta'], ['tiktok', 'TikTok']].map(([k, n]) => `<button data-act="focus" data-v="${k}" aria-pressed="${(s.focus || 'mix') === k}">${n === 'Mixed' ? n : PLOGO[k] + n}</button>`).join('')}</div></div>
-      <div class="field"><span class="lbl">Opening hook</span><div class="seg">${seg('hook', HOOKS)}</div></div>
-      <div class="field"><span class="lbl">Format</span><div class="seg">${seg('type', TYPES)}</div></div>
-      <div class="callout ${crew.length ? '' : 'hot'}">${crew.length ? `Next delivery: <b>${cap} creatives</b>, built for <b>${(s.focus || 'mix') === 'mix' ? 'a random platform' : CH[s.focus].name}</b>, with <b>${s.brief.hook === 'mix' ? 'any hook' : HOOKS[s.brief.hook].name + ' hooks'}</b>, as <b>${s.brief.type === 'mix' ? 'any format' : TYPES[s.brief.type].name}</b>.` : `<span>✨ <b>Hire a Marketing Artist</b> and this brief decides what they make every week.</span><button class="btn primary xs" data-act="huntFor" data-k="creative">Find a Marketing Artist</button>`}</div>
-      </div>
-    </div>
+        </div>
     <div class="panel stack"><div class="row"><h3>Audience insights</h3><span class="muted small">Average CTR on first test</span></div>
       <div class="callout">${best('mkt') ? `<b>Trending now:</b> ${HOOKS[s.trend.hook].name} hooks (CTR +30%). ${esc(best('mkt').name.split(' ')[0])} checks competitor ads every week; trends rotate every 4 weeks.` : `<b>Trending now:</b> ? · One hook style gets +30% CTR and it changes every 4 weeks. A Marketing Specialist tracks competitor ads and tells you which.`}</div>
       ${insightsTable('hook')}${insightsTable('type')}
