@@ -6,8 +6,14 @@ const lalamiShots = [
   { src: '/images/projects/lalami/sing.webp', alt: 'Lalami live pitch lane during a five-note scale' },
   { src: '/images/projects/lalami/progress.webp', alt: 'Lalami progress screen with streaks and skills' },
 ];
+const readeptShots = [
+  { src: '/images/projects/readept/library.webp', alt: 'Readept library with story categories' },
+  { src: '/images/projects/readept/reader.webp', alt: 'Readept reader showing one word at 450 wpm' },
+  { src: '/images/projects/readept/generate.webp', alt: 'Readept AI text generator with topic and length' },
+];
+const flash = 'Your eyes stay still. The words come to you. One at a time, at up to nine hundred words a minute.'.split(' ');
 ---
-<Base title="Projects" image="/og/projects.jpg" description="Products Uğur Uçar designs, builds and markets himself: Lalami, a singing coach app for iPhone, and App Marketing Tycoon, a free browser game about app marketing.">
+<Base title="Projects" image="/og/projects.jpg" description="Products Uğur Uçar designs, builds and markets himself: Lalami, a singing coach app for iPhone, Readept, a speed reading app, and App Marketing Tycoon, a free browser game about app marketing.">
   <section class="hero">
     <div class="glow" aria-hidden="true"></div>
     <div class="wrap">
@@ -16,7 +22,8 @@ const lalamiShots = [
       <p class="lead">Side projects I design, build and grow myself. Live products, not mockups.</p>
       <ol class="index">
         <li><a href="#lalami"><span>01</span> Lalami <em>iOS app</em></a></li>
-        <li><a href="#tycoon"><span>02</span> App Marketing Tycoon <em>Browser game</em></a></li>
+        <li><a href="#readept"><span>02</span> Readept <em>iOS app · soon</em></a></li>
+        <li><a href="#tycoon"><span>03</span> App Marketing Tycoon <em>Browser game</em></a></li>
       </ol>
     </div>
   </section>
@@ -40,7 +47,7 @@ const lalamiShots = [
           <a class="btn-l ghost" href="https://lalami.app" target="_blank" rel="noopener">lalami.app ↗</a>
         </div>
       </div>
-      <div class="visual" aria-hidden="true">
+      <div class="visual phones" aria-hidden="true">
         <div class="halo"></div>
         {lalamiShots.map((s, i) => (
           <figure class={`ph ph${i}`}><img src={s.src} alt={s.alt} width="551" height="1198" loading="lazy" /></figure>
@@ -50,16 +57,46 @@ const lalamiShots = [
     </article>
   </section>
 
-  <!-- 02 APP MARKETING TYCOON -->
+  <!-- 02 READEPT -->
+  <section id="readept" class="wrap proj-wrap">
+    <article class="proj readept reveal">
+      <div class="copy">
+        <div class="brand">
+          <img src="/images/projects/readept/icon.webp" alt="" width="56" height="56" />
+          <div><b>Readept</b><small>02 · iOS app · Soon on the App Store</small></div>
+        </div>
+        <h2>Read fast. <span>Word by word.</span></h2>
+        <p class="txt">Readept shows text one word at a time in the center of the screen. Your eyes stop jumping across lines and just take it in. Read the built-in stories or paste your own text, which never leaves your phone.</p>
+        <div class="rsvp" aria-hidden="true" data-words={flash.join(' ')}>
+          <i class="tick"></i><span class="w">read</span><i class="tick"></i>
+          <small>450 wpm</small>
+        </div>
+        <ul class="chips">
+          <li>300–900 wpm</li><li>Paste your own text</li><li>AI texts + quiz</li><li>No account, no ads</li>
+        </ul>
+        <p class="role"><b>My part</b> Product, design, build and marketing</p>
+        <div class="ctas">
+          <span class="soon"><i aria-hidden="true"></i>Soon on the App Store</span>
+        </div>
+      </div>
+      <div class="visual phones" aria-hidden="true">
+        {readeptShots.map((s, i) => (
+          <figure class={`ph ph${i}`}><img src={s.src} alt={s.alt} width="551" height="1198" loading="lazy" /></figure>
+        ))}
+      </div>
+    </article>
+  </section>
+
+  <!-- 03 APP MARKETING TYCOON -->
   <section id="tycoon" class="wrap proj-wrap">
     <article class="proj tycoon reveal">
       <div class="copy">
         <div class="brand">
           <span class="tico" aria-hidden="true">▶</span>
-          <div><b>App Marketing Tycoon</b><small>02 · Browser game · Free, no sign-up</small></div>
+          <div><b>App Marketing Tycoon</b><small>03 · Browser game · Free, no sign-up</small></div>
         </div>
         <h2>Market an app for <span>52 weeks.</span></h2>
-        <p class="txt">Launch an app, make creatives, run Meta, TikTok and Google campaigns, hire a team and try to turn a profit within a year. Everything I know about UA, turned into a game.</p>
+        <p class="txt">Launch an app, make creatives, run Meta, TikTok and Google campaigns, hire a team and try to turn a profit within a year.</p>
         <ul class="stats">
           <li><b>52</b><span>weeks</span></li>
           <li><b>3</b><span>ad networks</span></li>
@@ -84,6 +121,22 @@ const lalamiShots = [
     <a class="btn" href="mailto:collab@ugurucar.work">collab@ugurucar.work</a>
   </section>
 </Base>
+
+<script>
+  const box = document.querySelector<HTMLElement>('.rsvp');
+  if (box && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    const words = (box.dataset.words || '').split(' ');
+    const w = box.querySelector('.w')!;
+    let i = 0, t: number | undefined;
+    const step = () => {
+      const word = words[i++ % words.length];
+      w.textContent = word;
+      const pause = /[.,]$/.test(word) ? 380 : 0;
+      t = window.setTimeout(step, i % words.length === 0 ? 1400 : 133 + pause);
+    };
+    new IntersectionObserver(([e]) => { clearTimeout(t); if (e.isIntersecting) step(); }).observe(box);
+  }
+</script>
 
 <style>
   .hero { position: relative; isolation: isolate; padding: 90px 0 30px; }
@@ -116,17 +169,32 @@ const lalamiShots = [
   .btn-l:hover { transform: translateY(-1px); }
   .btn-l.ghost { background: transparent; color: #fff1e6; border: 1px solid rgba(255,227,196,.25); box-shadow: none; }
   .btn-l.ghost:hover { border-color: #ff8a5c; }
-  .lalami .visual { position: relative; height: 520px; }
+  .phones { position: relative; height: 520px; }
   .halo { position: absolute; inset: 15% 10%; background: radial-gradient(circle, rgba(255,138,92,.35), transparent 65%); filter: blur(30px); z-index: -1; }
   .ph { position: absolute; margin: 0; width: 210px; border-radius: 30px; padding: 6px; background: #3a1d14; box-shadow: 0 30px 60px -20px rgba(0,0,0,.7); transition: transform .5s cubic-bezier(.2,1,.3,1); }
   .ph img { border-radius: 24px; width: 100%; }
   .ph0 { left: 2%; top: 60px; transform: rotate(-9deg); }
   .ph1 { left: 50%; top: 0; transform: translateX(-50%); z-index: 2; width: 230px; }
   .ph2 { right: 2%; top: 60px; transform: rotate(9deg); }
-  .lalami:hover .ph0 { transform: rotate(-12deg) translate(-12px, 6px); }
-  .lalami:hover .ph2 { transform: rotate(12deg) translate(12px, 6px); }
+  .proj:hover .ph0 { transform: rotate(-12deg) translate(-12px, 6px); }
+  .proj:hover .ph2 { transform: rotate(12deg) translate(12px, 6px); }
   .mascot { position: absolute; z-index: 3; width: 150px; left: 50%; bottom: -10px; transform: translateX(-120%); animation: bob 3.2s ease-in-out infinite; }
   @keyframes bob { 50% { translate: 0 -10px; } }
+
+  /* ---------- Readept: black ink, white page ---------- */
+  .readept { background: radial-gradient(70% 70% at 80% 40%, #1c1c1f 0%, transparent 65%), #050505; color: #f5f5f5; border: 1px solid #222; }
+  .readept .brand img { width: 56px; height: 56px; border-radius: 14px; border: 1px solid #2a2a2a; }
+  .readept h2 span { color: #8a8a8a; }
+  .readept .chips li { background: rgba(255,255,255,.05); border-color: rgba(255,255,255,.14); }
+  .readept .ph { background: #1a1a1a; border: 1px solid #2c2c2c; box-shadow: 0 30px 60px -20px rgba(0,0,0,.9), 0 0 0 1px rgba(255,255,255,.03); }
+  .rsvp { position: relative; display: grid; place-items: center; height: 110px; max-width: 420px; margin-top: 22px; border-radius: 18px; background: #fff; color: #000; }
+  .rsvp .w { font-family: 'Inter', sans-serif; font-weight: 700; font-size: 38px; letter-spacing: -0.02em; line-height: 1; }
+  .rsvp .tick { position: absolute; left: 50%; width: 2px; height: 12px; background: #000; }
+  .rsvp .tick:first-of-type { top: 14px; } .rsvp .tick:last-of-type { bottom: 14px; }
+  .rsvp small { position: absolute; right: 14px; top: 10px; font-size: 12px; color: #777; }
+  .soon { display: inline-flex; align-items: center; gap: 10px; padding: 13px 22px; border-radius: 999px; border: 1px solid #333; font-weight: 700; font-size: 15px; color: #f5f5f5; }
+  .soon i { width: 8px; height: 8px; border-radius: 50%; background: #fff; animation: blink 1.6s ease-in-out infinite; }
+  @keyframes blink { 50% { opacity: .25; } }
 
   /* ---------- Tycoon: bright game-menu world ---------- */
   .tycoon { background: radial-gradient(70% 90% at 100% 0%, #f8dcef 0%, transparent 55%), linear-gradient(160deg, #eef0fb, #e3e6f8); color: #14162b; border: 1px solid #d5d9f0; }
@@ -156,14 +224,14 @@ const lalamiShots = [
 
   @media (max-width: 960px) {
     .proj { grid-template-columns: 1fr; padding: 36px 26px; gap: 36px; border-radius: 26px; }
-    .lalami .visual { height: 430px; max-width: 460px; width: 100%; margin: 0 auto; }
+    .phones { height: 430px; max-width: 460px; width: 100%; margin: 0 auto; }
     .ph { width: 170px; } .ph1 { width: 186px; }
     .mascot { width: 120px; }
     .window { transform: none; }
   }
   @media (max-width: 480px) {
     .hero { padding-top: 56px; }
-    .lalami .visual { height: 360px; }
+    .phones { height: 360px; }
     .ph { width: 138px; border-radius: 22px; padding: 4px; } .ph img { border-radius: 18px; } .ph1 { width: 152px; }
     .ph0 { top: 50px; } .ph2 { top: 50px; }
     .mascot { width: 96px; }
