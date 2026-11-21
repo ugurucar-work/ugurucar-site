@@ -1,0 +1,173 @@
+---
+import Base from '../layouts/Base.astro';
+
+const lalamiShots = [
+  { src: '/images/projects/lalami/home.webp', alt: 'Lalami home screen with the daily plan' },
+  { src: '/images/projects/lalami/sing.webp', alt: 'Lalami live pitch lane during a five-note scale' },
+  { src: '/images/projects/lalami/progress.webp', alt: 'Lalami progress screen with streaks and skills' },
+];
+---
+<Base title="Projects" image="/og/projects.jpg" description="Products Uğur Uçar designs, builds and markets himself: Lalami, a singing coach app for iPhone, and App Marketing Tycoon, a free browser game about app marketing.">
+  <section class="hero">
+    <div class="glow" aria-hidden="true"></div>
+    <div class="wrap">
+      <p class="eyebrow">Projects</p>
+      <h1 class="display">I build what<br />I <span class="grad-text">market.</span></h1>
+      <p class="lead">Side projects I design, build and grow myself. Live products, not mockups.</p>
+      <ol class="index">
+        <li><a href="#lalami"><span>01</span> Lalami <em>iOS app</em></a></li>
+        <li><a href="#tycoon"><span>02</span> App Marketing Tycoon <em>Browser game</em></a></li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- 01 LALAMI -->
+  <section id="lalami" class="wrap proj-wrap">
+    <article class="proj lalami reveal">
+      <div class="copy">
+        <div class="brand">
+          <img src="/images/projects/lalami/icon.webp" alt="" width="56" height="56" />
+          <div><b>Lalami</b><small>01 · iOS app · Live on the App Store</small></div>
+        </div>
+        <h2>Singing lessons that <span>listen.</span></h2>
+        <p class="txt">Lalami finds your vocal range, draws your pitch live while you sing, and builds a short practice plan every day. Pitch analysis runs on the phone, so recordings never leave it.</p>
+        <ul class="chips">
+          <li>130+ lessons</li><li>68 drills</li><li>Live pitch</li><li>Ear training</li>
+        </ul>
+        <p class="role"><b>My part</b> Product, design, build and marketing</p>
+        <div class="ctas">
+          <a class="btn-l" href="https://apps.apple.com/app/id6833916042" target="_blank" rel="noopener">Download on the App Store ↗</a>
+          <a class="btn-l ghost" href="https://lalami.app" target="_blank" rel="noopener">lalami.app ↗</a>
+        </div>
+      </div>
+      <div class="visual" aria-hidden="true">
+        <div class="halo"></div>
+        {lalamiShots.map((s, i) => (
+          <figure class={`ph ph${i}`}><img src={s.src} alt={s.alt} width="551" height="1198" loading="lazy" /></figure>
+        ))}
+        <img class="mascot" src="/images/projects/lalami/mascot.webp" alt="" width="180" height="180" loading="lazy" />
+      </div>
+    </article>
+  </section>
+
+  <!-- 02 APP MARKETING TYCOON -->
+  <section id="tycoon" class="wrap proj-wrap">
+    <article class="proj tycoon reveal">
+      <div class="copy">
+        <div class="brand">
+          <span class="tico" aria-hidden="true">▶</span>
+          <div><b>App Marketing Tycoon</b><small>02 · Browser game · Free, no sign-up</small></div>
+        </div>
+        <h2>Market an app for <span>52 weeks.</span></h2>
+        <p class="txt">Launch an app, make creatives, run Meta, TikTok and Google campaigns, hire a team and try to turn a profit within a year. Everything I know about UA, turned into a game.</p>
+        <ul class="stats">
+          <li><b>52</b><span>weeks</span></li>
+          <li><b>3</b><span>ad networks</span></li>
+          <li><b>0</b><span>logins</span></li>
+        </ul>
+        <p class="role"><b>My part</b> Game design, build and balancing</p>
+        <div class="ctas">
+          <a class="play-now" href="/play/"><span class="pi" aria-hidden="true">▶</span> Play now</a>
+          <span class="hint">Best on desktop · saves in your browser</span>
+        </div>
+      </div>
+      <a class="visual window" href="/play/" aria-label="Play App Marketing Tycoon">
+        <div class="chrome" aria-hidden="true"><i></i><i></i><i></i><span>ugurucar.work/play</span></div>
+        <img src="/images/projects/tycoon/cover.webp" alt="App Marketing Tycoon start screen with an isometric office" width="1200" height="627" loading="lazy" />
+        <span class="hover-play" aria-hidden="true">▶ Play</span>
+      </a>
+    </article>
+  </section>
+
+  <section class="wrap end">
+    <p>Building something and need it marketed?</p>
+    <a class="btn" href="mailto:collab@ugurucar.work">collab@ugurucar.work</a>
+  </section>
+</Base>
+
+<style>
+  .hero { position: relative; isolation: isolate; padding: 90px 0 30px; }
+  h1 { font-size: clamp(52px, 9vw, 112px); margin: 10px 0 18px; }
+  .lead { color: #c8c8cf; font-size: 18px; max-width: 520px; margin: 0; }
+  .index { list-style: none; padding: 0; margin: 40px 0 0; display: flex; flex-wrap: wrap; gap: 10px; }
+  .index a { display: inline-flex; align-items: center; gap: 10px; padding: 10px 16px; border: 1px solid var(--line); border-radius: 999px; background: var(--bg-2); text-decoration: none; font-weight: 600; font-size: 15px; transition: border-color .2s; }
+  .index a:hover { border-color: var(--accent); }
+  .index span { font-family: 'Space Grotesk', sans-serif; color: var(--accent); }
+  .index em { font-style: normal; color: var(--muted); font-weight: 500; font-size: 13px; }
+
+  .proj-wrap { padding-top: 56px; scroll-margin-top: 70px; }
+  .proj { display: grid; grid-template-columns: 1fr 1.05fr; gap: 40px; align-items: center; border-radius: 32px; padding: 56px; overflow: hidden; position: relative; isolation: isolate; }
+  .brand { display: flex; align-items: center; gap: 14px; }
+  .brand b { display: block; font-family: 'Space Grotesk', sans-serif; font-size: 22px; letter-spacing: -0.02em; line-height: 1.1; }
+  .brand small { font-size: 13px; opacity: .7; }
+  h2 { font-family: 'Space Grotesk', sans-serif; font-size: clamp(36px, 4.6vw, 58px); line-height: 1; letter-spacing: -0.035em; margin: 26px 0 16px; }
+  .txt { font-size: 16.5px; margin: 0; max-width: 480px; opacity: .85; }
+  .role { font-size: 14px; margin: 22px 0 0; opacity: .8; }
+  .role b { text-transform: uppercase; letter-spacing: .12em; font-size: 11px; margin-right: 8px; opacity: .7; }
+  .ctas { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; margin-top: 26px; }
+
+  /* ---------- Lalami: warm cocoa world ---------- */
+  .lalami { background: radial-gradient(90% 80% at 85% 30%, #4a2416 0%, transparent 60%), linear-gradient(160deg, #2b1913, #150b08); color: #fff1e6; border: 1px solid #3d261c; }
+  .lalami .brand img { width: 56px; height: 56px; border-radius: 14px; box-shadow: 0 10px 24px -10px rgba(255,138,92,.7); }
+  .lalami h2 span { color: #ff8a5c; }
+  .chips { list-style: none; padding: 0; margin: 22px 0 0; display: flex; flex-wrap: wrap; gap: 8px; }
+  .chips li { padding: 7px 14px; border-radius: 999px; background: rgba(255,227,196,.08); border: 1px solid rgba(255,227,196,.16); font-size: 14px; font-weight: 600; }
+  .btn-l { display: inline-flex; align-items: center; gap: 8px; padding: 13px 22px; border-radius: 999px; background: #ff8a5c; color: #2b1913; font-weight: 700; font-size: 15px; text-decoration: none; transition: transform .2s, box-shadow .2s; box-shadow: 0 10px 26px -10px rgba(255,138,92,.8); }
+  .btn-l:hover { transform: translateY(-1px); }
+  .btn-l.ghost { background: transparent; color: #fff1e6; border: 1px solid rgba(255,227,196,.25); box-shadow: none; }
+  .btn-l.ghost:hover { border-color: #ff8a5c; }
+  .lalami .visual { position: relative; height: 520px; }
+  .halo { position: absolute; inset: 15% 10%; background: radial-gradient(circle, rgba(255,138,92,.35), transparent 65%); filter: blur(30px); z-index: -1; }
+  .ph { position: absolute; margin: 0; width: 210px; border-radius: 30px; padding: 6px; background: #3a1d14; box-shadow: 0 30px 60px -20px rgba(0,0,0,.7); transition: transform .5s cubic-bezier(.2,1,.3,1); }
+  .ph img { border-radius: 24px; width: 100%; }
+  .ph0 { left: 2%; top: 60px; transform: rotate(-9deg); }
+  .ph1 { left: 50%; top: 0; transform: translateX(-50%); z-index: 2; width: 230px; }
+  .ph2 { right: 2%; top: 60px; transform: rotate(9deg); }
+  .lalami:hover .ph0 { transform: rotate(-12deg) translate(-12px, 6px); }
+  .lalami:hover .ph2 { transform: rotate(12deg) translate(12px, 6px); }
+  .mascot { position: absolute; z-index: 3; width: 150px; left: 50%; bottom: -10px; transform: translateX(-120%); animation: bob 3.2s ease-in-out infinite; }
+  @keyframes bob { 50% { translate: 0 -10px; } }
+
+  /* ---------- Tycoon: bright game-menu world ---------- */
+  .tycoon { background: radial-gradient(70% 90% at 100% 0%, #f8dcef 0%, transparent 55%), linear-gradient(160deg, #eef0fb, #e3e6f8); color: #14162b; border: 1px solid #d5d9f0; }
+  .tico { width: 56px; height: 56px; border-radius: 14px; display: grid; place-items: center; color: #fff; font-size: 20px; background: linear-gradient(135deg, #3b3fe0, #c0398f 60%, #f5a524); box-shadow: 0 10px 24px -10px rgba(59,63,224,.7); }
+  .tycoon h2 span { background: linear-gradient(90deg, #3b3fe0, #c0398f 55%, #f5a524); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .stats { list-style: none; padding: 0; margin: 24px 0 0; display: flex; gap: 28px; }
+  .stats li { display: grid; }
+  .stats b { font-family: 'Space Grotesk', sans-serif; font-size: 40px; line-height: 1; letter-spacing: -0.03em; }
+  .stats span { font-size: 13px; opacity: .65; }
+  .play-now { display: inline-flex; align-items: center; gap: 12px; padding: 16px 30px 16px 18px; border-radius: 999px; color: #fff; font-weight: 800; font-size: 18px; text-decoration: none; background: linear-gradient(90deg, #ff4d4d, #7c4dff); box-shadow: 0 14px 30px -10px rgba(124,77,255,.75); transition: transform .2s, box-shadow .2s; }
+  .play-now:hover { transform: translateY(-2px); box-shadow: 0 18px 36px -10px rgba(255,77,77,.75); }
+  .pi { width: 34px; height: 34px; border-radius: 50%; background: rgba(255,255,255,.22); display: grid; place-items: center; font-size: 13px; animation: pulse 2s ease-in-out infinite; }
+  @keyframes pulse { 0%, 100% { box-shadow: 0 0 0 0 rgba(255,255,255,.45); } 60% { box-shadow: 0 0 0 10px rgba(255,255,255,0); } }
+  .hint { font-size: 13px; opacity: .6; }
+  .window { position: relative; display: block; border-radius: 18px; overflow: hidden; background: #fff; border: 1px solid #d5d9f0; box-shadow: 0 40px 70px -30px rgba(40,44,120,.45); transform: rotate(1.5deg); transition: transform .5s cubic-bezier(.2,1,.3,1); text-decoration: none; }
+  .tycoon:hover .window { transform: rotate(0) scale(1.02); }
+  .chrome { display: flex; align-items: center; gap: 6px; padding: 10px 14px; background: #f4f5fc; border-bottom: 1px solid #e2e5f5; }
+  .chrome i { width: 10px; height: 10px; border-radius: 50%; background: #d3d6ea; }
+  .chrome i:first-child { background: #ff6159; } .chrome i:nth-child(2) { background: #ffbd2e; } .chrome i:nth-child(3) { background: #28c941; }
+  .chrome span { margin-left: 10px; font-size: 12px; color: #7a7f9e; background: #fff; border-radius: 6px; padding: 2px 10px; }
+  .window img { width: 100%; }
+  .hover-play { position: absolute; left: 50%; top: 55%; transform: translate(-50%, -50%) scale(.9); opacity: 0; padding: 12px 22px; border-radius: 999px; background: #14162b; color: #fff; font-weight: 800; transition: opacity .25s, transform .25s; }
+  .window:hover .hover-play { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+
+  .end { text-align: center; padding-top: 90px; }
+  .end p { color: var(--muted); font-size: 17px; margin: 0 0 18px; }
+
+  @media (max-width: 960px) {
+    .proj { grid-template-columns: 1fr; padding: 36px 26px; gap: 36px; border-radius: 26px; }
+    .lalami .visual { height: 430px; max-width: 460px; width: 100%; margin: 0 auto; }
+    .ph { width: 170px; } .ph1 { width: 186px; }
+    .mascot { width: 120px; }
+    .window { transform: none; }
+  }
+  @media (max-width: 480px) {
+    .hero { padding-top: 56px; }
+    .lalami .visual { height: 360px; }
+    .ph { width: 138px; border-radius: 22px; padding: 4px; } .ph img { border-radius: 18px; } .ph1 { width: 152px; }
+    .ph0 { top: 50px; } .ph2 { top: 50px; }
+    .mascot { width: 96px; }
+    .stats { gap: 20px; } .stats b { font-size: 32px; }
+    .play-now { width: 100%; justify-content: center; }
+  }
+</style>
