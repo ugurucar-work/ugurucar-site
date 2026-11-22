@@ -41,7 +41,9 @@ def main():
 <title>{TITLE}</title>
 <meta name="description" content="{DESC}">
 <meta name="theme-color" content="#2E44D4">
-<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/games/app-marketing-tycoon/favicon-32.png?v=2" sizes="32x32" type="image/png">
+<link rel="icon" href="/games/app-marketing-tycoon/favicon.svg?v=2" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/games/app-marketing-tycoon/apple-touch-icon.png?v=2">
 <link rel="canonical" href="{URL}">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="{TITLE}">
